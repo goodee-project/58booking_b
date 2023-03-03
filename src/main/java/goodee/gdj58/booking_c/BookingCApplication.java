@@ -1,13 +1,13 @@
-package goodee.gdj58.booking;
+package goodee.gdj58.booking_c;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application {
+public class BookingCApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(BookingCApplication.class, args);
 	}
 
 }
