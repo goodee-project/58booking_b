@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import goodee.gdj58.booking_c.service.minsong.CustomerService;
+import goodee.gdj58.booking_c.vo.Company;
 
 @Controller
 public class CustomerController {
@@ -19,13 +20,14 @@ public class CustomerController {
 	private CustomerService customerService;
 	
 	@GetMapping("/company/customerList")
-	public String customerList(HttpSession session,Model model
+	public String customerList(HttpSession session, Model model
 								, @RequestParam(value="currentPage", defaultValue="1") int currentPage
 								, @RequestParam(value="rowPerPage", defaultValue="10") int rowPerPage
 								, @RequestParam(value="orderKind", defaultValue="") String orderKind) {
-//		String loginCompanyId = ((Company)session.getAttribute("loginCompany")).getCompanyId();
+		Company loginCompany = (Company)session.getAttribute("loginCompany");
+		String loginCompanyId = loginCompany.getCompanyId();
 		
-		List<Map<String, Object>> list = customerService.getCustomerList(currentPage, rowPerPage, orderKind);
+		List<Map<String, Object>> list = customerService.getCustomerList(currentPage, rowPerPage, orderKind, loginCompanyId);
 		int startPage = ((currentPage-1)/rowPerPage)*rowPerPage+1;
 		int endPage = startPage + rowPerPage - 1;
 		int lastPage = (int)Math.ceil(customerService.getCustomerCount()/(double)rowPerPage);
