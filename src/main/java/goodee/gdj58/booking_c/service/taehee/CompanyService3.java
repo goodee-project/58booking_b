@@ -18,17 +18,24 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
+	
+	// 문의사항 상세보기
+	public List<Map<String, Object>> getQuestionOne(int questionNo) {
+		return companyMapper.selectQuestionOne(questionNo);
+	}
+	
 	// 문의사항 삭제
 	public int removeQuestion(int questionNo) {
 		return companyMapper.deleteQuestion(questionNo);
 	}
+	
 	// 문의사항 등록
 	public int addQeustion(Question question) {
 		return companyMapper.insertQuestion(question);
 	}
 	
 	// 문의사항 목록
-	public List<Map<String, Object>>  getQuestionList(int currentPage, int rowPerPage, Company loginCom) {
+	public List<Map<String, Object>> getQuestionList(int currentPage, int rowPerPage, Company loginCom) {
 		int beginRow = (currentPage - 1) * rowPerPage;
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("beginRow", beginRow);

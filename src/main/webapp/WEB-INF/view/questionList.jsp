@@ -70,7 +70,7 @@
 				<c:forEach var="q" items="${list}">
               		<tr>
                 		<td>
-                			<a href="">${q.questionTitle}</a>
+                			<a href="${pageContext.request.contextPath}/questionOne?questionNo=${q.questionNo}">${q.questionTitle}</a>
                 		</td>
                 		<td>${fn:substring(q.createdate,0,10) }</td>
                 		<td>
