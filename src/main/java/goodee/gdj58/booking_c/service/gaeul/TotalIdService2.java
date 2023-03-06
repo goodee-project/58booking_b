@@ -8,10 +8,10 @@ import goodee.gdj58.booking_c.mapper.gaeul.TotalIdMapper2;
 import goodee.gdj58.booking_c.vo.TotalId;
 import lombok.extern.slf4j.Slf4j;
 
-@Transactional
 @Service
+@Transactional
 @Slf4j
-public class TotalIdService {
+public class TotalIdService2 {
 	@Autowired TotalIdMapper2 totalIdMapper;
 	
 	// 아이디 등록(업체가입 시)

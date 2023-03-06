@@ -5,11 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import goodee.gdj58.booking_c.service.gaeul.TotalIdService;
+import goodee.gdj58.booking_c.service.gaeul.TotalIdService2;
 
 @RestController
 public class TotalIdRestController {
-	@Autowired TotalIdService totalIdService;
+	@Autowired TotalIdService2 totalIdService;
 	
 	// 중복아이디 확인
 	@GetMapping("/idCk")
