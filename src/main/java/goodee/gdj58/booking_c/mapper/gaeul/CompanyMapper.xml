@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="goodee.gdj58.booking_c.mapper.gaeul.CompanyMapper">
+
+	<!-- 업체 회원가입 -->
+	<insert id="insertCompany"
+			parameterType="goodee.gdj58.booking_c.vo.Company">
+		INSERT INTO booking_company(
+			booking_company_id
+			, booking_company_pw
+			, booking_company_name
+			, booking_company_ceo
+			, booking_company_address
+			, booking_company_phone
+			, booking_company_email
+			, booking_company_bank
+			, booking_company_account
+			, booking_company_number
+			, booking_company_info_agree
+			, booking_company_latitude
+			, booking_company_longtitude
+		) VALUES (
+			#{companyId}
+			, #{companyPw}
+			, #{companyName}
+			, #{companyCeo}
+			, #{companyAddress}
+			, #{companyPhone}
+			, #{companyEmail}
+			, #{companyBank}
+			, #{companyAccount}
+			, #{companyNumber}
+			, #{companyInfoAgree}
+			, #{companyLatitude}
+			, #{companyLongtitude}			
+		)
+	</insert>
+
+	<!-- 업체 로그인 -->
+	<select id="selectCompanyByIdPw"
+			parameterType="goodee.gdj58.booking_c.vo.Company"
+			resultType="goodee.gdj58.booking_c.vo.Company">
+		SELECT
+			booking_company_id companyId
+			, booking_company_name companyName
+		FROM booking_company
+		WHERE booking_company_id = #{companyId} AND booking_company_pw = PASSWORD(#{companyPw})
+	</select>
+</mapper>
