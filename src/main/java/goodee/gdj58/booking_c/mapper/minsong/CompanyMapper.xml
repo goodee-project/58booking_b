@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="goodee.gdj58.booking_c.mapper.minsong.CompanyMapper">
+<mapper	namespace="goodee.gdj58.booking_c.mapper.minsong.CompanyMapper">
+	<select id="selectCompanyTypeList" resultType="goodee.gdj58.booking_c.vo.CompanyType">
+		SELECT booking_company_type_no companyTypeNo
+				, booking_company_type_content companyTypeContent
+				, parent_no parentNo
+				, group_no groupNo
+				, sequence
+				, depth
+		FROM booking_company_type
+	</select>
+	
+	<insert id="insertCompanyDetail" parameterType="goodee.gdj58.booking_c.vo.CompanyDetail">
+		INSERT booking_company_detail(
+									booking_company_id
+									, booking_company_type_content
+									, booking_company_opentime
+									, booking_company_closetime
+									)
+		INTO ( #{loginCompanyId}
+			,
+			)
+	</insert>
 </mapper>
