@@ -14,7 +14,6 @@ public class Company {
 	private String companyBank;
 	private String companyAccount;
 	private String companyNumber;
-	private String companyActive;
 	private String infoAgree; // 개인정보제공동의
 	private int failLoginCount; // 로그인 실패 횟수
 	private double latitude; // 위도
