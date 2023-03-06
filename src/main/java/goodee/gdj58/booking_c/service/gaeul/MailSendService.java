@@ -5,39 +5,39 @@ import java.util.concurrent.ThreadLocalRandom;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goodee.gdj58.booking_c.util.FontColor;
+import goodee.gdj58.booking_c.util.MailConfig;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
 @Slf4j
 public class MailSendService {
-	@Autowired JavaMailSenderImpl mailSender;
-	//context-mail.xml에서 빈 등록했기 때문에 주입받을 수 있음, Spring에서 제공하는 MailSender
 	
 	// 이메일 전송
 	public String makeEmail(String companyEmail){
+		
+		JavaMailSender mailSender = MailConfig.getMailSender();
 		
 		// 1. 인증번호에 사용할 6자리 난수 생성(111111 ~ 999999)
 		int randomNum = ThreadLocalRandom.current().nextInt(100000, 1000000);
 		log.debug(FontColor.BLUE+"인증번호 : "+randomNum);
 		
 		// 전송할 이메일 양식
-		String setFrom = "goodee.booking.com"; // email-config에 설정한 이메일 주소 입력 
+		String setFrom = "goodee@booking.com"; // email-config에 설정한 이메일 주소 입력 
 		String toMail = companyEmail;
-		String title = "회원 가입 인증 이메일 입니다."; // 이메일 제목 
+		String title = "회원가입 인증 이메일 입니다."; // 이메일 제목 
 		String content = 
 				"홈페이지를 방문해주셔서 감사합니다." + 	// html 형식으로 작성
                 "<br><br>" + 
-			    "인증 번호는 " + randomNum + "입니다." + 
+			    "인증번호는 " + randomNum + " 입니다." + 
 			    "<br>" + 
-			    "해당 인증번호를 인증번호 확인 란에 기입하여 주세요." +
+			    "해당 인증번호를 인증번호 확인란에 기입하여 주세요." +
 			    "<br>" +
 			    "<br>" + 
 			    "이 메일은 인증번호 전송용 이메일이므로 회신이 불가합니다."; //이메일 내용 삽입

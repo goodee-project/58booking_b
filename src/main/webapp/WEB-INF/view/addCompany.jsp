@@ -7,14 +7,47 @@
 <title>예약 | 업체가입</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script>
-	$(document).ready(function(){
+	var sel_files = [];
+    $(document).ready(function() {
+        $("#input_imgs").change(handleImgsFilesSelect);
+        
+	// 유효성 확인
 		
-		// 유효성 확인
-		
-		// 아이디, 비밀번호, 비밀번호 일치, 사진, 업체명, 업체 전번, 업체 주소, 사업자명, 사업자 번호, 은행, 계좌버노, 약과동의, 위도/경도
-		
-	});
+	// 아이디, 비밀번호, 비밀번호 일치, 사진, 업체명, 업체 전번, 업체 주소, 사업자명, 사업자 번호, 은행, 계좌버노, 약과동의, 위도/경도
+    }); 
+
+    function handleImgsFilesSelect(e) {
+        var files = e.target.files;
+        var filesArr = Array.prototype.slice.call(files);
+
+        filesArr.forEach(function(f) {
+            if(!f.type.match("image.*")) {
+                alert("확장자는 이미지 확장자만 가능합니다.");
+                return;
+            }
+
+            sel_files.push(f);
+
+         	// 업로드한 이미지를 미리보기 위해서는 FileReader 객체를 사용
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img_html = "<img src=\"" + e.target.result + "\" />";
+                $(".imgs_wrap").append(img_html);
+            }
+            reader.readAsDataURL(f);
+        });
+    }
 </script>
+<style type="text/css">
+    .imgs_wrap {
+        width: 600px;
+        margin-top: 50px;
+    }
+    .imgs_wrap img {
+        max-width: 200px;
+    }
+
+</style>
 </head>
 <body>
 	<h2>업체가입</h2>
@@ -36,11 +69,13 @@
 				<td>
 					<input type="text" id="email" name="companyEmail">
 					<button type="button" id="emailCkBtn">인증번호 발송</button>
+					<div id="emailSendMsg" style="color: blue;"></div>
 				</td>
 				<th>Email 인증번호</th>
 				<td>
 					<input type="text" id="codeCk" disabled>
 					<button type="button" id="codeCkBtn" disabled>인증번호 확인</button>
+					<div id="emailResultMsg" style="color: green;"></div>
 				</td>
 			</tr>
 			<tr>
@@ -56,9 +91,17 @@
 			<tr>
 				<th>업체사진등록</th>
 				<td colspan="3">
+				
 					<div>
-						<input type="file" id="img" name="companyImg" multiple>
-					</div>
+				        <input type="file" name="companyImg" id="input_imgs" multiple />
+				        
+				    </div>
+				 
+				    <div>
+				        <div class="imgs_wrap">
+				            
+				        </div>
+				    </div>
 				</td>
 			</tr>
 			<tr>
@@ -125,10 +168,10 @@
 					<br>
 					<div>
 						<label>
-							<input type="radio" id="agree" class="agree" name="agree" value="동의">약관 및 마케팅 동의
+							<input type="radio" class="agree" name="agree" value="동의">약관 및 마케팅 동의
 						</label>
 						<label>
-							<input type="radio" id="agree" class="agree" name="agree" value="미동의">약관 및 마케팅 미동의
+							<input type="radio" class="agree" name="agree" value="미동의">약관 및 마케팅 미동의
 						</label>
 					</div>
 				</td>
@@ -164,35 +207,37 @@
 	});
 	
 	// 이메일 인증
+	var code = ''; // 인증번호를 담을 변수
 	$('#emailCkBtn').click(function() {
+		$('#emailSendMsg').text('인증번호가 전송되었습니다. 전송된 인증번호를 입력해주세요.');
+		$('#codeCk').attr('disabled',false); // 인증번호 입력 활성화
+		$('#codeCkBtn').attr('disabled',false); // 인증확인 버튼 활성화
+		$('#email').attr('disabled',true); // 중복 전송 방지위한 비활성화 + 인증완료 시 수정 방지
+		$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
+		
 		$.ajax({
 			url:'emailCk'
 			, type:'get'
 			, data:{companyEmail:$('#email').val()}
 			, success:function(model) {
-				$('#codeCk').attr('disabled',false);
 				code = model;
-				alert('인증번호가 전송되었습니다.');
+				//console.log(code);
 			}			
 		});
 	});
 	
-	// 인증번호 비교 
-	$('.mail-check-input').blur(function () {
-		const inputCode = $(this).val();
-		const $resultMsg = $('#mail-check-warn');
-		
-		if(inputCode === code){
-			$resultMsg.html('인증번호가 일치합니다.');
-			$resultMsg.css('color','green');
-			$('#mail-Check-Btn').attr('disabled',true);
-			$('#userEamil1').attr('readonly',true);
-			$('#userEamil2').attr('readonly',true);
-			$('#userEmail2').attr('onFocus', 'this.initialSelect = this.selectedIndex');
-	         $('#userEmail2').attr('onChange', 'this.selectedIndex = this.initialSelect');
-		}else{
-			$resultMsg.html('인증번호가 불일치 합니다. 다시 확인해주세요!.');
-			$resultMsg.css('color','red');
+	// 인증번호 비교
+	var ckResult = false; // 이메일 인증 성공 여부를 담을 변수 (false : 인증실패, true : 인증성공)
+	$('#codeCkBtn').click(function() {
+		if($('#codeCk').val() == code){ // 인증번호 일치 시
+			$('#email').attr('disabled',true); // 중복 전송 방지위한 비활성화 + 인증완료 시 수정 방지
+			$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
+			$('#codeCk').attr('disabled',true); // 인증번호 입력 활성화
+			$('#codeCkBtn').attr('disabled',true); // 중복 인증 방지위한 버튼 비활성화
+			alert('이메일 인증에 성공하였습니다.');
+			ckResult = true;
+		} else { // 인증번호 실패 시
+			alert('이메일 인증에 실패하였습니다.\n인증번호를 확인해주세요.');
 		}
 	});
 </script>
