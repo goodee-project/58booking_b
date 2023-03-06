@@ -21,6 +21,21 @@
 	
 	<!-- 라이브러리 -->
 	<dependencies>
+		
+		<!-- 이메일 인증 API https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.7</version>
+		</dependency>
+		
+		<!-- 이메일 인증 API https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context-support</artifactId>
+		    <version>5.3.9</version>
+		</dependency>
+		
 		<!--  JSP뷰 엔진(내장 톰캣) -->
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>

@@ -11,3 +11,4 @@ public class CompanyType {
 	private int sequence; // 그룹 내 순서
 	private int depth; // 들여쓰기 단계
 }
+ 

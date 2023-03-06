@@ -39,8 +39,8 @@
 				</td>
 				<th>Email 인증번호</th>
 				<td>
-					<input type="text" id="codeCk">
-					<button type="button" id="codeCkBtn">인증번호 확인</button>
+					<input type="text" id="codeCk" disabled>
+					<button type="button" id="codeCkBtn" disabled>인증번호 확인</button>
 				</td>
 			</tr>
 			<tr>
@@ -161,6 +161,39 @@
 				}
 			}
 		});
+	});
+	
+	// 이메일 인증
+	$('#emailCkBtn').click(function() {
+		$.ajax({
+			url:'emailCk'
+			, type:'get'
+			, data:{companyEmail:$('#email').val()}
+			, success:function(model) {
+				$('#codeCk').attr('disabled',false);
+				code = model;
+				alert('인증번호가 전송되었습니다.');
+			}			
+		});
+	});
+	
+	// 인증번호 비교 
+	$('.mail-check-input').blur(function () {
+		const inputCode = $(this).val();
+		const $resultMsg = $('#mail-check-warn');
+		
+		if(inputCode === code){
+			$resultMsg.html('인증번호가 일치합니다.');
+			$resultMsg.css('color','green');
+			$('#mail-Check-Btn').attr('disabled',true);
+			$('#userEamil1').attr('readonly',true);
+			$('#userEamil2').attr('readonly',true);
+			$('#userEmail2').attr('onFocus', 'this.initialSelect = this.selectedIndex');
+	         $('#userEmail2').attr('onChange', 'this.selectedIndex = this.initialSelect');
+		}else{
+			$resultMsg.html('인증번호가 불일치 합니다. 다시 확인해주세요!.');
+			$resultMsg.css('color','red');
+		}
 	});
 </script>
 </body>
