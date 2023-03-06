@@ -17,15 +17,35 @@
 			, data : {typeNo}
 			, success:function(model){
 				 $('#targetSel').children("option").remove();
-				// console.log(model);
-				// console.log("parentNo : "+model[1].parentNo);
+				 $('#targetSel').append("<option>"+'==옵션선택=='+"</option>");	// 첫 번째 옵션 선택자리
 				for(var i = 0; i < model.length ; i++){
+					let option = '';
 					if(model[i].parentNo == typeNo){
-			        	var option = "<option value='" + model[i].companyTypeNo + "'>" + model[i].companyTypeContent + "</option>";        
+			        	option = "<option value='" + model[i].companyTypeNo + "'>" + model[i].companyTypeContent + "</option>";        
 					}
 			        //대상 셀렉트박스에 추가
 			        $('#targetSel').append(option);
-					// ★★★★중복 해결 필요★★★★
+			   }
+			}
+		});
+	}
+	
+	function selectKeyword(value){
+		$('#targetSpan').html('');	// 바뀌면 초기화
+		
+		let keywordNo = value;
+		//console.log(keywordNo);
+		
+		$.ajax({
+			url:'/58booking_b/companyType'
+			, type:'get'
+			, data : {keywordNo}
+			, success:function(model){
+				for(var i = 0; i < model.length ; i++){
+					if(model[i].parentNo == keywordNo){
+						console.log(model[i].companyTypeContent+"<=======");
+						$('#targetSpan').html($('#targetSpan').html() + model[i].companyTypeContent + ' ');        
+					}
 			   }
 			}
 		});
@@ -35,6 +55,7 @@
 <body>
 	<!-- 업체 유형 -->
 	<div>
+		<h3>업체 유형</h3>
 		<!-- depth == 0 -->
 		<select onchange="changeType(this.value)" id="testSel">
 			<option>==옵션선택==</option>
@@ -45,15 +66,22 @@
 			</c:forEach>
 		</select>
 		<!-- depth == 1 -->
-		<select id="targetSel">
+		<select id="targetSel" onchange="selectKeyword(this.value)">
 		</select>
+		
+		<div>검색 키워드 예시: <span id="targetSpan"></span></div>
 	</div>
 	<!-- 운영 시간 -->
  	<div>
+ 		<h3>운영 시간</h3>
  		<!-- 00~23 -->
- 		<input type="number" name="opentimeHour">:<input type="number" name="opentimeMinute">
+ 		<select name="openTime">
+ 			<option>==개장시간==</option>
+ 		</select>
  		~
- 		<input type="number"  name="closetimeHour">:<input type="number"  name="opentimeMinute">
+ 		<select name="closeTime">
+ 			<option>==마감시간==</option>
+ 		</select>
  	</div>
 </body>
 </html>
