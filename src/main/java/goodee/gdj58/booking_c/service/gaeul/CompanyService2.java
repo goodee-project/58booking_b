@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import goodee.gdj58.booking_c.mapper.gaeul.CompanyMapper;
+import goodee.gdj58.booking_c.mapper.gaeul.CompanyMapper2;
 import goodee.gdj58.booking_c.vo.Company;
 import goodee.gdj58.booking_c.vo.CompanyImg;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 @Slf4j
-public class CompanyService {
-	@Autowired CompanyMapper companyMapper;
+public class CompanyService2 {
+	@Autowired CompanyMapper2 companyMapper;
 	
 	// 업체 회원가입
 	public int addCompany(Company com) {

@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import goodee.gdj58.booking_c.vo.Company;
 
 @Mapper
-public interface CompanyMapper {
+public interface CompanyMapper2 {
 	
 	// 업체 회원가입
 	int insertCompany(Company com);

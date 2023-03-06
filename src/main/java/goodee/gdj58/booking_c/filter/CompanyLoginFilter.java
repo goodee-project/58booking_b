@@ -23,11 +23,12 @@ public class CompanyLoginFilter implements Filter{
 		
 		log.debug("\u001B[31m"+"CompanyLoginFilter");
 		
+		
 		if(request instanceof HttpServletRequest) {
 			HttpServletRequest req = (HttpServletRequest)request;
 			HttpSession session = req.getSession();
 			if(session.getAttribute("loginCompany") == null) {
-				((HttpServletResponse)response).sendRedirect(req.getContextPath()+"loginCompany");
+				((HttpServletResponse)response).sendRedirect(req.getContextPath()+"/loginCompany");
 				return;
 			} else {
 				log.debug("웹브라우저 요청만 허용됩니다.");
