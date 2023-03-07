@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3">
+	<!-- 상품관리 -->
+	<!-- 2) 등록 -->
+	<insert id="insertProduct"  parameterType="goodee.gdj58.booking_c.vo.Product">
+		INSERT booking_product(
+				booking_company_id
+				, booking_product_name
+				, booking_product_price
+				, booking_product_open
+				, booking_product_min_people
+				, booking_product_max_people
+		) VALUES(
+				#{companyId}
+				, #{productName}
+				, #{productPrice}
+				, #{productOpen}
+				, #{productMinPeople}
+				, #{productMaxPeople});
+		<selectKey resultType="int" keyProperty="productNo" keyColumn="booking_product_no" order="AFTER">
+        	SELECT LAST_INSERT_ID()
+    	</selectKey> 
+	</insert>
+	
+	<!-- 1) 목록 -->
+	<select id="selectProduct" resultType="java.util.Map" parameterType="java.util.Map">
+	
+	</select>
+	<select id="productCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM booking_product 
+		WHERE booking_company_id = #{companyId}
+	</select>
+	
+	
 	<!-- 예약관리 -->
 	<!-- 3) 취소 -->
 	<insert id="insertBookingCancel">

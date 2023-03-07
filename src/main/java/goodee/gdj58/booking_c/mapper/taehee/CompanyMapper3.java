@@ -8,10 +8,18 @@ import org.apache.ibatis.annotations.Mapper;
 import goodee.gdj58.booking_c.vo.Booking;
 import goodee.gdj58.booking_c.vo.BookingCancel;
 import goodee.gdj58.booking_c.vo.Company;
+import goodee.gdj58.booking_c.vo.Product;
 import goodee.gdj58.booking_c.vo.Question;
 
 @Mapper
 public interface CompanyMapper3 {
+	// 상퓸관리
+	// 2) 등록
+	int insertProduct(Product product);
+	// 1) 목록
+	List<Map<String, Object>> selectProduct(Map<String, Object> paramMap);
+	int productCount(String companyId);
+	
 	// 예약관리
 	// 3) 취소
 	int insertBookingCancel(BookingCancel bookingCancel);

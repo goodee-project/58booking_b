@@ -18,6 +18,9 @@ import goodee.gdj58.booking_c.vo.Question;
 @Transactional
 public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
+	// 상품관리
+	// 1) 목록
+	
 	// 예약관리
 	// 3) 취소
 	public int addBookingCancel(Booking booking, BookingCancel bookingCancel) {
