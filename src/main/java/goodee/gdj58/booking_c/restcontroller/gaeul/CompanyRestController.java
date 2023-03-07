@@ -15,7 +15,7 @@ public class CompanyRestController {
 	@Autowired CompanyService2 companyService;
 	
 	// 아이디 조회
-	@PostMapping("/findCompanyId")
+	@PostMapping("/beforeLogin/findCompanyId")
 	public String findCompanyId(
 				@RequestParam(value="companyEmail") String companyEmail,
 				@RequestParam(value="companyCeo") String companyCeo) {

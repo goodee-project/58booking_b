@@ -15,7 +15,7 @@ public class EmailRestController {
 	@Autowired MailSendService mailSendService;
 	
 	// 뷰에서 받은 이메일로 받아 인증번호가 담긴 메일 전송
-	@GetMapping("/emailCk")
+	@GetMapping("/beforeLogin/emailCk")
 	public String emailCk(@RequestParam(value="companyEmail") String companyEmail) {
 		log.debug(FontColor.BLUE+"이메일요청 : "+companyEmail);
 		return mailSendService.makeEmail(companyEmail);

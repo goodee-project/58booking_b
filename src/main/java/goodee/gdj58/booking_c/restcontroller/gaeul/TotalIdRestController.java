@@ -12,7 +12,7 @@ public class TotalIdRestController {
 	@Autowired TotalIdService2 totalIdService;
 	
 	// 중복아이디 확인
-	@GetMapping("/idCk")
+	@GetMapping("/beforeLogin/idCk")
 	public String idCk(@RequestParam(value="idCk") String id) {
 		return totalIdService.getId(id);
 	}
