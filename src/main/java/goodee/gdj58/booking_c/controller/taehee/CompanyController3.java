@@ -22,6 +22,16 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyController3 {
 	@Autowired CompanyService3 companyService;
 	
+	// 문의사항 상세보기
+	@GetMapping("/questionOne")
+	public String getQuestionOne(Model model, @RequestParam(value = "questionNo") int questionNo) {
+		log.debug("\u001B[31m"+questionNo+"	<=questionNo");
+		List<Map<String, Object>> list = companyService.getQuestionOne(questionNo);
+		model.addAttribute("list", list);
+		return "questionOne";
+	}
+	
+	
 	// 문의사항 삭제
 	@GetMapping("/removeQuestion")
 	public String removeQuestion(int questionNo) {

@@ -11,8 +11,8 @@ import goodee.gdj58.booking_c.vo.Question;
 @Mapper
 public interface CompanyMapper3 {
 	// 문의사항
-	// 4) 수정
-	int updateQuestion(int questionNo);
+	// 4) 상세보기
+	List<Map<String, Object>> selectQuestionOne(int questionNo);
 	// 3) 삭제
 	int deleteQuestion(int questionNo);
 	// 2) 등록
