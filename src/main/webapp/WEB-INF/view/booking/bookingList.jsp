@@ -9,7 +9,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="Ansonika">
-		<title>PANAGEA - Admin dashboard</title>
+		<title>예약 | 예약관리</title>
 		
 		<!-- Favicons-->
 		<link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath}/resources/admin_section/image/x-icon">
@@ -36,9 +36,57 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 		<script>
 			$(document).ready(function(){
-				$('#orderby').change(function() {
+				// 예약번호, 상태
+				let bookingNo = '';
+				let state = '';
+				
+				// 취소모달 값 전달
+				$(".btn_1").click(function(){
+					bookingNo = $(this).data('id');
+					state = $(this).data('state');
+					date = $(this).data('date');
+					po = $(this).data('po');
+					name = $(this).data('name');
+					$("#bookingNo").val(bookingNo);
+			 	    //console.log(bookingNo);
+			 	    //console.log(state);
+			 	});
+				
+				// 취소 폼 유효성 검사
+				$('#cancelBtn').click(function() {
 					// 유효성 검사
+					if($('#cancelMemo').val() == '') {
+						$('#msg').text('취소사유를 입력 해주세요');
+						$('#cancleMemo').focus();
+						return;
+					} else {
+						$('#msg').text('');
+					}
+					$('#cancelForm').submit();
+				});
+				
+				// 예약 확정 처리
+				$('.approveBtn').click(function(){
+					bookingNo = $(this).data('id');
+					state = $(this).data('state');
 					
+					// vo로 POST
+					$.ajax({ // 컨트롤러와 통신	    			
+						 type: 'POST',
+						 url: "/58booking_b/company/modifyBooking",
+						 data: {"bookingNo" : bookingNo, "bookingState" : state},
+						 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+						 success: function(data) {
+							 alert("예약 승인 완료");
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							alert("ERROR");
+						}		
+					});
+				});
+				
+				// 정렬
+				$('#orderby').change(function() {
 					$('#orderbyForm').submit();
 				});
 			});
@@ -262,7 +310,7 @@
 			</div>
 			
 			<div class="list_general">
-				<input type="text" class="form-group form-control" placeholder="search" name="search" id="search" value="1">
+				<input type="text" class="form-group form-control" placeholder="search" name="search" id="search">
 				<ul>
 					<c:forEach var="b" items="${list}">
 						<li>
@@ -280,9 +328,6 @@
 									<c:when test="${b.state eq '방문완료'}">
 										<i class="approved">완료</i>									
 									</c:when> 
-								<c:otherwise>
-									<p>답변완료</p>
-								</c:otherwise> 
 							</c:choose> 
 							</h4>
 							<ul class="booking_list">
@@ -294,9 +339,22 @@
 								<li><strong>방문일</strong> ${fn:substring(b.date,0,16)}</li>
 								<li><strong>예약 신청일</strong> ${fn:substring(b.requestDate,0,16)}</li>
 							</ul>
+							
 							<ul class="buttons">
-								<li><a href="${pageContext.request.contextPath}/company/modifyBooking?bookingNo=${b.bookingNo}&bookingState=${b.state}" class="btn_1 gray approve" ><i class="fa fa-fw fa-check-circle-o"></i> Approve</a></li>
-								<li><a href="${pageContext.request.contextPath}/company/modifyBooking" class="btn_1 gray delete"><i class="fa fa-fw fa-times-circle-o"></i> Cancel</a></li>
+								<c:choose> 
+									<c:when test="${b.state eq '예약확정'}">
+										<li><a class="btn_1 gray delete" data-toggle="modal" data-target="#cancelModal" data-id="${b.bookingNo}" data-state="취소">
+												<i class="fa fa-fw fa-times-circle-o"></i> Cancel
+											</a>
+										</li>										
+									</c:when> 
+									<c:when test="${b.state eq '예약승인대기'}">
+										<li><a class="btn_1 gray approve approveBtn" id="approveBtn" data-id="${b.bookingNo}" data-state="예약확정"><i class="fa fa-fw fa-check-circle-o"></i> Approve</a></li>
+										<li><a class="btn_1 gray delete" data-toggle="modal" data-target="#cancelModal" data-id="${b.bookingNo}"><i class="fa fa-fw fa-times-circle-o"></i> Cancel</a></li>									
+									</c:when> 
+									<c:when test="${b.state eq '취소' || b.state eq '방문완료'}">
+									</c:when> 
+								</c:choose> 
 							</ul>
 						</li>
 					</c:forEach>
@@ -354,6 +412,42 @@
           </div>
         </div>
       </div>
+    </div>
+    
+    
+    
+    <!-- Booking/order Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="client_detail_modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="client_detail_modalLabel">예약 취소</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="cancelForm" method="post" action="${pageContext.request.contextPath}/company/modifyBooking">
+	                <div class="modal-body">
+	                    <div class="row">
+	                        <div class="col-md-6">
+	                            <div class="form-group">
+	                                <label>취소사유</label>
+	                                <p id="msg" style="color: red;"></p>
+	                                <input type="text" class="form-control" name="cancelMemo" id="cancelMemo">
+	                                <input type="hidden" value="업체" name="cancelSubject">
+	                                <input type="hidden" value="" name="bookingNo" id="bookingNo">
+	                                <input type="hidden" value="취소" name="bookingState" id="bookingState">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <!-- /Row -->
+	                </div>
+	                <div class="modal-footer">
+	                    <a class="btn btn-primary" id="cancelBtn">Save</a>
+	                </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Bootstrap core JavaScript-->

@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3">
 	<!-- 예약관리 -->
+	<!-- 3) 취소 -->
+	<insert id="insertBookingCancel">
+		INSERT booking_cancel(booking_no, cancel_memo, cancel_subject) VALUES(#{bookingNo}, #{cancelMemo}, #{cancelSubject})
+	</insert>
+	
 	<!-- 2) 변경 -->
 	<update id="updateBooking" parameterType="goodee.gdj58.booking_c.vo.Booking">
 		UPDATE booking SET booking_state = #{bookingState} WHERE booking_no = #{bookingNo}

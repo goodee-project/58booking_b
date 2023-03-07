@@ -6,12 +6,15 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import goodee.gdj58.booking_c.vo.Booking;
+import goodee.gdj58.booking_c.vo.BookingCancel;
 import goodee.gdj58.booking_c.vo.Company;
 import goodee.gdj58.booking_c.vo.Question;
 
 @Mapper
 public interface CompanyMapper3 {
 	// 예약관리
+	// 3) 취소
+	int insertBookingCancel(BookingCancel bookingCancel);
 	// 2) 변경
 	int updateBooking(Booking booking);
 	// 1) 목록

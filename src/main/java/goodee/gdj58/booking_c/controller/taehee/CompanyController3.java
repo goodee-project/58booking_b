@@ -10,10 +10,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import goodee.gdj58.booking_c.service.taehee.CompanyService3;
+import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.Booking;
+import goodee.gdj58.booking_c.vo.BookingCancel;
 import goodee.gdj58.booking_c.vo.Company;
 import goodee.gdj58.booking_c.vo.Question;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +28,19 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyController3 {
 	@Autowired CompanyService3 companyService;
 	// 예약관리
+	// 3) 취소
+	@PostMapping("/company/cancelBooking")
+	public String cancelBooking(BookingCancel bookingCancel, Booking booking) {
+		// 상태변경 + 취소insert
+		companyService.addBookingCancel(booking, bookingCancel);
+		return "";
+	}
 	// 2) 상태변경
 	@PostMapping("/company/modifyBooking")
-	public String modifyBooking(Booking booking) {
-		log.debug("\u001B[31m" + booking.getBookingNo() + "  <=  booking");
+	public String modifyBooking(Booking booking) {		
+		log.debug(FontColor.GREEN + booking.toString() + "	<=booking" );
+		companyService.modifyBooking(booking);
+		 
 		return "redirect:/company/bookingList";
 	}
 	

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3;
 import goodee.gdj58.booking_c.vo.Booking;
+import goodee.gdj58.booking_c.vo.BookingCancel;
 import goodee.gdj58.booking_c.vo.Company;
 import goodee.gdj58.booking_c.vo.Question;
 
@@ -18,6 +19,13 @@ import goodee.gdj58.booking_c.vo.Question;
 public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
 	// 예약관리
+	// 3) 취소
+	public int addBookingCancel(Booking booking, BookingCancel bookingCancel) {
+		companyMapper.updateBooking(booking);
+		return companyMapper.insertBookingCancel(bookingCancel);
+		
+	}
+	
 	// 2) 상태변경
 	public int modifyBooking(Booking booking) {
 		return companyMapper.updateBooking(booking);
