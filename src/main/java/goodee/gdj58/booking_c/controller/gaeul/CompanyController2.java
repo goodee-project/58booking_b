@@ -4,8 +4,10 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import goodee.gdj58.booking_c.service.gaeul.CompanyService2;
 import goodee.gdj58.booking_c.util.FontColor;
@@ -19,6 +21,36 @@ public class CompanyController2 {
 	@Autowired CompanyService2 companyService;
 	
 	// 업체 비밀번호 변경
+	@GetMapping("/beforeLogin/modifyCompanyPw")
+	public String findCompanyPw(Model model,
+			@RequestParam(value="email") String email,
+			@RequestParam(value="id") String id) {
+		
+		log.debug(FontColor.BLUE+"email : "+email);
+		log.debug(FontColor.BLUE+"id : "+id);
+		
+		model.addAttribute("email", email);
+		model.addAttribute("id", id);
+		
+		return "beforeLogin/modifyCompanyPw";
+	}
+	@PostMapping("/beforeLogin/modifyCompanyPw")
+	public String modifyCompanyPw(Company com) {
+		
+		log.debug(FontColor.BLUE+"email : "+com.getCompanyEmail());
+		log.debug(FontColor.BLUE+"id : "+com.getCompanyId());
+		log.debug(FontColor.BLUE+"pw : "+com.getCompanyPw());
+		
+		int row = companyService.modifyCompanyPw(com.getCompanyEmail(), com.getCompanyId(), com.getCompanyPw());
+		if(row == 0) {
+			log.debug(FontColor.BLUE+"비밀번호 변경실패");
+			return "redirect:/beforeLogin/modifyCompanyPw";
+		}
+		
+		return "success";
+	}
+	
+	// 업체 비밀번호 찾기
 	@GetMapping("/beforeLogin/findCompanyPw")
 	public String findCompanyPw() {
 		return "beforeLogin/findCompanyPw";

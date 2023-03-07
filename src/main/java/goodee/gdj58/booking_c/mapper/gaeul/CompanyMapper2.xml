@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.gaeul.CompanyMapper2">
 
+	<!-- 업체 비밀번호 변경 -->
+	<update id="updateCompanyPw"
+			parameterType="goodee.gdj58.booking_c.vo.Company">
+		UPDATE booking_company
+		SET booking_company_pw = PASSWORD(#{companyPw})
+		WHERE booking_company_id = #{companyId} AND booking_company_email = #{companyEmail};
+	</update>
+
 	<!-- 업체 아이디 조회 -->
 	<select id="selectCompanyIdByNameAndEmail"
 			parameterType="goodee.gdj58.booking_c.vo.Company"
@@ -9,6 +17,15 @@
 		SELECT booking_company_id comId
 		FROM booking_company
 		WHERE booking_company_email = #{companyEmail} AND booking_company_ceo = #{companyCeo};
+	</select>
+	
+	<!-- 업체 이메일 조회 -->
+	<select id="selectCompanyEmailByEmail"
+			resultType="Integer"
+			parameterType="java.lang.String">
+		SELECT COUNT(booking_company_email) cnt
+		FROM booking_company
+		WHERE booking_company_email = #{paramComEmail}
 	</select>
 
 	<!-- 업체 회원가입 -->

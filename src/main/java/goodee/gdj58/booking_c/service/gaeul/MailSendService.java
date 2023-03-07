@@ -20,9 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 public class MailSendService {
 	
 	// 이메일 전송
-	public String makeEmail(String companyEmail){
+	public String makeEmail(String companyEmail1, String companyEmail2){
 		
 		JavaMailSender mailSender = MailConfig.getMailSender();
+		
+		// 이메일 가공
+		String companyEmail = companyEmail1 + "@" + companyEmail2;
+		log.debug(FontColor.BLUE+"가공 email : "+companyEmail);
 		
 		// 1. 인증번호에 사용할 6자리 난수 생성(111111 ~ 999999)
 		int randomNum = ThreadLocalRandom.current().nextInt(100000, 1000000);
@@ -56,6 +60,7 @@ public class MailSendService {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 			log.debug(FontColor.BLUE+"메일 전송 실패");
+			return "fail"; // 실패 반환
 		}
 		
 		//message.setSubject(title, "utf-8"); // 제목

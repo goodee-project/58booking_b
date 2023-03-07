@@ -1,5 +1,6 @@
 package goodee.gdj58.booking_c.mapper.gaeul;
 
+
 import org.apache.ibatis.annotations.Mapper;
 
 import goodee.gdj58.booking_c.vo.Company;
@@ -8,9 +9,13 @@ import goodee.gdj58.booking_c.vo.Company;
 public interface CompanyMapper2 {
 	
 	// 업체 비밀번호 변경
+	int updateCompanyPw(Company com);
 	
 	// 업체 아이디 조회
 	String selectCompanyIdByNameAndEmail(Company com);
+	
+	// 업체 이메일 조회
+	int selectCompanyEmailByEmail(String comEmail);
 	
 	// 업체 회원가입
 	int insertCompany(Company com);

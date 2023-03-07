@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goodee.gdj58.booking_c.mapper.gaeul.CompanyMapper2;
+import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.Company;
-import goodee.gdj58.booking_c.vo.CompanyImg;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -14,6 +14,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CompanyService2 {
 	@Autowired CompanyMapper2 companyMapper;
+	
+	// 업체 비밀번호 변경
+	public int modifyCompanyPw(String companyEmail, String companyId, String companyPw) {
+		
+		Company com = new Company();
+		com.setCompanyEmail(companyEmail);
+		com.setCompanyId(companyId);
+		com.setCompanyPw(companyPw);
+		
+		return companyMapper.updateCompanyPw(com);
+	}
 	
 	// 업체 아이디 조회
 	public String getCompanyIdByNameAndEmail(String companyEmail, String companyCeo) {
@@ -23,6 +34,16 @@ public class CompanyService2 {
 		com.setCompanyCeo(companyCeo);
 		
 		return companyMapper.selectCompanyIdByNameAndEmail(com);
+	}
+	
+	// 업체 이메일 조회
+	public int getCompanyEmailBuEmail(String companyEmail1, String companyEmail2) {
+		
+		// 이메일 가공
+		String comEmail = companyEmail1 + "@" + companyEmail2;
+		log.debug(FontColor.BLUE+"조회 email : "+comEmail);
+		
+		return companyMapper.selectCompanyEmailByEmail(comEmail);
 	}
 	
 	// 업체 회원가입

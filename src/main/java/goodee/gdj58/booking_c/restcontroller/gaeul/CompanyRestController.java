@@ -23,6 +23,8 @@ public class CompanyRestController {
 		log.debug(FontColor.BLUE+"companyEmail : "+companyEmail);
 		log.debug(FontColor.BLUE+"companyCeo : "+companyCeo);
 		
-		return companyService.getCompanyIdByNameAndEmail(companyEmail, companyCeo);
+		String id = companyService.getCompanyIdByNameAndEmail(companyEmail, companyCeo);
+		
+		return id;
 	}
 }
