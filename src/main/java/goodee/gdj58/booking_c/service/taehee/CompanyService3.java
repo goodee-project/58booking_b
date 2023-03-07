@@ -9,32 +9,52 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3;
+import goodee.gdj58.booking_c.vo.Booking;
 import goodee.gdj58.booking_c.vo.Company;
 import goodee.gdj58.booking_c.vo.Question;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 @Transactional
 public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
+	// 예약관리
+	// 2) 상태변경
+	public int modifyBooking(Booking booking) {
+		return companyMapper.updateBooking(booking);
+	}
 	
-	// 문의사항 상세보기
+	// 1) 목록
+	public List<Map<String, Object>> getBookingList(int currentPage, int rowPerPage, Company loginCom) {
+		int beginRow = (currentPage - 1) * rowPerPage;
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("beginRow", beginRow);
+		paramMap.put("rowPerPage", rowPerPage);
+		paramMap.put("loginCom", loginCom);
+		return companyMapper.selectBooking(paramMap);
+	}
+	
+	// 1) 목록 페이징
+	public int getBookingCount(String companyId) {
+		return companyMapper.bookingCount(companyId);
+	}
+	
+	// 문의사항 
+	// 4) 상세보기
 	public List<Map<String, Object>> getQuestionOne(int questionNo) {
 		return companyMapper.selectQuestionOne(questionNo);
 	}
 	
-	// 문의사항 삭제
+	// 3) 삭제
 	public int removeQuestion(int questionNo) {
 		return companyMapper.deleteQuestion(questionNo);
 	}
 	
-	// 문의사항 등록
+	// 2) 등록
 	public int addQeustion(Question question) {
 		return companyMapper.insertQuestion(question);
 	}
 	
-	// 문의사항 목록
+	// 1) 목록
 	public List<Map<String, Object>> getQuestionList(int currentPage, int rowPerPage, Company loginCom) {
 		int beginRow = (currentPage - 1) * rowPerPage;
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -44,7 +64,7 @@ public class CompanyService3 {
 		return companyMapper.selectQuestion(paramMap);
 	}
 	
-	// 문의사항개수
+	// 1) 목록 페이징
 	public int getQuestionCount(String companyId) {
 		return companyMapper.questionCount(companyId);
 	}

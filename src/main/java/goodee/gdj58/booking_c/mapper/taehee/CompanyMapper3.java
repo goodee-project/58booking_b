@@ -5,11 +5,19 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import goodee.gdj58.booking_c.vo.Booking;
 import goodee.gdj58.booking_c.vo.Company;
 import goodee.gdj58.booking_c.vo.Question;
 
 @Mapper
 public interface CompanyMapper3 {
+	// 예약관리
+	// 2) 변경
+	int updateBooking(Booking booking);
+	// 1) 목록
+	List<Map<String, Object>> selectBooking(Map<String, Object> paramMap);
+	int bookingCount(String companyId);
+	
 	// 문의사항
 	// 4) 상세보기
 	List<Map<String, Object>> selectQuestionOne(int questionNo);

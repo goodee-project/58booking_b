@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3">
+	<!-- 예약관리 -->
+	<!-- 2) 변경 -->
+	<update id="updateBooking" parameterType="goodee.gdj58.booking_c.vo.Booking">
+		UPDATE booking SET booking_state = #{bookingState} WHERE booking_no = #{bookingNo}
+	</update>
 	
+	<!-- 1) 목록 -->
+	<select id="selectBooking" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+			b.booking_no bookingNo 
+			, b.booking_state state
+			, b.booking_company_id comId
+			, c.customer_name cusName
+			, c.customer_phone customerPh
+			, b.booking_date date
+			, bp.booking_product_name productName
+			, bpo.booking_product_option_name optionName 
+			, b.booking_people people
+			, b.booking_total_price price
+			, b.booking_request_date requestDate
+		FROM booking b 
+			INNER JOIN booking_product bp 
+			ON b.product_no = bp.booking_product_no 
+			INNER JOIN booking_product_option bpo 
+			ON b.option_no = bpo.booking_product_option_no
+			INNER JOIN customer c 
+			ON b.customer_id = c.customer_id 
+		WHERE b.booking_company_id = #{loginCom.companyId}
+		ORDER BY b.booking_state ASC, b.booking_no DESC
+	</select>
+	<select id="bookingCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM booking 
+		WHERE booking_company_id = #{companyId}
+	</select>
+	
+	<!-- 문의사항 -->
 	<!-- 4) 상세보기 -->
 	<select id="selectQuestionOne" resultType="java.util.Map">
 		SELECT 

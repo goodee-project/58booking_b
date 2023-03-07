@@ -29,7 +29,7 @@
 			<c:choose> 
 				<c:when test="${q.answer == null}">
 					<h3>문의사항 확인 중입니다.</h3>
-					<a href="${pageContext.request.contextPath}/removeQuestion?questionNo=${q.questionNo}">삭제</a>
+					<a href="${pageContext.request.contextPath}/company/removeQuestion?questionNo=${q.questionNo}">삭제</a>
 				</c:when> 
 				<c:otherwise>
 					<table border="1">

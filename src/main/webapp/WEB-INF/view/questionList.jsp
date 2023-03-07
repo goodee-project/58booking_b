@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -27,14 +26,13 @@
 					}
 					$('#questionForm').submit();
 					alert('문의사항등록 완료');
-				
 				});
 			});
 		</script>
 	</head>
 	<body>
 		<h3>문의사항 등록</h3>
-		<form id="questionForm" method="post" action="${pageContext.request.contextPath}/addQuestion">
+		<form id="questionForm" method="post" action="${pageContext.request.contextPath}/company/addQuestion">
 			<div>
  				<p id="msg" style="color: red;"></p>
 			</div>
@@ -70,13 +68,13 @@
 				<c:forEach var="q" items="${list}">
               		<tr>
                 		<td>
-                			<a href="${pageContext.request.contextPath}/questionOne?questionNo=${q.questionNo}">${q.questionTitle}</a>
+                			<a href="${pageContext.request.contextPath}/company/questionOne?questionNo=${q.questionNo}">${q.questionTitle}</a>
                 		</td>
                 		<td>${fn:substring(q.createdate,0,10) }</td>
                 		<td>
 		               		<c:choose> 
 								<c:when test="${empty q.questionComment}">
-									<a href="${pageContext.request.contextPath}/removeQuestion?questionNo=${q.questionNo}">삭제</a>
+									<a href="${pageContext.request.contextPath}/company/removeQuestion?questionNo=${q.questionNo}">삭제</a>
 								</c:when> 
 								<c:otherwise>
 									<p>답변완료</p>
@@ -88,10 +86,10 @@
 			</tbody>
 		</table>
 		
-        <a href="${pageContext.request.contextPath}/questionList?currentPage=${currentPage-1}"> < </a>
+        <a href="${pageContext.request.contextPath}/company/questionList?currentPage=${currentPage-1}"> < </a>
         <c:forEach var="i" begin="${beginPage}" end="${endPage}" step="1">
-			<a href="${pageContext.request.contextPath}/questionList?currentPage=${i}">${i}</a>
+			<a href="${pageContext.request.contextPath}/company/questionList?currentPage=${i}">${i}</a>
 		</c:forEach>
-        <a class="page-link" href="${pageContext.request.contextPath}/questionList?currentPage=${currentPage+1}"> > </a>
+        <a class="page-link" href="${pageContext.request.contextPath}/company/questionList?currentPage=${currentPage+1}"> > </a>
 	</body>
 </html>
