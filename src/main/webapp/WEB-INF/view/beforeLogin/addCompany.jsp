@@ -51,7 +51,7 @@
 </head>
 <body>
 	<h2>업체가입</h2>
-	<form action="${pageContext.request.contextPath}/addCompany" method="post" id="addForm">
+	<form action="${pageContext.request.contextPath}/beforeLogin/addCompany" method="post" id="addForm">
 		<table border="1">
 			<tr>
 				<th>ID</th>
@@ -71,7 +71,7 @@
 					<button type="button" id="emailCkBtn">인증번호 발송</button>
 					<div id="emailSendMsg" style="color: blue;"></div>
 				</td>
-				<th>Email 인증번호</th>
+				<th>인증번호</th>
 				<td>
 					<input type="text" id="codeCk" disabled>
 					<button type="button" id="codeCkBtn" disabled>인증번호 확인</button>

@@ -15,6 +15,16 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyService2 {
 	@Autowired CompanyMapper2 companyMapper;
 	
+	// 업체 아이디 조회
+	public String getCompanyIdByNameAndEmail(String companyEmail, String companyCeo) {
+		
+		Company com = new Company();
+		com.setCompanyEmail(companyEmail);
+		com.setCompanyCeo(companyCeo);
+		
+		return companyMapper.selectCompanyIdByNameAndEmail(com);
+	}
+	
 	// 업체 회원가입
 	public int addCompany(Company com) {
 		return companyMapper.insertCompany(com);
