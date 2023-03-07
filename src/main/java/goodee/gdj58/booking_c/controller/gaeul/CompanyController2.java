@@ -63,6 +63,6 @@ public class CompanyController2 {
 		log.debug(FontColor.BLUE+"로그인 성공, 세션에 정보 저장");
 		session.setAttribute("loginCompany", resultCompany);
 
-		return "success";
+		return "index";
 	}
 }

@@ -8,9 +8,17 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <style>
 	#resultId{
-		border:1px solid black;
+		background-color: #eeeeee;
 		width:200px;
 		height:100px;
+	}
+	#idHeader{
+		font-weight: strong;
+		text-aline: center;
+	}
+	#idBody{
+		color: red;
+		text-aline: center;
 	}
 </style>
 </head>
@@ -22,10 +30,11 @@
 			<th>이름(사업자명)</th>
 			<td>
 				<input type="text" id="name" name="companyCeo">
+				<div id="nameMsg" style="color: red;"></div>
 			</td>
 		</tr>
 		<tr>
-			<th>Email</th>
+			<th>이메일</th>
 			<td>
 				<input type="text" id="email" name="companyEmail">
 				<button type="button" id="emailCkBtn">인증번호 발송</button>
@@ -56,29 +65,34 @@
 	<div>
 		<a href="#">자주묻는 질문</a>
 	</div>
-	<script>
-		//이메일 인증
-		var code = ''; // 인증번호를 담을 변수
-		$('#emailCkBtn').click(function() {
-			$('#emailSendMsg').text('인증번호가 전송되었습니다. 전송된 인증번호를 입력해주세요.');
-			$('#codeCk').attr('disabled',false); // 인증번호 입력 활성화
-			$('#codeCkBtn').attr('disabled',false); // 인증확인 버튼 활성화
-			$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
-			
-			$.ajax({
-				url:'emailCk'
-				, type:'get'
-				, data:{companyEmail:$('#email').val()}
-				, success:function(model) {
-					code = model;
-					//console.log(code);
-				}			
-			});
-		});
+	
+<script>
+	//이메일 인증
+	var code = ''; // 인증번호를 담을 변수
+	$('#emailCkBtn').click(function() {	
+		$('#emailSendMsg').text('인증번호가 전송되었습니다. 전송된 인증번호를 입력해주세요.');
+		$('#codeCk').attr('disabled',false); // 인증번호 입력 활성화
+		$('#codeCkBtn').attr('disabled',false); // 인증확인 버튼 활성화
+		$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
 		
-		// 인증번호 비교
-		var ckResult = false; // 이메일 인증 성공 여부를 담을 변수 (false : 인증실패, true : 인증성공)
-		$('#codeCkBtn').click(function() {
+		$.ajax({
+			url:'emailCk'
+			, type:'get'
+			, data:{companyEmail:$('#email').val()}
+			, success:function(model) {
+				code = model;
+				//console.log(code);
+			}			
+		});
+	});
+	
+	// 인증번호 비교
+	var ckResult = false; // 이메일 인증 성공 여부를 담을 변수 (false : 인증실패, true : 인증성공)
+	$('#codeCkBtn').click(function() {
+		
+		if($('#name').val() == ''){
+			$('#nameMsg').text('이름을 입력해주세요.');
+		} else {
 			if($('#codeCk').val() == code){ // 인증번호 일치 시
 				$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
 				$('#codeCkBtn').attr('disabled',true); // 중복 인증 방지위한 버튼 비활성화
@@ -92,8 +106,8 @@
 					, success:function(model) {
 						var id = model;
 						var html = "<div id='resultId'>" + 
-										"<div><strong>아이디 조회결과</strong></div>"+
-										"<div style='color:red;'>"+id+"</div>"+
+										"<div id='idHeader'><strong>아이디 조회결과</strong></div>"+
+										"<div id='idbody'>"+id+"</div>"+
 									"</div>"
 						$('#a').append(html);
 					}
@@ -101,7 +115,10 @@
 			} else { // 인증번호 실패 시
 				alert('이메일 인증에 실패하였습니다.\n인증번호를 확인해주세요.');
 			}
-		});
-	</script>
+		}
+		
+		
+	});
+</script>
 </body>
 </html>

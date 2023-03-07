@@ -34,6 +34,15 @@
 				return;
 			}
 			
+
+			
+			$('#loginForm').submit();
+		});
+	});
+</script>
+</head>
+<body>
+<!-- 
 			var captcha = 1;
 			$.ajax({
 	            url:'/verifyRecaptcha'
@@ -58,16 +67,11 @@
 			if(captcha != 0) {
 				return false;
 			}
-			
-			// $('#loginForm').submit();
-		});
-	});
-</script>
-</head>
-<body>
+
+ -->
 	<button type=button id="test">dddd</button>
 	<h2>login company</h2>
-	<form action="${pageContext.request.contextPath}/loginCompany" method="post" id="loginForm">
+	<form action="${pageContext.request.contextPath}/beforeLogin/loginCompany" method="post" id="loginForm">
 		<!-- 로그인 폼 -->
 		<table>
 			<tr>
