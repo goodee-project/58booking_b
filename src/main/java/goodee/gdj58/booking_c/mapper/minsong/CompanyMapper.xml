@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper	namespace="goodee.gdj58.booking_c.mapper.minsong.CompanyMapper">
+	<insert id="insertCompanyOffdayOfWeek" parameterType="java.util.Map">
+		INSERT INTO booking_company_offday(booking_company_id
+												, booking_company_offday_date
+												, booking_company_offday_memo)
+		VALUES (#{companyId}
+					, ADDDATE(#{dayOfWeek}, INTERVAL #{cnt} DAY)
+					, '정기휴무')
+	</insert>
+	
+	<select id="selectCompanyOffdayOfWeek" parameterType="int" resultType="String">
+		WITH RECURSIVE CTE  AS (
+		        SELECT CURDATE() AS DT, dayofweek(CURDATE()) AS num
+				  FROM DUAL
+		        UNION ALL
+		        SELECT DATE_ADD(DT, INTERVAL 1 DAY), dayofweek(DATE_ADD(DT, INTERVAL 1 DAY))
+				  FROM CTE
+				<![CDATA[WHERE DT < ADDDATE(CURDATE(), INTERVAL 6 DAY)]]>
+		)
+		SELECT DT date FROM CTE
+		WHERE num = #{dayNo}
+	</select>
+	
+
 	<insert id="insertCompanyOffday" parameterType="goodee.gdj58.booking_c.vo.CompanyOffday">
 		INSERT INTO booking_company_offday( booking_company_id
 											, booking_company_offday_date

@@ -50,15 +50,21 @@
 			}
 		});
 	}
+
+	//function check(checkbox){
+    //	if(checkbox.checked == true){
+	//		console.log('클릭');
+	//   		calendar.addEvent({'title':'정기휴무', 'start':'2023-03-22'});	    		
+    //	}
+    //}
 </script>
 
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
 <script>
-
   document.addEventListener('DOMContentLoaded', function() {
-	//let date = '';
 	let arr = [];
 	let idx = 0;
+	
 	
     var calendarEl = document.getElementById('calendar');
     var request = $.ajax({
@@ -117,11 +123,18 @@
 	    	  }
 	      }
 	    });
-   		calendar.render();
+   	
+		calendar.render();
     });
   });
-
 </script>
+
+<script>
+</script>
+<style type="text/css">
+    .fc-day-number.fc-sat.fc-past { color:#0000FF; }     /* 토요일 */
+    .fc-day-number.fc-sun.fc-past { color:#FF0000; }    /* 일요일 */
+</style>
 </head>
 <body>
 	<form method="post" action="${pageContext.request.contextPath}/company/addCompanyDetail" id="form">
@@ -225,13 +238,13 @@
 		 	<div>
 		 		<div>정기 휴무(중복 선택 가능):</div>
 		 		<span>매주</span>
-		 		<input type="checkbox">월
-		 		<input type="checkbox">화
-		 		<input type="checkbox">수
-		 		<input type="checkbox">목
-		 		<input type="checkbox">금
-		 		<input type="checkbox">토
-		 		<input type="checkbox">일
+		 		<input type="checkbox" name="dayofweek" value="2">월	<!-- onClick="check(this)" -->
+		 		<input type="checkbox" name="dayofweek" value="3">화
+		 		<input type="checkbox" name="dayofweek" value="4">수
+		 		<input type="checkbox" name="dayofweek" value="5">목
+		 		<input type="checkbox" name="dayofweek" value="6">금
+		 		<input type="checkbox" name="dayofweek" value="7">토
+		 		<input type="checkbox" name="dayofweek" value="1">일
 		 	</div>
 		 	<div id='calendar'>
 		 	</div>

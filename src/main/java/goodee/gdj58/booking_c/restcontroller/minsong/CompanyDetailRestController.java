@@ -9,6 +9,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import goodee.gdj58.booking_c.service.minsong.CompanyService;
@@ -42,6 +44,13 @@ public class CompanyDetailRestController {
 		// 데이터 왔다갔다 하지 않고 등록눌렀을 때만 db에 넣고 싶음 -> PostMapping + ResponseBody 조합은 힘들듯
 		return list;
 	}
+//	@PostMapping("/offday")
+//	@ResponseBody
+//	public List<Map<String, Object>> getOffday(HttpSession session, Map<String, Object> paramMap){
+//		
+//		return list;
+//	}
+	
 	
 	// 업체 유형
 	@GetMapping("/companyType")

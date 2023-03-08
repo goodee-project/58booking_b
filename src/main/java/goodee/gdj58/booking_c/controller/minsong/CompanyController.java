@@ -30,13 +30,14 @@ public class CompanyController {
 		List<CompanyType> typeList = companyService.getCompanyTypeList();
 		log.debug(FontColor.PURPLE+"===============>"+typeList);
 		model.addAttribute("typeList", typeList);
-		return "addCompanyDetail";
+		return "companyDetail/addCompanyDetail";
 	}
 	@PostMapping("/company/addCompanyDetail")
 	public String addCompanyDetail(HttpSession session, CompanyDetail companyDetail
 									, @RequestParam(value="am_pm") String[] am_pm
 									, @RequestParam(value="companyOffdayDate") String[] companyOffdayDate
-									, @RequestParam(value="companyOffdayMemo") String[] companyOffdayMemo) {
+									, @RequestParam(value="companyOffdayMemo") String[] companyOffdayMemo
+									, @RequestParam(value="dayofweek") int[] dayofweek) {
 		// 1. CompanyDetail
 		// 아이디
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
@@ -74,7 +75,7 @@ public class CompanyController {
 		
 		// 2. CompanyOffday
 		row = 0;
-		
+
 		CompanyOffday companyOffday = new CompanyOffday();
 		companyOffday.setCompanyId(loginCompanyId);
 
@@ -86,11 +87,22 @@ public class CompanyController {
 			}
 		}
 		
-		// 요일별
-		
 		if(row == 0) {
 			return "company/addCompanyDetail";
 		}
+
+		// 요일별
+		for(int i = 0; i < dayofweek.length; i++) {
+			// 해당 요일의 날짜 구하기
+			String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
+			log.debug(FontColor.PURPLE+date+"<--------");
+			// 쿼리 돌리기
+			for(int j = 7; j < 365; j+=7) {
+				log.debug(FontColor.PURPLE+j+"요일 계산");
+				companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);
+			}
+		}
+			
 		
 		return "redirect:/company/addCompanyDetail";
 	}

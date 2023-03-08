@@ -1,6 +1,8 @@
 package goodee.gdj58.booking_c.service.minsong;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +22,25 @@ public class CompanyService {
 	@Autowired 
 	private CompanyMapper companyMapper;
 	
+	public int addCompanyOffdayOfWeek(String companyId, String dayOfWeek, int cnt) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("companyId", companyId);
+		paramMap.put("dayOfWeek", dayOfWeek);
+		paramMap.put("cnt", cnt);
+		return companyMapper.insertCompanyOffdayOfWeek(paramMap);
+	}
+	
+	public String getCompanyOffdayOfWeek(int dayNo) {
+		return companyMapper.selectCompanyOffdayOfWeek(dayNo);
+	}
+	
 	public int addCompanyOffday(CompanyOffday companyOffday) {
 		return companyMapper.insertCompanyOffday(companyOffday);
 	}
 	
 	public List<CompanyOffday> getCompanyOffdayList(String companyId){
-		log.debug(FontColor.PURPLE+"======service=========>"+companyId);
-		log.debug(FontColor.PURPLE+"======service=========>"+companyMapper.selectCompanyOffdayList(companyId));
+//		log.debug(FontColor.PURPLE+"======service=========>"+companyId);
+//		log.debug(FontColor.PURPLE+"======service=========>"+companyMapper.selectCompanyOffdayList(companyId));
 		return companyMapper.selectCompanyOffdayList(companyId);
 	}
 	
