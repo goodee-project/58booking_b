@@ -27,6 +27,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CompanyController3 {
 	@Autowired CompanyService3 companyService;
+	
+	
+	@GetMapping("/company/addProduct")
+	public String addProduct(HttpSession session) {
+		return "/product/addProduct";
+	}
 	// 예약관리
 	// 3) 취소
 	@PostMapping("/company/cancelBooking")
@@ -79,7 +85,7 @@ public class CompanyController3 {
 	// 4) 상세보기
 	@GetMapping("/company/questionOne")
 	public String getQuestionOne(Model model, @RequestParam(value = "questionNo") int questionNo) {
-		log.debug("\u001B[31m"+questionNo+"	<=questionNo");
+		log.debug(FontColor.GREEN +questionNo+"	<=questionNo");
 		List<Map<String, Object>> list = companyService.getQuestionOne(questionNo);
 		model.addAttribute("list", list);
 		return "questionOne";
@@ -90,7 +96,7 @@ public class CompanyController3 {
 	public String removeQuestion(int questionNo) {
 		int row = companyService.removeQuestion(questionNo);
 		if(row == 1) {
-			log.debug("\u001B[31m"+"문의 삭제성공");
+			log.debug(FontColor.GREEN +"문의 삭제성공");
 		}
 		return "redirect:/company/questionList";
 	}
@@ -103,7 +109,7 @@ public class CompanyController3 {
 		question.setId(id);
 		int row = companyService.addQeustion(question);
 		if(row == 1) {
-			log.debug("\u001B[31m"+"문의 등록성공");
+			log.debug(FontColor.GREEN +"문의 등록성공");
 		}
 		return "redirect:/company/questionList";
 	}
@@ -131,9 +137,9 @@ public class CompanyController3 {
 		model.addAttribute("beginPage", beginPage);
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("lastPage", lastPage);
-		log.debug("\u001B[31m" + beginPage + "  <=  beginPage");
-		log.debug("\u001B[31m" + endPage + "  <=  endPage");
-		log.debug("\u001B[31m" + lastPage + "  <=  lastPage");
+		log.debug(FontColor.GREEN + beginPage + "  <=  beginPage");
+		log.debug(FontColor.GREEN + endPage + "  <=  endPage");
+		log.debug(FontColor.GREEN + lastPage + "  <=  lastPage");
 		return "questionList";
 	}
 }

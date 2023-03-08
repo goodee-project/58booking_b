@@ -467,5 +467,5 @@
     <!-- Custom scripts for all pages-->
     <script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
 	
-</body>
+	</body>
 </html>

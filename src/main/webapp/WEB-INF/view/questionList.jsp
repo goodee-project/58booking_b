@@ -31,6 +31,7 @@
 		</script>
 	</head>
 	<body>
+		<jsp:include page="/WEB-INF/view/nav.jsp"></jsp:include>
 		<h3>문의사항 등록</h3>
 		<form id="questionForm" method="post" action="${pageContext.request.contextPath}/company/addQuestion">
 			<div>

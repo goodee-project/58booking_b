@@ -26,7 +26,6 @@ public class CompanyService3 {
 	public int addBookingCancel(Booking booking, BookingCancel bookingCancel) {
 		companyMapper.updateBooking(booking);
 		return companyMapper.insertBookingCancel(bookingCancel);
-		
 	}
 	
 	// 2) 상태변경
