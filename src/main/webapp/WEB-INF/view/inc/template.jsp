@@ -8,7 +8,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="Ansonika">
-		<title>예약 | 상품등록</title>
+		<title>예약 | 임시템플릿</title>
 		
 		<!-- Favicons-->
 		<link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath}/resources/admin_section/image/x-icon">
@@ -46,141 +46,19 @@
 		
 	  <div class="content-wrapper">
 	    <div class="container-fluid">
-	      <!-- Breadcrumbs-->
+    	  <!-- Breadcrumbs-->
 	      <ol class="breadcrumb">
 	        <li class="breadcrumb-item">
-	          <a href="#">Dashboard</a>
+	          <a href="${pageContext.request.contextPath}/index">Dashboard</a>
 	        </li>
 	        <li class="breadcrumb-item active">Add listing</li>
 	      </ol>
-			<div class="box_general padding_bottom">
-				<div class="header_box version_2">
-					<h2><i class="fa fa-file"></i>상품정보</h2>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>Photos</label>
-							<form action="/file-upload" class="dropzone dz-clickable">
-								<div class="dz-default dz-message">
-									<span>Drop files here to upload</span>
-								</div>
-							</form>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>미리보기 넣기</label>
-							<div>
-							
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /row-->
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>상품명</label>
-							<input type="text" class="form-control" name="productName" id="productName">
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>가격</label>
-							<input type="text" class="form-control" placeholder="상품가격" name="productPrice" id="productPrice">
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- /box_general-->
-			
-			<div class="box_general padding_bottom">
-				<div class="header_box version_2">
-					<h2><i class="fa fa-map-marker"></i>세부사항</h2>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>최소 인원</label>
-							<input type="text" class="form-control" value="1" name="productMinPeople" id="productMinPeople">
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>최대 인원</label>
-							<input type="text" class="form-control">
-						</div>
-					</div>
-				</div>
-				<!-- /row-->
-			</div>
-			<!-- /box_general-->
-			
-			<div class="box_general padding_bottom">
-				<div class="header_box version_2">
-					<h2><i class="fa fa-clock-o"></i>상품 휴무</h2>
-				</div>
-			</div>
-			<!-- /box_general-->
-			
-			<div class="box_general padding_bottom">
-				<div class="header_box version_2">
-					<h2><i class="fa fa-dollar"></i>옵션</h2>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<h6>option</h6>
-						<table id="pricing-list-container" style="width:100%;">
-							<tr class="pricing-list-item">
-								<td>
-									<div class="row">
-										<div class="col-md-4">
-											<div class="form-group">
-												<input type="text" class="form-control" placeholder="Title" name="productOptionName" id="productOptionName">
-											</div>
-										</div>
-										<div class="col-md-4">
-											<div class="form-group">
-												<input type="text" class="form-control" placeholder="Description" name="productOptionMemo" id="productOptionMemo">
-											</div>
-										</div>
-										<div class="col-md-2">
-											<div class="form-group">
-												<input type="text" class="form-control"  placeholder="Price" name="productOptionPrice" id="productOptionPrice">
-											</div>
-										</div>
-										<div class="col-md-2 d-flex align-items-center">
-											<div class="form-group">
-												<a class="delete" href="#"><i class="fa fa-fw fa-remove"></i></a>
-											</div>
-										</div>
-									</div>
-								</td>
-							</tr>
-						</table>
-						<a href="#0" class="btn_1 gray add-pricing-list-item"><i class="fa fa-fw fa-plus-circle"></i>Add Option</a>
-						</div>
-				</div>
-				<!-- /row-->
-			</div>
-			<!-- /box_general-->
-			<p><a href="#0" class="btn_1 medium">Save</a></p>
-		  </div>
-		  <!-- /.container-fluid-->
-	   	</div>
-	    <!-- /.container-wrapper-->
-	    <footer class="sticky-footer">
-	      <div class="container">
-	        <div class="text-center">
-	          <small>Copyright © PANAGEA 2021</small>
-	        </div>
-	      </div>
-	    </footer>
-	    <!-- Scroll to Top Button-->
-	    <a class="scroll-to-top rounded" href="#page-top">
-	      <i class="fa fa-angle-up"></i>
-	    </a>
+	    
+	    	
+	    	
+	    </div>
+	  </div>
+
 	    <!-- Logout Modal-->
 	    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	      <div class="modal-dialog" role="document">

@@ -24,6 +24,9 @@
             <li>
               <a href="${pageContext.request.contextPath}/company/addCompanyDetail">업체등록</a>
             </li>
+            <li>
+              <a href="${pageContext.request.contextPath}/company/customerList">고객관리</a>
+            </li>
           </ul>
         </li>
 		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="My listings">
