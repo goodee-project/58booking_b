@@ -11,9 +11,6 @@
     $(document).ready(function() {
         $("#input_imgs").change(handleImgsFilesSelect);
         
-	// 유효성 확인
-		
-	// 아이디, 비밀번호, 비밀번호 일치, 사진, 업체명, 업체 전번, 업체 주소, 사업자명, 사업자 번호, 은행, 계좌버노, 약과동의, 위도/경도
     }); 
 
     function handleImgsFilesSelect(e) {
@@ -21,6 +18,8 @@
         var filesArr = Array.prototype.slice.call(files);
 
         filesArr.forEach(function(f) {
+        	
+        	// 확장자 확인
             if(!f.type.match("image.*")) {
                 alert("확장자는 이미지 확장자만 가능합니다.");
                 return;
@@ -44,12 +43,22 @@
         margin-top: 50px;
     }
     .imgs_wrap img {
-        max-width: 200px;
+        width: 200px;
     }
 
 </style>
 </head>
 <body>
+
+<!-- 테스트 -->
+<form action="${pageContext.request.contextPath}/multiFileupload" method="post"
+	encType="multipart/form-data">
+	이름 : <input type="text" name="name"><br>
+	사진1 : <input type="file" name="pic"><br>
+	사진2 : <input type="file" name="pic"><br>
+	<button type="submit">등록</button>
+</form>
+
 	<h2>업체가입</h2>
 	<form action="${pageContext.request.contextPath}/beforeLogin/addCompany" method="post" id="addForm">
 		<table border="1">
@@ -65,42 +74,41 @@
 				</td>
 			</tr>
 			<tr>
-				<th>Email</th>
+				<th>이메일</th>
 				<td>
-					<input type="text" id="email" name="companyEmail">
+					<input type="text" id="email1" name="companyEmail1">
+					<span>@</span>
+					<select id="email2" name="companyEmail2">
+						<option value="gmail.com">gmail.com</option>
+						<option value="naver.com">naver.com</option>
+						<option value="daum.net">daum.net</option>
+						<option value="hanmail.net">hanmail.net</option>
+						<option value="nate.com">nate.com</option>
+					</select>
 					<button type="button" id="emailCkBtn">인증번호 발송</button>
-					<div id="emailSendMsg" style="color: blue;"></div>
 				</td>
 				<th>인증번호</th>
 				<td>
 					<input type="text" id="codeCk" disabled>
 					<button type="button" id="codeCkBtn" disabled>인증번호 확인</button>
-					<div id="emailResultMsg" style="color: green;"></div>
 				</td>
 			</tr>
 			<tr>
 				<th>PW</th>
-				<td>
+				<td colspan="3">
 					<input type="password" id="pw" name="companyPw">
-				</td>
-				<th>PW 확인</th>
-				<td>
-					<input type="password" id="pwCk">
 				</td>
 			</tr>
 			<tr>
 				<th>업체사진등록</th>
 				<td colspan="3">
-				
+					<!-- 사진등록 -->
 					<div>
 				        <input type="file" name="companyImg" id="input_imgs" multiple />
-				        
 				    </div>
-				 
+				 	<!-- 사진미리보기 -->
 				    <div>
-				        <div class="imgs_wrap">
-				            
-				        </div>
+				        <div class="imgs_wrap"></div>
 				    </div>
 				</td>
 			</tr>
@@ -190,55 +198,138 @@
 		<button type="button" id="addBtn">가입</button>
 	</form>
 <script>
-	// 아이디 중복확인
-	$('#idCkBtn').click(function(){
-		$.ajax({
-			url:'idCk' // 요청보낼 컨트롤러 맵핑주소
-			, type:'get' // 맵핑 방식
-			, data: {idCk:$('#idCk').val()} // 보낼 데이터
-			, success:function(model){ // model -> 컨트롤러(idCk)에서 받아오는 값
-				if(model=='yes'){
-					$('#id').val($('#idCk').val());
-				} else {
-					alert($('#idCk').val()+'는 사용중인 아이디입니다');
+	$(document).ready(function(){
+		// 아이디 중복확인
+		$('#idCkBtn').click(function(){
+			console.log('dd');
+			$.ajax({
+				url:'idCk' // 요청보낼 컨트롤러 맵핑주소
+				, type:'get' // 맵핑 방식
+				, data: {id:$('#idCk').val()} // 보낼 데이터
+				, success:function(model){ // model -> 컨트롤러(idCk)에서 받아오는 값
+					if(model=='yes'){
+						$('#id').val($('#idCk').val());
+					} else {
+						alert($('#idCk').val()+'는 사용중인 아이디입니다.');
+					}
 				}
+			});
+		});
+		
+		// 이메일 인증
+		var code = ''; // 인증번호를 담을 변수
+		$('#emailCkBtn').click(function() {
+			
+			if($('#email1').val() == ''){ // 이메일 유효성 확인
+				alert('이메일을 입력해주세요.');
+			} else {
+				$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
+				
+				$.ajax({
+					url:'emailCk'
+					, type:'get'
+					, data:{companyEmail1:$('#email1').val(), companyEmail2:$('#email2').val()}
+					, success:function(model) {
+						code = model;
+						console.log(code);
+						
+						if(code == 'fail'){
+							alert('인증번호 전송에 실패하였습니다. 입력한 이메일을 확인해주세요.');
+							$('#email').attr('disabled',false); // 입력 재활성화
+							$('#emailCkBtn').attr('disabled',false); // 버튼 재활성화
+						} else {
+							alert('인증번호가 전송되었습니다. 전송된 인증번호를 입력해주세요.');
+							$('#codeCk').attr('disabled',false); // 인증번호 입력 활성화
+							$('#codeCkBtn').attr('disabled',false); // 인증확인 버튼 활성화
+							$('#email1').attr('disabled',true); // 중복 전송 방지위한 비활성화 + 인증완료 시 수정 방지
+							$('#email2').attr('disabled',true);
+						}
+					}			
+				});
 			}
 		});
-	});
-	
-	// 이메일 인증
-	var code = ''; // 인증번호를 담을 변수
-	$('#emailCkBtn').click(function() {
-		$('#emailSendMsg').text('인증번호가 전송되었습니다. 전송된 인증번호를 입력해주세요.');
-		$('#codeCk').attr('disabled',false); // 인증번호 입력 활성화
-		$('#codeCkBtn').attr('disabled',false); // 인증확인 버튼 활성화
-		$('#email').attr('disabled',true); // 중복 전송 방지위한 비활성화 + 인증완료 시 수정 방지
-		$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
 		
-		$.ajax({
-			url:'emailCk'
-			, type:'get'
-			, data:{companyEmail:$('#email').val()}
-			, success:function(model) {
-				code = model;
-				//console.log(code);
-			}			
+		// 인증번호 비교
+		var ckResult = false; // 이메일 인증 성공 여부를 담을 변수 (false : 인증실패, true : 인증성공)
+		$('#codeCkBtn').click(function() {
+			if($('#codeCk').val() == code){ // 인증번호 일치 시
+				$('#email1').attr('disabled',true);
+				$('#email2').attr('disabled',true);
+				$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
+				$('#codeCkBtn').attr('disabled',true); // 중복 인증 방지위한 버튼 비활성화
+				alert('이메일 인증에 성공하였습니다.');
+				ckResult = true;
+				console.log(ckResult);
+			} else { // 인증번호 실패 시
+				alert('이메일 인증에 실패하였습니다.\n인증번호를 확인해주세요.');
+			}
 		});
-	});
-	
-	// 인증번호 비교
-	var ckResult = false; // 이메일 인증 성공 여부를 담을 변수 (false : 인증실패, true : 인증성공)
-	$('#codeCkBtn').click(function() {
-		if($('#codeCk').val() == code){ // 인증번호 일치 시
-			$('#email').attr('disabled',true); // 중복 전송 방지위한 비활성화 + 인증완료 시 수정 방지
-			$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
-			$('#codeCk').attr('disabled',true); // 인증번호 입력 활성화
-			$('#codeCkBtn').attr('disabled',true); // 중복 인증 방지위한 버튼 비활성화
-			alert('이메일 인증에 성공하였습니다.');
-			ckResult = true;
-		} else { // 인증번호 실패 시
-			alert('이메일 인증에 실패하였습니다.\n인증번호를 확인해주세요.');
-		}
+		
+		// 유효성 확인 후 폼 제출
+		var allChecked = false; // 함수 결과값
+		$('#addBtn').click(function(){
+			console.log(formCheck());
+			if(allChecked){
+				$('#addForm').submit();
+			}
+		});
+		
+		// 유효성 확인 함수
+		formCheck = function(){
+			var radioCk = $('input:radio[name=agree]').is(":checked");
+			
+			if($('#id').val() == ''){ // 아이디
+				alert('아이디를 입력해주세요.');
+				return false;
+			} else if ($('#pw').val() == ''){ // 비밀번호
+				alert('비밀번호를 입력해주세요.');
+				return false;
+			} else if (ckResult == false){ // 이메일
+				alert('이메일 인증을 해주세요.');
+				return false;
+			} else if ($('#id').val() == ''){ // 이미지
+				alert('아이디를 입력해주세요.');
+				return false;
+			} else if ($('#name').val() == ''){ // 업체명
+				alert('업체명을 입력해주세요.');
+				return false;
+			} else if ($('#phone').val() == ''){ // 업체전화번호
+				alert('업체전화번호를 입력해주세요.');
+				return false;
+			} else if ($('#address').val() == ''){ // 업체주소
+				alert('업체주소를 입력해주세요.');
+				return false;
+			} else if ($('#ceo').val() == ''){ // 사업자명
+				alert('사업자명을 입력해주세요.');
+				return false;
+			} else if ($('#number').val() == ''){ // 사업자번호
+				alert('사업자번호를 입력해주세요.');
+				return false;
+			} else if ($('#bank').val() == ''){ // 은행
+				alert('은행을 입력해주세요.');
+				return false;
+			} else if ($('#account').val() == ''){ // 계좌번호
+				alert('계좌번호를 입력해주세요.');
+				return false;
+			} else if (!radioCk){ // 약관동의
+				alert('약관동의 여부를 선택해주세요.');
+				return false;
+			} else if ($('.agree:checked').val() == '미동의'){ // 약관동의
+				alert('약관에 동의해야만 가입이 가능합니다.');
+				return false;
+			} else if ($('#la').val() == ''){ // 위도
+				alert('위도를 입력해주세요.');
+				return false;
+			} else if ($('#long').val() == ''){ // 경도
+				alert('경도를 입력해주세요.');
+				return false;
+			} else {
+				allChecked = true;
+	    		return true;
+	    	}
+		};
+		
+		// 아이디, 비밀번호, 비밀번호 일치, 사진, 업체명, 업체 전번, 업체 주소, 사업자명, 사업자 번호, 은행, 계좌버노, 약과동의, 위도/경도
 	});
 </script>
 </body>

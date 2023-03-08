@@ -37,13 +37,8 @@ public class CompanyService2 {
 	}
 	
 	// 업체 이메일 조회
-	public int getCompanyEmailBuEmail(String companyEmail1, String companyEmail2) {
-		
-		// 이메일 가공
-		String comEmail = companyEmail1 + "@" + companyEmail2;
-		log.debug(FontColor.BLUE+"조회 email : "+comEmail);
-		
-		return companyMapper.selectCompanyEmailByEmail(comEmail);
+	public int getCompanyEmail(Company com) {
+		return companyMapper.selectCompanyEmail(com);
 	}
 	
 	// 업체 회원가입

@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,12 +24,11 @@ public class CompanyLoginFilter implements Filter{
 		
 		log.debug("\u001B[31m"+"CompanyLoginFilter");
 		
-		
 		if(request instanceof HttpServletRequest) {
 			HttpServletRequest req = (HttpServletRequest)request;
 			HttpSession session = req.getSession();
 			if(session.getAttribute("loginCompany") == null) {
-				((HttpServletResponse)response).sendRedirect(req.getContextPath()+"/loginCompany");
+				((HttpServletResponse)response).sendRedirect(req.getContextPath()+"/beforeLogin/loginCompany");
 				return;
 			} else {
 				log.debug("웹브라우저 요청만 허용됩니다.");
@@ -36,7 +36,6 @@ public class CompanyLoginFilter implements Filter{
 			}
 				
 		}
-		
 		chain.doFilter(request, response);
 	}
 

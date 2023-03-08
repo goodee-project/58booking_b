@@ -44,9 +44,9 @@ public class CompanyController2 {
 		int row = companyService.modifyCompanyPw(com.getCompanyEmail(), com.getCompanyId(), com.getCompanyPw());
 		if(row == 0) {
 			log.debug(FontColor.BLUE+"비밀번호 변경실패");
-			return "redirect:/beforeLogin/modifyCompanyPw";
+			return "beforeLogin/findCompanyPw"; // 변경 실패시 이메일 다시 인증
 		}
-		
+		log.debug(FontColor.BLUE+"비밀번호 변경성공");
 		return "success";
 	}
 	

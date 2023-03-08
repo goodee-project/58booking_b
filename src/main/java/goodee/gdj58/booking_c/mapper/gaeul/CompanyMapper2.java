@@ -15,7 +15,7 @@ public interface CompanyMapper2 {
 	String selectCompanyIdByNameAndEmail(Company com);
 	
 	// 업체 이메일 조회
-	int selectCompanyEmailByEmail(String comEmail);
+	int selectCompanyEmail(Company com);
 	
 	// 업체 회원가입
 	int insertCompany(Company com);

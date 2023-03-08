@@ -20,12 +20,20 @@
 	</select>
 	
 	<!-- 업체 이메일 조회 -->
-	<select id="selectCompanyEmailByEmail"
+	<select id="selectCompanyEmail"
 			resultType="Integer"
-			parameterType="java.lang.String">
+			parameterType="goodee.gdj58.booking_c.vo.Company">
 		SELECT COUNT(booking_company_email) cnt
 		FROM booking_company
-		WHERE booking_company_email = #{paramComEmail}
+		WHERE booking_company_email = #{companyEmail}
+		<choose>
+			<when test="companyId != null and companyCeo == null">
+				AND booking_company_id = #{companyId}
+			</when>
+			<when test="companyCeo != null and companyId == null">
+				AND booking_company_ceo = #{companyCeo}
+			</when>
+		</choose>
 	</select>
 
 	<!-- 업체 회원가입 -->

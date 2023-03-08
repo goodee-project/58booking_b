@@ -20,13 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MailSendService {
 	
 	// 이메일 전송
-	public String makeEmail(String companyEmail1, String companyEmail2){
+	public String makeEmail(String companyEmail){
 		
 		JavaMailSender mailSender = MailConfig.getMailSender();
-		
-		// 이메일 가공
-		String companyEmail = companyEmail1 + "@" + companyEmail2;
-		log.debug(FontColor.BLUE+"가공 email : "+companyEmail);
 		
 		// 1. 인증번호에 사용할 6자리 난수 생성(111111 ~ 999999)
 		int randomNum = ThreadLocalRandom.current().nextInt(100000, 1000000);

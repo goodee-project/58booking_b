@@ -35,8 +35,8 @@
 <body>
 	<h2>비밀번호 변경</h2>
 	<form action="${pageContext.request.contextPath}/beforeLogin/modifyCompanyPw" method="post" id="modiForm">
-		<input type="hidden" name="companyId" value="id">
-		<input type="hidden" name="companyEmail" value="email">
+		<input type="hidden" name="companyId" value="${id}">
+		<input type="hidden" name="companyEmail" value="${email}">
 		<table>
 			<tr>
 				<td><div id="msg" style="color:red;"></div></td>
