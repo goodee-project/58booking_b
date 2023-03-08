@@ -20,6 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyController2 {
 	@Autowired CompanyService2 companyService;
 	
+	// test
+	@GetMapping("/test")
+	public String test() {	
+		return "beforeLogin/test";
+	}
+	
 	// 업체 비밀번호 변경
 	@GetMapping("/beforeLogin/modifyCompanyPw")
 	public String findCompanyPw(Model model,

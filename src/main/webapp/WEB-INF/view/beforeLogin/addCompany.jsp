@@ -5,13 +5,47 @@
 <head>
 <meta charset="UTF-8">
 <title>예약 | 업체가입</title>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script>
 	var sel_files = [];
     $(document).ready(function() {
+    	
+        // 첫번째 사진 추가
+        $('#inputImgBtn0').click(function(){ // 0버튼 눌리면
+            $('#inputImg0').click(); // input0 열기
+        });
+    	$('#inputImg0').change(function() { // 두번째 파일 등록 위한 동적 버튼 생성
+			var tag0 = "<input type='file' name='companyImg' accept='image/*' id='inputImg1' style='display:none;'>" +
+						"<button type='button' id='inputImgBtn1'>사진추가</button>" +
+						"<span id='fileName1'></span>";
+			$('#target0').html(tag0);
+			$('#fileName0').html($('#inputImg0').val()); // 파일 이름
+		});
+		
+		// 두번째 사진 추가
+		$(document).on('click', '#inputImgBtn1', function() {
+			$('#inputImg1').click(); // input1 열기
+			
+			$('#inputImg1').change(function() { // 세번째 파일 등록 위한 동적 버튼 생성
+				var tag1 = "<input type='file' name='companyImg' accept='image/*' id='inputImg2' style='display:none;'>" +
+							"<button type='button' id='inputImgBtn2'>사진추가</button>" +
+							"<span id='fileName2'></span>";
+				$('#target1').html(tag1);
+				$('#fileName1').html($('#inputImg1').val());
+			});
+		});
+		
+		// 세번째 사진 추가
+		$(document).on('click', '#inputImgBtn2', function() {
+			$('#inputImg2').click(); // input2 열기
+			
+			$('#inputImg2').change(function() { // 세번째 파일 등록 위한 동적 버튼 생성
+				$('#fileName2').html($('#inputImg2').val());
+			});
+		});
+
         $("#input_imgs").change(handleImgsFilesSelect);
-        
-    }); 
+    });
 
     function handleImgsFilesSelect(e) {
         var files = e.target.files;
@@ -34,7 +68,7 @@
                 $(".imgs_wrap").append(img_html);
             }
             reader.readAsDataURL(f);
-        });
+    	});
     }
 </script>
 <style type="text/css">
@@ -51,16 +85,52 @@
 <body>
 
 <!-- 테스트 -->
-<form action="${pageContext.request.contextPath}/multiFileupload" method="post"
-	encType="multipart/form-data">
-	이름 : <input type="text" name="name"><br>
-	사진1 : <input type="file" name="pic"><br>
-	사진2 : <input type="file" name="pic"><br>
-	<button type="submit">등록</button>
-</form>
-
+	<!-- 사진 등록 인풋 -->
+	<!-- 
+		파일 인풋 디스플레이 논 accept="image/jpeg, image/png"
+		버튼 만들어서 인풋 형식 안보이고 등록 가능하게
+		
+		동적버튼 생성
+		
+		// 사진 추가
+		$(function () {
+			// 파일추가 버튼
+			$('#btn-upload0').click(function (e) {
+		        e.preventDefault();
+		        $('#input_file0').click(); // 파일 input 열기
+		    });
+			$('#input_file0').change(function(e) { // 동적 버튼 생성
+				e.preventDefault();
+				$('#fileName0').html($('#input_file0').get(0).files[0].name);	// 파일 이름
+				$('#target').html(`<button id="btn-upload1" type="button" class="btn btn-sm btn-primary mb-1 h-100">파일 추가</button>
+				<input type="file" name="addedFilename1" accept="image/jpeg, image/png" style="display:none;" id="input_file1"> <span id="fileName1"></span>`);			
+			})
+			
+			// 생성된 동적버튼 1 
+			$(document).on('click', '#btn-upload1', function(e) {
+				e.preventDefault();
+				$('#input_file1').click(); // 파일 input 열기
+				
+				$('#input_file1').change(function() { // 동적 버튼 생성
+					$('#fileName1').html($('#input_file1').get(0).files[0].name);	// 파일 이름
+					$('#target1').html(`<button id="btn-upload2" type="button" class="btn btn-sm btn-primary h-100">파일 추가</button>
+					<input type="file" name="addedFilename2" accept="image/jpeg, image/png" style="display:none;" id="input_file2"> <span id="fileName2"></span>`);			
+				})
+			});
+			
+			// 생성된 동적버튼 2
+			$(document).on('click', '#btn-upload2', function(e) {
+				e.preventDefault();
+				$('#input_file2').click(); // 파일 input 열기
+				
+				$('#input_file2').change(function() {
+					$('#fileName2').html($('#input_file2').get(0).files[0].name);	// 파일 이름		
+				})
+			});
+	   	});
+	 -->
 	<h2>업체가입</h2>
-	<form action="${pageContext.request.contextPath}/beforeLogin/addCompany" method="post" id="addForm">
+	<form action="${pageContext.request.contextPath}/beforeLogin/addCompany" method="post" encType="multipart/form-data" id="addForm">
 		<table border="1">
 			<tr>
 				<th>ID</th>
@@ -104,8 +174,13 @@
 				<td colspan="3">
 					<!-- 사진등록 -->
 					<div>
-				        <input type="file" name="companyImg" id="input_imgs" multiple />
+				        <input type="file" name="companyImg" accept="image/*" id="inputImg0" style="display:none;">
+				        <button type="button" id="inputImgBtn0">사진등록</button>
+				        <span id="fileName0"></span>
 				    </div>
+				    <div id="target0"></div>
+				    <div id="target1"></div>
+				    
 				 	<!-- 사진미리보기 -->
 				    <div>
 				        <div class="imgs_wrap"></div>

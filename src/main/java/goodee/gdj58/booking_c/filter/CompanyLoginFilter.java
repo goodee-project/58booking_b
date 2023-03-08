@@ -30,12 +30,12 @@ public class CompanyLoginFilter implements Filter{
 			if(session.getAttribute("loginCompany") == null) {
 				((HttpServletResponse)response).sendRedirect(req.getContextPath()+"/beforeLogin/loginCompany");
 				return;
-			} else {
-				log.debug("웹브라우저 요청만 허용됩니다.");
-				return;
 			}
-				
+		} else {
+			log.debug("웹브라우저 요청만 허용됩니다.");
+			return;
 		}
+
 		chain.doFilter(request, response);
 	}
 
