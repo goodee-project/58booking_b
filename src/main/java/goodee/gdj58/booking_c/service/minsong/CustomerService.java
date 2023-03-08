@@ -16,8 +16,8 @@ public class CustomerService {
 	@Autowired
 	private CustomerMapper customerMapper;
 
-	public int getCustomerCount() {
-		return customerMapper.selectCustomerCount();
+	public int getCustomerCount(String companyId) {
+		return customerMapper.selectCustomerCount(companyId);
 	}
 	
 	// String loginCompanyId

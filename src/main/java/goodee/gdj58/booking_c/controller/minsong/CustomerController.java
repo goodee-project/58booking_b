@@ -30,7 +30,7 @@ public class CustomerController {
 		List<Map<String, Object>> list = customerService.getCustomerList(currentPage, rowPerPage, orderKind, loginCompanyId);
 		int startPage = ((currentPage-1)/rowPerPage)*rowPerPage+1;
 		int endPage = startPage + rowPerPage - 1;
-		int lastPage = (int)Math.ceil(customerService.getCustomerCount()/(double)rowPerPage);
+		int lastPage = (int)Math.ceil(customerService.getCustomerCount(loginCompanyId)/(double)rowPerPage);
 		if(endPage > lastPage) {
 			endPage = lastPage;
 		}
@@ -41,6 +41,7 @@ public class CustomerController {
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("lastPage", lastPage);
+
 		return "customerList";
 	}
 }

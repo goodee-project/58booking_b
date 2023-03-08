@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.minsong.CustomerMapper">
-	<select id="selectCustomerCount" resultType="int">
+	<select id="selectCustomerCount" resultType="int" parameterType="String">
 		SELECT COUNT(*)
-		FROM customer c INNER JOIN booking b ON c.customer_id = b.customer_id
-		WHERE b.booking_company_id = #{loginCompanyId}
+		FROM customer c 
+				INNER JOIN booking b ON c.customer_id = b.customer_id
+				INNER JOIN total_id ti ON c.customer_id = ti.id 
+		WHERE b.booking_company_id = #{loginCompanyId} AND ti.total_id_deactive_memo IS NULL
 	</select>
 	
 	<select id="selectCustomerList" resultType="java.util.Map" parameterType="java.util.Map">
 		SELECT c.customer_id customerId
 				, c.customer_name customerName
 				, (SELECT COUNT(*) FROM booking WHERE customer_id = c.customer_id AND (booking_state = '예약확정' OR booking_state = '방문완료') AND booking_company_id=#{loginCompanyId}) bookingCount
-				, (SELECT COUNT(*) FROM booking WHERE customer_id = c.customer_id AND (booking_state = '취소' OR booking_state = '환불') AND booking_company_id=#{loginCompanyId}) cancelCount
+				, (SELECT COUNT(*) FROM booking WHERE customer_id = c.customer_id AND (booking_state = '취소') AND booking_company_id=#{loginCompanyId}) cancelCount
 				, (SELECT COUNT(*) FROM booking b INNER JOIN review r ON b.booking_no = r.booking_no WHERE b.customer_id = c.customer_id AND b.booking_company_id=#{loginCompanyId})  reviewCount
 				, IFNULL((SELECT SUM(booking_price) FROM booking WHERE customer_id = c.customer_id AND (booking_state = '예약확정' OR booking_state = '방문완료') AND booking_company_id=#{loginCompanyId}), 0) bookingTotalPrice
 				, c.customer_rank customerRank
-		FROM customer c INNER JOIN booking b ON c.customer_id = b.customer_id
-		WHERE b.booking_company_id = #{loginCompanyId}
+		FROM customer c 
+				INNER JOIN booking b ON c.customer_id = b.customer_id
+				INNER JOIN total_id ti ON c.customer_id = ti.id 
+		WHERE b.booking_company_id = #{loginCompanyId} AND ti.total_id_deactive_memo IS NULL
 		GROUP BY c.customer_id
 		<trim prefix="ORDER BY">
 			<if test="orderKind == 'bookingCountASC'">  bookingCount ASC </if>

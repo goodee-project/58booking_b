@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CustomerMapper {
-	int selectCustomerCount();
+	int selectCustomerCount(String companyId);
 	List<Map<String, Object>> selectCustomerList(Map<String, Object> paramMap);
 }
