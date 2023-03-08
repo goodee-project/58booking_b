@@ -35,9 +35,9 @@ public class CompanyController {
 	@PostMapping("/company/addCompanyDetail")
 	public String addCompanyDetail(HttpSession session, CompanyDetail companyDetail
 									, @RequestParam(value="am_pm") String[] am_pm
-									, @RequestParam(value="companyOffdayDate") String[] companyOffdayDate
-									, @RequestParam(value="companyOffdayMemo") String[] companyOffdayMemo
-									, @RequestParam(value="dayofweek") int[] dayofweek) {
+									, @RequestParam(value="companyOffdayDate", required = false) String[] companyOffdayDate
+									, @RequestParam(value="companyOffdayMemo", required = false) String[] companyOffdayMemo
+									, @RequestParam(value="dayofweek", required = false) int[] dayofweek) {
 		// 1. CompanyDetail
 		// 아이디
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
@@ -62,6 +62,12 @@ public class CompanyController {
 				}
 			}
 		}
+		
+		// 부가 서비스 해당 없음
+		if(companyDetail.getAdditionService() == null) {
+			companyDetail.setAdditionService("해당없음");
+		}
+		
 		log.debug(FontColor.PURPLE+"========유형=======>"+companyDetail.getCompanyTypeContent());
 		log.debug(FontColor.PURPLE+"========개장======>"+companyDetail.getOpenTime());
 		log.debug(FontColor.PURPLE+"========마감=======>"+companyDetail.getCloseTime());
@@ -79,31 +85,35 @@ public class CompanyController {
 		CompanyOffday companyOffday = new CompanyOffday();
 		companyOffday.setCompanyId(loginCompanyId);
 
-		for(int i = 0; i < companyOffdayDate.length; i++) {
-			if(!companyOffdayDate[i].equals("")) {
-				companyOffday.setCompanyOffdayDate(companyOffdayDate[i]);
-				companyOffday.setCompanyOffdayMemo(companyOffdayMemo[i]);
-				row += companyService.addCompanyOffday(companyOffday);
+		if(companyOffdayDate != null) {			
+			for(int i = 0; i < companyOffdayDate.length; i++) {
+				if(!companyOffdayDate[i].equals("")) {
+					companyOffday.setCompanyOffdayDate(companyOffdayDate[i]);
+					companyOffday.setCompanyOffdayMemo(companyOffdayMemo[i]);
+					row += companyService.addCompanyOffday(companyOffday);
+				}
+			}
+			
+			if(row == 0) {
+				return "company/addCompanyDetail";
 			}
 		}
 		
-		if(row == 0) {
-			return "company/addCompanyDetail";
-		}
 
 		// 요일별
-		for(int i = 0; i < dayofweek.length; i++) {
-			// 해당 요일의 날짜 구하기
-			String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
-			log.debug(FontColor.PURPLE+date+"<--------");
-			// 쿼리 돌리기
-			for(int j = 7; j < 365; j+=7) {
-				log.debug(FontColor.PURPLE+j+"요일 계산");
-				companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);
+		if(dayofweek != null) {			
+			for(int i = 0; i < dayofweek.length; i++) {
+				// 해당 요일의 날짜 구하기
+				String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
+				log.debug(FontColor.PURPLE+date+"<--------");
+				// 쿼리 돌리기
+				for(int j = 0; j < 365; j+=7) {
+					log.debug(FontColor.PURPLE+j+"요일 계산");
+					companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);
+				}
 			}
 		}
 			
-		
 		return "redirect:/company/addCompanyDetail";
 	}
 }

@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>예약 | 업체 등록</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
 <script>
 	function changeType(value){
 		let typeNo = value;
@@ -57,10 +58,8 @@
 	//   		calendar.addEvent({'title':'정기휴무', 'start':'2023-03-22'});	    		
     //	}
     //}
-</script>
 
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
-<script>
+  // fullCalendar
   document.addEventListener('DOMContentLoaded', function() {
 	let arr = [];
 	let idx = 0;
@@ -79,16 +78,23 @@
 	      , selectable: true
 	      , events: data
 	      , dateClick: function(info) { 
+	    	  // 휴무 사유 유효성 검사 후		    		  
+	    	  if($('#memo').val().length < 1 || $('#memo').val().trim() == ''){	
+				alert('휴무 사유를 입력해 주세요.');
+	    		return;
+	    	  }
+	    	  
 	    	  if(!arr.includes(info.dateStr)){
 		    	  calendar.addEvent({'title':$('#memo').val(), 'start': info.dateStr});
 		    	  arr.push(info.dateStr);
 		    	  
-		    	  let offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+info.dateStr+"' id='offday"+idx+"'>";
-			      $('#targetCal').append(offday);
-			      let reason = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+$('#memo').val()+"' id='reason"+idx+"'>";
-			      $('#targetCal').append(reason);
-			      
-			      idx++;
+		    	    // 나중에 hidden으로 바꾸기
+			    	let offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+info.dateStr+"' id='offday"+idx+"'>";
+				    $('#targetCal').append(offday);
+				    let reason = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+$('#memo').val()+"' id='reason"+idx+"'>";
+				    $('#targetCal').append(reason);
+				      
+				    idx++;
 	    	  }
 	    	  
 		    	//date = info.dateStr
@@ -131,10 +137,6 @@
 
 <script>
 </script>
-<style type="text/css">
-    .fc-day-number.fc-sat.fc-past { color:#0000FF; }     /* 토요일 */
-    .fc-day-number.fc-sun.fc-past { color:#FF0000; }    /* 일요일 */
-</style>
 </head>
 <body>
 	<form method="post" action="${pageContext.request.contextPath}/company/addCompanyDetail" id="form">
