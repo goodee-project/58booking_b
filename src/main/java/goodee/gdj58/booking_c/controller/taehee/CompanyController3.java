@@ -28,11 +28,25 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyController3 {
 	@Autowired CompanyService3 companyService;
 	
+	// 상품관리
+	// 3) 수정
 	
+	// 2) 목록
+	@GetMapping("/company/productList")
+	public String getProduct(HttpSession session) {
+		return "/product/productList";
+	}
+	
+	// 1) 등록
 	@GetMapping("/company/addProduct")
 	public String addProduct(HttpSession session) {
 		return "/product/addProduct";
 	}
+	@PostMapping("/company/addProduct")
+	public String addProduct() {
+		return "redirect:/company/productList";
+	}
+	
 	// 예약관리
 	// 3) 취소
 	@PostMapping("/company/cancelBooking")
