@@ -7,31 +7,35 @@
 <title>예약 | 업체가입</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script>
-	var sel_files = [];
     $(document).ready(function() {
-    	
         // 첫번째 사진 추가
         $('#inputImgBtn0').click(function(){ // 0버튼 눌리면
             $('#inputImg0').click(); // input0 열기
         });
-    	$('#inputImg0').change(function() { // 두번째 파일 등록 위한 동적 버튼 생성
+        
+    	$('#inputImg0').change(function(e) { // 두번째 파일 등록 위한 동적 버튼 생성
 			var tag0 = "<input type='file' name='companyImg' accept='image/*' id='inputImg1' style='display:none;'>" +
-						"<button type='button' id='inputImgBtn1'>사진추가</button>" +
-						"<span id='fileName1'></span>";
+						"<button type='button' id='inputImgBtn1'>사진등록</button>";
 			$('#target0').html(tag0);
-			$('#fileName0').html($('#inputImg0').val()); // 파일 이름
+			
+			// 이미지 미리보기
+			var tmp = e.target.files[0];
+			var img = URL.createObjectURL(tmp);
+			$('#img0').attr('src', img);
 		});
 		
 		// 두번째 사진 추가
 		$(document).on('click', '#inputImgBtn1', function() {
 			$('#inputImg1').click(); // input1 열기
 			
-			$('#inputImg1').change(function() { // 세번째 파일 등록 위한 동적 버튼 생성
+			$('#inputImg1').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
 				var tag1 = "<input type='file' name='companyImg' accept='image/*' id='inputImg2' style='display:none;'>" +
-							"<button type='button' id='inputImgBtn2'>사진추가</button>" +
-							"<span id='fileName2'></span>";
+							"<button type='button' id='inputImgBtn2'>사진등록</button>";
 				$('#target1').html(tag1);
-				$('#fileName1').html($('#inputImg1').val());
+				
+				var tmp = e.target.files[0];
+				var img = URL.createObjectURL(tmp);
+				$('#img1').attr('src', img);
 			});
 		});
 		
@@ -39,103 +43,37 @@
 		$(document).on('click', '#inputImgBtn2', function() {
 			$('#inputImg2').click(); // input2 열기
 			
-			$('#inputImg2').change(function() { // 세번째 파일 등록 위한 동적 버튼 생성
-				$('#fileName2').html($('#inputImg2').val());
+			$('#inputImg2').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
+				var tmp = e.target.files[0];
+				var img = URL.createObjectURL(tmp);
+				$('#img2').attr('src', img);
 			});
-		});
-
-        $("#input_imgs").change(handleImgsFilesSelect);
+		});        
     });
-
-    function handleImgsFilesSelect(e) {
-        var files = e.target.files;
-        var filesArr = Array.prototype.slice.call(files);
-
-        filesArr.forEach(function(f) {
-        	
-        	// 확장자 확인
-            if(!f.type.match("image.*")) {
-                alert("확장자는 이미지 확장자만 가능합니다.");
-                return;
-            }
-
-            sel_files.push(f);
-
-         	// 업로드한 이미지를 미리보기 위해서는 FileReader 객체를 사용
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var img_html = "<img src=\"" + e.target.result + "\" />";
-                $(".imgs_wrap").append(img_html);
-            }
-            reader.readAsDataURL(f);
-    	});
-    }
 </script>
 <style type="text/css">
     .imgs_wrap {
-        width: 600px;
-        margin-top: 50px;
+
     }
     .imgs_wrap img {
         width: 200px;
+    }
+    .upload_btn {
+		width: 200px;
+    	text-align: center;
     }
 
 </style>
 </head>
 <body>
-
-<!-- 테스트 -->
-	<!-- 사진 등록 인풋 -->
-	<!-- 
-		파일 인풋 디스플레이 논 accept="image/jpeg, image/png"
-		버튼 만들어서 인풋 형식 안보이고 등록 가능하게
-		
-		동적버튼 생성
-		
-		// 사진 추가
-		$(function () {
-			// 파일추가 버튼
-			$('#btn-upload0').click(function (e) {
-		        e.preventDefault();
-		        $('#input_file0').click(); // 파일 input 열기
-		    });
-			$('#input_file0').change(function(e) { // 동적 버튼 생성
-				e.preventDefault();
-				$('#fileName0').html($('#input_file0').get(0).files[0].name);	// 파일 이름
-				$('#target').html(`<button id="btn-upload1" type="button" class="btn btn-sm btn-primary mb-1 h-100">파일 추가</button>
-				<input type="file" name="addedFilename1" accept="image/jpeg, image/png" style="display:none;" id="input_file1"> <span id="fileName1"></span>`);			
-			})
-			
-			// 생성된 동적버튼 1 
-			$(document).on('click', '#btn-upload1', function(e) {
-				e.preventDefault();
-				$('#input_file1').click(); // 파일 input 열기
-				
-				$('#input_file1').change(function() { // 동적 버튼 생성
-					$('#fileName1').html($('#input_file1').get(0).files[0].name);	// 파일 이름
-					$('#target1').html(`<button id="btn-upload2" type="button" class="btn btn-sm btn-primary h-100">파일 추가</button>
-					<input type="file" name="addedFilename2" accept="image/jpeg, image/png" style="display:none;" id="input_file2"> <span id="fileName2"></span>`);			
-				})
-			});
-			
-			// 생성된 동적버튼 2
-			$(document).on('click', '#btn-upload2', function(e) {
-				e.preventDefault();
-				$('#input_file2').click(); // 파일 input 열기
-				
-				$('#input_file2').change(function() {
-					$('#fileName2').html($('#input_file2').get(0).files[0].name);	// 파일 이름		
-				})
-			});
-	   	});
-	 -->
 	<h2>업체가입</h2>
 	<form action="${pageContext.request.contextPath}/beforeLogin/addCompany" method="post" encType="multipart/form-data" id="addForm">
+		<input type="hidden" id="email" name="companyEmail"><!-- 이메일 인증 후 value 변경 -->
 		<table border="1">
 			<tr>
 				<th>ID</th>
 				<td>
-					<input type="text" id="id" name="companyId" disabled>
+					<input type="text" id="id" name="companyId" readonly>
 				</td>
 				<th>ID 중복확인</th>
 				<td>
@@ -146,6 +84,7 @@
 			<tr>
 				<th>이메일</th>
 				<td>
+					<div>* 가입 이후 아이디/비밀번호 찾기에 필요한 이메일이므로 정확히 입력해주세요.</div>
 					<input type="text" id="email1" name="companyEmail1">
 					<span>@</span>
 					<select id="email2" name="companyEmail2">
@@ -172,19 +111,27 @@
 			<tr>
 				<th>업체사진등록</th>
 				<td colspan="3">
-					<!-- 사진등록 -->
-					<div>
-				        <input type="file" name="companyImg" accept="image/*" id="inputImg0" style="display:none;">
-				        <button type="button" id="inputImgBtn0">사진등록</button>
-				        <span id="fileName0"></span>
+					
+					<div>* 업체 사진은 3개를 등록하여야 합니다.</div>
+					<!-- 사진미리보기 -->
+			        <div class="imgs_wrap" id="view">
+			        	<img id="img0">
+			        	<img id="img1">
+			        	<img id="img2">
+			        </div>
+			        
+			        <!-- 사진등록 -->
+					<div style="display:flex;">
+						<div class="upload_btn">
+					        <input type="file" name="companyImg" accept="image/*" id="inputImg0" style="display:none;">
+					        <button type="button" id="inputImgBtn0">사진등록</button>
+					    </div>
+				        <div class="upload_btn" id="target0"></div>
+				    	<div class="upload_btn" id="target1"></div>
 				    </div>
-				    <div id="target0"></div>
-				    <div id="target1"></div>
 				    
-				 	<!-- 사진미리보기 -->
-				    <div>
-				        <div class="imgs_wrap"></div>
-				    </div>
+				    <!-- 대표사진여부 -->
+				    <div><!-- 라디오로 선택하게 name=choose value=0,1,2 --></div>
 				</td>
 			</tr>
 			<tr>
@@ -251,10 +198,10 @@
 					<br>
 					<div>
 						<label>
-							<input type="radio" class="agree" name="agree" value="동의">약관 및 마케팅 동의
+							<input type="radio" class="agree" name="infoAgree" value="동의">약관 및 마케팅 동의
 						</label>
 						<label>
-							<input type="radio" class="agree" name="agree" value="미동의">약관 및 마케팅 미동의
+							<input type="radio" class="agree" name="infoAgree" value="미동의">약관 및 마케팅 미동의
 						</label>
 					</div>
 				</td>
@@ -262,16 +209,17 @@
 			<tr>
 				<th>위도</th>
 				<td>
-					<input type="number" id="la" name="companyLatitude">
+					<input type="number" id="la" name="latitude">
 				</td>
 				<th>경도</th>
 				<td>
-					<input type="number" id="long" name="companyLongtitude">
+					<input type="number" id="long" name="longtitude">
 				</td>
 			</tr>
 		</table>
-		<button type="button" id="addBtn">가입</button>
+		<button type="submit" id="addBtn">가입</button>
 	</form>
+	
 <script>
 	$(document).ready(function(){
 		// 아이디 중복확인
@@ -294,7 +242,6 @@
 		// 이메일 인증
 		var code = ''; // 인증번호를 담을 변수
 		$('#emailCkBtn').click(function() {
-			
 			if($('#email1').val() == ''){ // 이메일 유효성 확인
 				alert('이메일을 입력해주세요.');
 			} else {
@@ -316,8 +263,7 @@
 							alert('인증번호가 전송되었습니다. 전송된 인증번호를 입력해주세요.');
 							$('#codeCk').attr('disabled',false); // 인증번호 입력 활성화
 							$('#codeCkBtn').attr('disabled',false); // 인증확인 버튼 활성화
-							$('#email1').attr('disabled',true); // 중복 전송 방지위한 비활성화 + 인증완료 시 수정 방지
-							$('#email2').attr('disabled',true);
+							$('#email').attr('value', $('#email1').val()+'@'+$('#email2').val());
 						}
 					}			
 				});
@@ -328,8 +274,8 @@
 		var ckResult = false; // 이메일 인증 성공 여부를 담을 변수 (false : 인증실패, true : 인증성공)
 		$('#codeCkBtn').click(function() {
 			if($('#codeCk').val() == code){ // 인증번호 일치 시
-				$('#email1').attr('disabled',true);
-				$('#email2').attr('disabled',true);
+				$('#email1').attr('readonly',true);
+				$('#email2').attr('readonly',true);
 				$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
 				$('#codeCkBtn').attr('disabled',true); // 중복 인증 방지위한 버튼 비활성화
 				alert('이메일 인증에 성공하였습니다.');
@@ -403,8 +349,6 @@
 	    		return true;
 	    	}
 		};
-		
-		// 아이디, 비밀번호, 비밀번호 일치, 사진, 업체명, 업체 전번, 업체 주소, 사업자명, 사업자 번호, 은행, 계좌버노, 약과동의, 위도/경도
 	});
 </script>
 </body>

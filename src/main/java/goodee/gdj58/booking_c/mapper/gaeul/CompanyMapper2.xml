@@ -55,7 +55,7 @@
 			, booking_company_longtitude
 		) VALUES (
 			#{companyId}
-			, #{companyPw}
+			, PASSWORD(#{companyPw})
 			, #{companyName}
 			, #{companyCeo}
 			, #{companyAddress}
@@ -64,9 +64,9 @@
 			, #{companyBank}
 			, #{companyAccount}
 			, #{companyNumber}
-			, #{companyInfoAgree}
-			, #{companyLatitude}
-			, #{companyLongtitude}			
+			, #{infoAgree}
+			, #{latitude}
+			, #{longtitude}			
 		)
 	</insert>
 

@@ -3,6 +3,7 @@ package goodee.gdj58.booking_c.service.gaeul;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.mail.javamail.JavaMailSender;
@@ -29,7 +30,7 @@ public class MailSendService {
 		log.debug(FontColor.BLUE+"인증번호 : "+randomNum);
 		
 		// 전송할 이메일 양식
-		String setFrom = "goodee@booking.com"; // email-config에 설정한 이메일 주소 입력 
+		String setFrom = "goodee@booking.com";
 		String toMail = companyEmail;
 		String title = "회원가입 인증 이메일 입니다."; // 이메일 제목 
 		String content = 
@@ -46,7 +47,7 @@ public class MailSendService {
 		MimeMessage message = mailSender.createMimeMessage();
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-			helper.setFrom(setFrom);
+			helper.setFrom(new InternetAddress(setFrom, true));
 			helper.setTo(toMail);
 			helper.setSubject(title);
 			// true 전달 > html 형식으로 전송 , 작성하지 않으면 단순 텍스트로 전달

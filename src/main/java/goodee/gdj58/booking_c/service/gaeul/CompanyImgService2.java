@@ -12,8 +12,5 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyImgService2 {
 	@Autowired CompanyImgMapper2 companyImgMapper;
 	
-	// 업체 회원가입 시 이미지 등록
-	public int addCompanyImg(CompanyImg comImg) {
-		return companyImgMapper.insertCompanyImg(comImg);
-	}
+	
 }

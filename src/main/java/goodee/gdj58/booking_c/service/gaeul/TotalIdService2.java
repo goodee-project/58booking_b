@@ -14,18 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TotalIdService2 {
 	@Autowired TotalIdMapper2 totalIdMapper;
 	
-	// 아이디 등록(업체가입 시)
-	public int addId(String id) {
-		
-		TotalId paramTotalId = new TotalId();
-		paramTotalId.setId(id);
-		paramTotalId.setTotalIdKind("예약");
-		paramTotalId.setTotalIdActive("비활성화");
-		paramTotalId.setTotalIdDeactiveMemo("신규 업체 등록");
-		
-		return totalIdMapper.insertId(paramTotalId);
-	}
-	
 	// 아이디 중복확인
 	public String getId(String id) {
 		

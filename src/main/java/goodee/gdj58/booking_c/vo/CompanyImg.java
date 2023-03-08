@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CompanyImg {
 	private int companyImgNo;
-	private String comopanyId;
+	private String companyId;
 	private String companyImgSaveName;
 	private String companyImgOriginName;
 	private String companyImgLevel;

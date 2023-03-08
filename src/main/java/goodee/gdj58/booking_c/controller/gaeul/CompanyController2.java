@@ -1,5 +1,7 @@
 package goodee.gdj58.booking_c.controller.gaeul;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import goodee.gdj58.booking_c.service.gaeul.CompanyService2;
 import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.Company;
-import goodee.gdj58.booking_c.vo.CompanyImg;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -20,11 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyController2 {
 	@Autowired CompanyService2 companyService;
 	
-	// test
-	@GetMapping("/test")
-	public String test() {	
-		return "beforeLogin/test";
-	}
 	
 	// 업체 비밀번호 변경
 	@GetMapping("/beforeLogin/modifyCompanyPw")
@@ -74,12 +71,26 @@ public class CompanyController2 {
 		return "beforeLogin/addCompany";
 	}
 	@PostMapping("/beforeLogin/addCompany")
-	public String addCompany(Company com, CompanyImg comImg) {
+	public String addCompany(Company com,
+					@RequestParam(value="companyImg") List<MultipartFile> comImgs,
+					@RequestParam(value="companyEmail") String companyEmail) {
+		// 대표사진선택값(name=choose)도 받아오기
+		// @RequestParam(value="choose") int choose
+		// 서비스도 수정
+		// boolean result = companyService.addCompany(com, comImgs, companyEmail, choose);
 		
-		// 업체 기본정보, 아이디 중복확인, 이메일 인증, 업체 대표 이미지
+		log.debug(FontColor.CYAN+"com : "+com.toString());
+		log.debug(FontColor.CYAN+"comImg : "+comImgs.size());
+		log.debug(FontColor.CYAN+"comImg : "+comImgs.get(0).getOriginalFilename());
+		log.debug(FontColor.CYAN+"companyEmail : "+companyEmail);
 		
+		boolean result = companyService.addCompany(com, comImgs, companyEmail);
+		if(!result) {
+			log.debug(FontColor.BLUE+"업체가입 실패");
+			return "";
+		}
 		
-		
+		log.debug(FontColor.BLUE+"업체가입 실패");
 		return "success";
 	}
 	
@@ -92,7 +103,6 @@ public class CompanyController2 {
 	public String loginCompany(Company com, HttpSession session) {
 		
 		Company resultCompany = companyService.getCompanyByIdPw(com);
-		
 		if(resultCompany == null) {
 			log.debug(FontColor.BLUE+"로그인 실패 : 일치하는 정보 없음");
 			return "beforeLogin/loginCompany";
@@ -100,7 +110,6 @@ public class CompanyController2 {
 		
 		log.debug(FontColor.BLUE+"로그인 성공, 세션에 정보 저장");
 		session.setAttribute("loginCompany", resultCompany);
-
 		return "index";
 	}
 }
