@@ -55,8 +55,8 @@
 					<h2><i class="fa fa-bar-chart"></i>예약팀-기업</h2>
 				</div>
 				<p>
-					1) 스토리보드<br>
-					- 카카오 오븐을 사용하여 스토리보드를 작성했습니다.<br>
+					1) 화면설계<br>
+					- 카카오 오븐을 사용하여 화면설계했습니다.<br>
 					2) 통합 DB 생성<br>
 					- 플랫폼, 쇼핑몰팀, 예약팀 통합 DB 구현했습니다.<br>
 					3) 일정관리<br>
@@ -64,10 +64,10 @@
 					4) gitHub<br>
 				</p>
 				<p>
-					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/UI.pdf')"><i class="fa fa-fw fa-eye"></i> UI/UX</button>
-					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/UI.pdf')"><i class="fa fa-fw fa-eye"></i> ERD</button>
-					<a href="https://chambray-alley-4a0.notion.site/70631427223d438dbefa955cd0e549fd" class="btn_1 " target="blank"><i class="fa fa-fw fa-eye"></i> Notion</a>
-					<a href="https://github.com/goodee-project/58booking_b" class="btn_1 " target="blank"><i class="fa fa-fw fa-eye"></i> git</a>
+					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/UI.pdf')"> 화면설계</button>
+					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/UI.pdf')">ERD</button>
+					<a href="https://chambray-alley-4a0.notion.site/70631427223d438dbefa955cd0e549fd" class="btn_1 " target="blank"> Notion</a>
+					<a href="https://github.com/goodee-project/58booking_b" class="btn_1 " target="blank">git</a>
 				</p>
 				<div class="list_general">
 				<ul>
