@@ -52,7 +52,7 @@ public class CompanyService2 {
 	}
 	
 	// 업체 회원가입
-	public boolean addCompany(Company com, List<MultipartFile> comImgs, String companyEmail) {
+	public String addCompany(Company com, List<MultipartFile> comImgs, String companyEmail, int choose) {
 		
 		// 서비스 수정
 		// Company com, List<MultipartFile> comImgs, String companyEmail, int choose
@@ -70,7 +70,7 @@ public class CompanyService2 {
 		int totalIdRow = totalIdMapper.insertId(paramTotalId);
 		if(totalIdRow == 0) {
 			log.debug(FontColor.BLUE+"totalId 입력 실패");
-			return false;
+			return "통합아이디 입력 실패";
 		}
 		log.debug(FontColor.BLUE+"totalId 입력 성공, company입력 진행");
 		
@@ -79,7 +79,7 @@ public class CompanyService2 {
 		int companyRow = companyMapper.insertCompany(com);
 		if(companyRow == 0) {
 			log.debug(FontColor.BLUE+"company 입력 실패");
-			return false;
+			return "업체 입력 실패";
 		}
 		log.debug(FontColor.BLUE+"company 입력 성공, companyImg 입력 진행");
 		
@@ -104,7 +104,13 @@ public class CompanyService2 {
 			img.setCompanyImgSaveName(companyImgSaveName);
 			img.setCompanyImgKind(companyImgKind);
 			img.setCompanyImgSize(companyImgSize);
-			img.setCompanyImgLevel("0"); // 추후 수정!!!!!
+			if(choose == i) {
+				img.setCompanyImgLevel("Y");
+				log.debug(FontColor.BLUE+(i+1)+"번째 사진 대표사진으로 등록");
+			} else {
+				img.setCompanyImgLevel("N");
+			}
+			// 추후 수정!!!!!
 			// choose 값(int) 가져와서 i와 비교
 			// choose와 i값이 같을때 해당 사진을 대표사진으로
 			
@@ -112,11 +118,11 @@ public class CompanyService2 {
 			int imgRow = companyImgMapper.insertCompanyImg(img);
 			if(imgRow == 0) {
 				log.debug(FontColor.BLUE+(i+1)+"번째 companyImg 입력 실패");
-				return false;
+				return "업체사진 입력 실패";
 			}
 		}
 		log.debug(FontColor.BLUE+"모든 정보 입력 성공");
-		return true;
+		return "성공";
 	}
 	
 	// 업체 로그인

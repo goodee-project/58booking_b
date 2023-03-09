@@ -23,6 +23,14 @@
 			var img = URL.createObjectURL(tmp);
 			$('#img0').attr('src', img);
 		});
+    	
+    	// 첫번째 사진 클릭 시
+    	$('#img0').click(function(){
+            $('#level').attr('value', 0);
+            $('#img0').css("filter", "brightness(0.8)");
+            $('#img1').css("filter", "");
+            $('#img2').css("filter", "");
+        });
 		
 		// 두번째 사진 추가
 		$(document).on('click', '#inputImgBtn1', function() {
@@ -37,6 +45,14 @@
 				var img = URL.createObjectURL(tmp);
 				$('#img1').attr('src', img);
 			});
+			
+			// 두번째 사진 클릭 시
+	    	$('#img1').click(function(){
+	            $('#level').attr('value', 1);
+	            $('#img0').css("filter", "");
+	            $('#img1').css("filter", "brightness(0.8)");
+	            $('#img2').css("filter", "");
+	        });
 		});
 		
 		// 세번째 사진 추가
@@ -48,7 +64,15 @@
 				var img = URL.createObjectURL(tmp);
 				$('#img2').attr('src', img);
 			});
-		});        
+			
+			// 세번째 사진 클릭 시
+	    	$('#img2').click(function(){
+	            $('#level').attr('value', 2);
+	            $('#img0').css("filter", "");
+	            $('#img1').css("filter", "");
+	            $('#img2').css("filter", "brightness(0.8)");
+	        });
+		});
     });
 </script>
 <style type="text/css">
@@ -57,18 +81,27 @@
     }
     .imgs_wrap img {
         width: 200px;
+        filter: brightness(1);
+        transition:1s;
     }
+    .imgs_wrap img:hover {
+        width: 200px;
+        cursor: pointer;
+        filter: brightness(0.8);
+		
+    }  
     .upload_btn {
 		width: 200px;
     	text-align: center;
     }
-
 </style>
 </head>
 <body>
 	<h2>업체가입</h2>
 	<form action="${pageContext.request.contextPath}/beforeLogin/addCompany" method="post" encType="multipart/form-data" id="addForm">
 		<input type="hidden" id="email" name="companyEmail"><!-- 이메일 인증 후 value 변경 -->
+		<input type="hidden" id="level" name="choose"><!-- 대표사진설정 -->
+		
 		<table border="1">
 			<tr>
 				<th>ID</th>
@@ -111,15 +144,13 @@
 			<tr>
 				<th>업체사진등록</th>
 				<td colspan="3">
-					
-					<div>* 업체 사진은 3개를 등록하여야 합니다.</div>
+					<div>* 업체 사진은 3개를 등록하여야 합니다.(이미지 클릭 시 대표사진으로 지정)</div>
 					<!-- 사진미리보기 -->
-			        <div class="imgs_wrap" id="view">
-			        	<img id="img0">
-			        	<img id="img1">
-			        	<img id="img2">
+			        <div class="imgs_wrap">
+		        		<img id="img0">
+		        		<img id="img1">
+		        		<img id="img2">
 			        </div>
-			        
 			        <!-- 사진등록 -->
 					<div style="display:flex;">
 						<div class="upload_btn">
@@ -129,9 +160,6 @@
 				        <div class="upload_btn" id="target0"></div>
 				    	<div class="upload_btn" id="target1"></div>
 				    </div>
-				    
-				    <!-- 대표사진여부 -->
-				    <div><!-- 라디오로 선택하게 name=choose value=0,1,2 --></div>
 				</td>
 			</tr>
 			<tr>
@@ -217,7 +245,7 @@
 				</td>
 			</tr>
 		</table>
-		<button type="submit" id="addBtn">가입</button>
+		<button type="button" id="addBtn">가입</button>
 	</form>
 	
 <script>
@@ -302,14 +330,17 @@
 			if($('#id').val() == ''){ // 아이디
 				alert('아이디를 입력해주세요.');
 				return false;
-			} else if ($('#pw').val() == ''){ // 비밀번호
-				alert('비밀번호를 입력해주세요.');
-				return false;
 			} else if (ckResult == false){ // 이메일
 				alert('이메일 인증을 해주세요.');
 				return false;
-			} else if ($('#id').val() == ''){ // 이미지
-				alert('아이디를 입력해주세요.');
+			} else if ($('#pw').val() == ''){ // 비밀번호
+				alert('비밀번호를 입력해주세요.');
+				return false;
+			} else if ($('#img0').attr("src") == '' || $('#img1').attr("src") == '' || $('#img2').attr("src") == ''){ // 이미지
+				alert('모든 사진(3개)을 등록해주세요.');
+				return false;
+			} else if ($('#level').val() == ''){ // 대표사진
+				alert('대표사진을 설정해주세요.');
 				return false;
 			} else if ($('#name').val() == ''){ // 업체명
 				alert('업체명을 입력해주세요.');
@@ -332,10 +363,7 @@
 			} else if ($('#account').val() == ''){ // 계좌번호
 				alert('계좌번호를 입력해주세요.');
 				return false;
-			} else if (!radioCk){ // 약관동의
-				alert('약관동의 여부를 선택해주세요.');
-				return false;
-			} else if ($('.agree:checked').val() == '미동의'){ // 약관동의
+			} else if ($('.agree:checked').val() == '' || $('.agree:checked').val() == '미동의'){ // 약관동의
 				alert('약관에 동의해야만 가입이 가능합니다.');
 				return false;
 			} else if ($('#la').val() == ''){ // 위도

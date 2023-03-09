@@ -73,7 +73,8 @@ public class CompanyController2 {
 	@PostMapping("/beforeLogin/addCompany")
 	public String addCompany(Company com,
 					@RequestParam(value="companyImg") List<MultipartFile> comImgs,
-					@RequestParam(value="companyEmail") String companyEmail) {
+					@RequestParam(value="companyEmail") String companyEmail,
+					@RequestParam(value="choose") int choose) {
 		// 대표사진선택값(name=choose)도 받아오기
 		// @RequestParam(value="choose") int choose
 		// 서비스도 수정
@@ -83,15 +84,16 @@ public class CompanyController2 {
 		log.debug(FontColor.CYAN+"comImg : "+comImgs.size());
 		log.debug(FontColor.CYAN+"comImg : "+comImgs.get(0).getOriginalFilename());
 		log.debug(FontColor.CYAN+"companyEmail : "+companyEmail);
+		log.debug(FontColor.CYAN+"choose : "+choose);
 		
-		boolean result = companyService.addCompany(com, comImgs, companyEmail);
-		if(!result) {
-			log.debug(FontColor.BLUE+"업체가입 실패");
-			return "";
+		String result = companyService.addCompany(com, comImgs, companyEmail, choose);
+		if(!result.equals("성공")) { // 반환 결과가 성공이 아닐 시
+			log.debug(FontColor.BLUE+result);
+			return "redirect:/beforeLogin/addCompany";
 		}
 		
-		log.debug(FontColor.BLUE+"업체가입 실패");
-		return "success";
+		log.debug(FontColor.BLUE+"업체가입 성공");
+		return "beforeLogin/loginCompany";
 	}
 	
 	// 업체 로그인

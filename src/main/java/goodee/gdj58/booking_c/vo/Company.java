@@ -15,7 +15,6 @@ public class Company {
 	private String companyAccount;
 	private String companyNumber;
 	private String infoAgree; // 개인정보제공동의
-	private int failLoginCount; // 로그인 실패 횟수
-	private double latitude; // 위도
-	private double longtitude; // 경도
+	private int latitude; // 위도
+	private int longtitude; // 경도
 }
