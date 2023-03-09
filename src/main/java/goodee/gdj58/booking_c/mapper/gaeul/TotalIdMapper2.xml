@@ -21,8 +21,10 @@
 	<!-- 아이디 중복확인 -->
 	<select id="selectIdForCheck"
 			parameterType="java.lang.String"
-			resultType="java.lang.String">
-		SELECT id
+			resultType="goodee.gdj58.booking_c.vo.TotalId">
+		SELECT
+			id
+			, total_id_active totalIdActive
 		FROM total_id
 		WHERE id = #{id}
 	</select>

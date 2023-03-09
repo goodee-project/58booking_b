@@ -4,12 +4,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
+
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="Ansonika">
-<meta charset="UTF-8">
-<title>예약 | 업체 비밀번호 변경</title>
+
+
+<title>예약 | 업체가입</title>
+
+
 <!-- Favicons-->
 <link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath}/resources/admin_section/image/x-icon">
 <link rel="apple-touch-icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/admin_section/img/apple-touch-icon-57x57-precomposed.png">
@@ -34,74 +39,54 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/admin_section/js/editor/summernote-bs4.css">
 <!-- Your custom styles -->
 <link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script>
-	$(document).ready(function(){
-		$('#modiBtn').click(function(){
-			if($('#newPw').val() == ''){
-				$('#newPwMsg').text('새 비밀번호를 입력하세요.');
-				$('#pwCkMsg').text('');
-				return;
-			}
-			if($('#pwCk').val() == ''){
-				$('#pwCkMsg').text('새 비밀번호 확인을 입력하세요.');
-				$('#newPwMsg').text('');
-				return;
-			}
-			if($('#pwCk').val() != $('#newPw').val()){
-				$('#pwCkMsg').text('');
-				$('#newPwMsg').text('');
-				$('#msg').text('두 비밀번호가 일치하지 않습니다.');
-				return;
-			}
-			
-			$('#modiForm').submit();
-			
-		});
-	});
-</script>
 </head>
 <body class="fixed-nav sticky-footer" id="page-top">
+
 	<!-- Navigation-->
-	<jsp:include page="/WEB-INF/view/inc/navBeforeLogin.jsp"></jsp:include>
+	<jsp:include page="/WEB-INF/view/inc/nav.jsp"></jsp:include>
 	<!-- /Navigation-->
 	
-	<div class="content-wrapper w-75 mx-auto" style="margin-left:0px">
+	<div class="content-wrapper">
 		<div class="container-fluid">
 		
-			<!-- 본문 입력 -->
-			<div class="box_general">
+			<!-- Breadcrumbs-->
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="${pageContext.request.contextPath}/index">Dashboard</a>
+				</li>
+				<li class="breadcrumb-item active">Add listing</li>
+			</ol>
 			
-				<h2>비밀번호 변경</h2>
-				<form action="${pageContext.request.contextPath}/beforeLogin/modifyCompanyPw" method="post" id="modiForm">
-					<input type="hidden" name="companyId" value="${id}">
-					<input type="hidden" name="companyEmail" value="${email}">
-					<table>
-						<tr>
-							<td><div id="msg" style="color:red;"></div></td>
-						</tr>
-						<tr>
-							<th>새 비밀번호</th>
-							<td>
-								<input type="password" name="companyPw" id="newPw">
-								<div id="newPwMsg" style="color:red;"></div>
-							</td>
-						</tr>
-						<tr>
-							<th>새 비밀번호 확인</th>
-							<td>
-								<input type="password" id="pwCk">
-								<div id="pwCkMsg" style="color:red;"></div>
-							</td>
-						</tr>
-					</table>
-					<button type="button" id="modiBtn">변경</button>
-				</form>
-			</div><!-- 본문 끝 -->
+			<!-- 본문 입력 -->
+			
+			
 		</div>
 	</div>
 	
+	<!-- Logout Modal-->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+			
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				
+				<div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+					<a class="btn btn-primary" href="#0">Logout</a>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+
 <!-- Custom scripts for all pages-->
 <script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
 
@@ -119,5 +104,3 @@
 <script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
 <!-- Custom scripts for this page-->
 <script src="${pageContext.request.contextPath}/resources/admin_section/vendor/dropzone.min.js"></script>
-</body>
-</html>

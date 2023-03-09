@@ -11,5 +11,5 @@ public interface TotalIdMapper2 {
 	int insertId(TotalId totalId);
 	
 	// 아이디 중복확인
-	String selectIdForCheck(String id);
+	TotalId selectIdForCheck(String id);
 }

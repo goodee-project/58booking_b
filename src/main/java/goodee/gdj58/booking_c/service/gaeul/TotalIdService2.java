@@ -14,14 +14,21 @@ import lombok.extern.slf4j.Slf4j;
 public class TotalIdService2 {
 	@Autowired TotalIdMapper2 totalIdMapper;
 	
+	// 활성화 여부 확인
+	public TotalId getActive(String id) {
+		return totalIdMapper.selectIdForCheck(id);
+	}
+	
 	// 아이디 중복확인
 	public String getId(String id) {
+
+		TotalId totalId = totalIdMapper.selectIdForCheck(id);
+		String resultId = totalId.getId();
 		
 		String result = "no"; // yes : 아이디 사용가능, no : 아이디 사용불가
-		if(totalIdMapper.selectIdForCheck(id) == null) {
+		if(resultId.equals(id)) {
 			result = "yes";
 		}
-		
 		return result;
 	}
 }

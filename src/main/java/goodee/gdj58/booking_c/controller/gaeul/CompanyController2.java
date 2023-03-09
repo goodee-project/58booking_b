@@ -12,16 +12,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import goodee.gdj58.booking_c.service.gaeul.CompanyDetailService2;
 import goodee.gdj58.booking_c.service.gaeul.CompanyService2;
+import goodee.gdj58.booking_c.service.gaeul.TotalIdService2;
 import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.Company;
+import goodee.gdj58.booking_c.vo.TotalId;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
 public class CompanyController2 {
 	@Autowired CompanyService2 companyService;
+	@Autowired TotalIdService2 totalIdService;
+	@Autowired CompanyDetailService2 companyDetailService;
 	
+	// 업체 기본정보 조회(업체 메인)
+	@GetMapping("/company/companyBasicInfo/companyMain")
+	public String companyMain() {
+		return "companyBasicInfo/companyMain";
+	}
 	
 	// 업체 비밀번호 변경
 	@GetMapping("/beforeLogin/modifyCompanyPw")
@@ -47,10 +57,10 @@ public class CompanyController2 {
 		int row = companyService.modifyCompanyPw(com.getCompanyEmail(), com.getCompanyId(), com.getCompanyPw());
 		if(row == 0) {
 			log.debug(FontColor.BLUE+"비밀번호 변경실패");
-			return "beforeLogin/findCompanyPw"; // 변경 실패시 이메일 다시 인증
+			return "redirect:/beforeLogin/findCompanyPw"; // 변경 실패시 이메일 다시 인증
 		}
 		log.debug(FontColor.BLUE+"비밀번호 변경성공");
-		return "success";
+		return "redirect:/beforeLogin/loginCompany"; // 변경 성공 후 로그인 페이지로 이동
 	}
 	
 	// 업체 비밀번호 찾기
@@ -89,11 +99,11 @@ public class CompanyController2 {
 		String result = companyService.addCompany(com, comImgs, companyEmail, choose);
 		if(!result.equals("성공")) { // 반환 결과가 성공이 아닐 시
 			log.debug(FontColor.BLUE+result);
-			return "redirect:/beforeLogin/addCompany";
+			return "redirect:/beforeLogin/addCompany"; // 가입 다시 진행
 		}
 		
 		log.debug(FontColor.BLUE+"업체가입 성공");
-		return "beforeLogin/loginCompany";
+		return "redirect:/beforeLogin/loginCompany"; // 로그인 페이지로 이동
 	}
 	
 	// 업체 로그인
@@ -104,14 +114,29 @@ public class CompanyController2 {
 	@PostMapping("/beforeLogin/loginCompany")
 	public String loginCompany(Company com, HttpSession session) {
 		
+		// 1. 로그인 정보 확인
 		Company resultCompany = companyService.getCompanyByIdPw(com);
 		if(resultCompany == null) {
 			log.debug(FontColor.BLUE+"로그인 실패 : 일치하는 정보 없음");
-			return "beforeLogin/loginCompany";
+			return "redirect:/beforeLogin/loginCompany";
+		}
+		session.setAttribute("loginCompany", resultCompany);
+		log.debug(FontColor.BLUE+"로그인 성공, 세션에 정보 저장");
+		
+		// 2. 활성화 여부 확인
+		TotalId totalId = totalIdService.getActive(com.getCompanyId());
+		if(totalId.getTotalIdActive().equals("비활성화")) { // 비활성화이면
+			log.debug(FontColor.BLUE+"플랫폼 미승인, 로그인 불가");
+			return "redirect:/beforeLogin/loginCompany"; // 로그인 페이지로 다시 이동(알림도 같이)
 		}
 		
-		log.debug(FontColor.BLUE+"로그인 성공, 세션에 정보 저장");
-		session.setAttribute("loginCompany", resultCompany);
-		return "index";
+		// 3. 상세정보 등록여부 확인
+		if(companyDetailService.getComDetailById(com.getCompanyId()) == 0) {
+			log.debug(FontColor.BLUE+"플랫폼 승인 후 최초 로그인, 업체 상세정보 등록");
+			return "redirect:/company/addCompanyDetail"; // 업체 상세정보 등록페이지로 이동
+		}
+		
+		log.debug(FontColor.BLUE+"업체 메인페이지로 이동");
+		return "redirect:/company/companyBasicInfo/companyMain";
 	}
 }

@@ -4,12 +4,43 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="Ansonika">
 <title>예약 | 업체 로그인</title>
+<!-- Favicons-->
+<link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath}/resources/admin_section/image/x-icon">
+<link rel="apple-touch-icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/admin_section/img/apple-touch-icon-57x57-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="${pageContext.request.contextPath}/resources/admin_section/img/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="${pageContext.request.contextPath}/resources/admin_section/img/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="${pageContext.request.contextPath}/resources/admin_section/img/apple-touch-icon-144x144-precomposed.png">
+
+<!-- GOOGLE WEB FONT -->
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Bootstrap core CSS-->
+<link href="${pageContext.request.contextPath}/resources/admin_section/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!-- Main styles -->
+<link href="${pageContext.request.contextPath}/resources/admin_section/css/admin.css" rel="stylesheet">
+<!-- Icon fonts-->
+<link href="${pageContext.request.contextPath}/resources/admin_section/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<!-- Plugin styles -->
+<link href="${pageContext.request.contextPath}/resources/admin_section/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/resources/admin_section/vendor/dropzone.css" rel="stylesheet">
+<!-- WYSIWYG Editor -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/admin_section/js/editor/summernote-bs4.css">
+<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/resources/css/vendors.css" rel="stylesheet">
+<!-- Your custom styles -->
+<link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
+
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <!-- 리캡챠 -->
 <script src="https://www.google.com/recaptcha/api.js"></script>
 <script>
-	
 	// 쿠키 설정 변경(리캡챠 사용위함)
 	document.cookie = "crossCookie=bar; SameSite=None; Secure";
 	
@@ -33,87 +64,114 @@
 				alert('비밀번호를 입력해주세요.');
 				return;
 			}
-			
 
-			
 			$('#loginForm').submit();
 		});
 	});
 </script>
 </head>
-<body>
-<!-- 
-			var captcha = 1;
-			$.ajax({
-	            url:'/verifyRecaptcha'
-	            , type:'post'
-	            , data:{recaptcha: $(".g-recaptcha-response").val()}
-	            , success: function(data) {
-	                switch (data) {
-                    case 0:
-                        console.log("자동 가입 방지 봇 통과");
-                        captcha = 0;
-                		break;
-                    case 1:
-                        alert("자동 가입 방지 봇을 확인 한뒤 진행 해 주세요.");
-                        break;
-                    default:
-                        alert("자동 가입 방지 봇을 실행 하던 중 오류가 발생 했습니다. [Error bot Code : " + Number(data) + "]");
-                   		break;
-	                }
-	            }
-	        });
-			
-			if(captcha != 0) {
-				return false;
-			}
 
+<!-- 
+	var captcha = 1;
+	$.ajax({
+           url:'/verifyRecaptcha'
+           , type:'post'
+           , data:{recaptcha: $(".g-recaptcha-response").val()}
+           , success: function(data) {
+               switch (data) {
+                  case 0:
+                      console.log("자동 가입 방지 봇 통과");
+                      captcha = 0;
+              		break;
+                  case 1:
+                      alert("자동 가입 방지 봇을 확인 한뒤 진행 해 주세요.");
+                      break;
+                  default:
+                      alert("자동 가입 방지 봇을 실행 하던 중 오류가 발생 했습니다. [Error bot Code : " + Number(data) + "]");
+                 		break;
+               }
+           }
+       });
+	
+	if(captcha != 0) {
+		return false;
+	}
  -->
-	<button type=button id="test">dddd</button>
-	<h2>login company</h2>
-	<form action="${pageContext.request.contextPath}/beforeLogin/loginCompany" method="post" id="loginForm">
-		<!-- 로그인 폼 -->
-		<table>
-			<tr>
-				<th>ID</th>
-				<td>
-					<input type="text" id="id" name="companyId">
-				</td>
-			</tr>
-			<tr>
-				<th>PW</th>
-				<td>
-					<input type="password" id="pw" name="companyPw">
-				</td>
-			</tr>
-		</table>
-		
-		<!-- 로그인 정보 저장 여부 -->
-		<div>
-			<span>
-				<label><input type="checkbox" id="saveLoginInfo">로그인 정보 저장</label>
-			</span>
+<body class="fixed-nav sticky-footer" id="page-top">
+	<!-- Navigation-->
+	<jsp:include page="/WEB-INF/view/inc/navBeforeLogin.jsp"></jsp:include>
+	<!-- /Navigation-->
+	
+	<div class="content-wrapper w-75 mx-auto" style="margin-left:0px">
+		<div class="container-fluid">
+		<button type=button id="test" style="display:none;">dddd</button>
+			<!-- 본문 입력 -->
+			<div class="box_general w-50 mx-auto">
+				<h2>예약 업체 로그인</h2>
+				<form action="${pageContext.request.contextPath}/beforeLogin/loginCompany" method="post" id="loginForm">
+					<!-- 로그인 폼 -->
+					<table class="table">
+						<tr>
+							<th>ID</th>
+							<td>
+								<input type="text" id="id" name="companyId">
+							</td>
+						</tr>
+						<tr>
+							<th>PW</th>
+							<td>
+								<input type="password" id="pw" name="companyPw">
+							</td>
+						</tr>
+					</table>
+					
+					<!-- 로그인 정보 저장 여부 -->
+					<div class="checkboxes float-start">
+						<label class="container_check">Remember me
+							<input type="checkbox" id="saveLoginInfo">
+							<span class="checkmark"></span>
+						</label>
+					</div>
+					
+					<!-- 리캡챠 -->
+					<div class="g-recaptcha" data-sitekey="6LevqtkkAAAAALTd1rpqiYdFT1OHY14wxlqMG89a"></div>
+					
+					<!-- 아이디찾기/비밀번호 찾기 링크 -->
+					<div>
+						<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디 찾기</a>
+						<span> | </span>
+						<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호 찾기</a>
+					</div>
+					
+					<!-- 로그인 버튼 -->
+					<div>
+						<button type="button" id="loginBtn" class="btn_1 rounded full-width">login</button>
+					</div>
+					
+					<div class="text-center add_top_10">
+						<strong><a href="${pageContext.request.contextPath}/beforeLogin/addCompany">Sign up</a></strong>
+					</div>
+				</form>
+			</div><!-- 본문 끝 -->
 		</div>
-		
-		<!-- 리캡챠 -->
-		<div class="g-recaptcha" data-sitekey="6LevqtkkAAAAALTd1rpqiYdFT1OHY14wxlqMG89a"></div>
-		
-		<!-- 아이디찾기/비밀번호 찾기 링크 -->
-		<div>
-			<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디 찾기</a>
-			<span> | </span>
-			<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호 찾기</a>
-		</div>
-		
-		<!-- 로그인 버튼 -->
-		<div>
-			<button type="button" id="loginBtn">login</button>
-		</div>
-		
-		<!-- 회원가입 링크 -->
-		<div>
-			<a href="${pageContext.request.contextPath}/beforeLogin/addCompany">업체가입</a>
-		</div>
-	</form>
+	</div>
+	
+<!-- Custom scripts for all pages-->
+<script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
+
+<!-- Bootstrap core JavaScript-->
+<script src="${pageContext.request.contextPath}/resources/admin_section/vendor/jquery/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/admin_section/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="${pageContext.request.contextPath}/resources/admin_section/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Page level plugin JavaScript-->
+<script src="${pageContext.request.contextPath}/resources/admin_section/vendor/chart.js/Chart.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/admin_section/vendor/datatables/jquery.dataTables.js"></script>
+<script src="${pageContext.request.contextPath}/resources/admin_section/vendor/datatables/dataTables.bootstrap4.js"></script>
+<script src="${pageContext.request.contextPath}/resources/admin_section/vendor/jquery.magnific-popup.min.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
+<!-- Custom scripts for this page-->
+<script src="${pageContext.request.contextPath}/resources/admin_section/vendor/dropzone.min.js"></script>
 </body>
 </html>
