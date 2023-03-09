@@ -37,6 +37,26 @@
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 		
+		<!-- fullcalender -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				var calendarEl = document.getElementById('calendar');
+				var calendar = new FullCalendar.Calendar(calendarEl, {
+					initialView: 'dayGridMonth'
+				});
+				calendar.render();
+			});
+		</script>
+		<script>
+			$(document).ready(function(){
+				$.ajax({ // 컨트롤러와 통신	    			
+					 method: 'get',
+					 url: "/58booking_b/companyOffday"
+				});
+			});
+		</script>
 	</head>
 	
 	<body class="fixed-nav sticky-footer" id="page-top">
@@ -121,6 +141,16 @@
 				<div class="header_box version_2">
 					<h2><i class="fa fa-clock-o"></i>상품 휴무</h2>
 				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div id='calendar'></div>
+							
+					</div>
+					<div class="col-md-6">
+						테스트
+					</div>
+				</div>
+				
 			</div>
 			<!-- /box_general-->
 			

@@ -78,10 +78,11 @@
 						 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 						 success: function(data) {
 							 alert("예약 승인 완료");
+							 document.location.reload(); // 승인완료 후 페이지리로드
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							alert("ERROR");
-						}		
+						},
 					});
 				});
 				
@@ -124,7 +125,7 @@
 					</div>
 				</div>
 				
-				<div class="list_general">
+				<div class="list_general" >
 					<input type="text" class="form-group form-control" placeholder="search" name="search" id="search">
 					<ul>
 						<c:forEach var="b" items="${list}">
@@ -138,7 +139,7 @@
 											<i class="pending">대기</i>									
 										</c:when> 
 										<c:when test="${b.state eq '취소'}">
-											<i class="cancel">취소</i>									
+											<i class="cancel" >취소</i>									
 										</c:when> 
 										<c:when test="${b.state eq '방문완료'}">
 											<i class="approved">완료</i>									

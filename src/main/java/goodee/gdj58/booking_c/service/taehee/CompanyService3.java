@@ -20,7 +20,9 @@ public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
 	// 상품관리
 	// 1) 목록
-	
+	public List<Map<String, Object>> getOffday(String companyId) {
+		return companyMapper.selectCompanyOffday(companyId);
+	}
 	// 예약관리
 	// 3) 취소
 	public int addBookingCancel(Booking booking, BookingCancel bookingCancel) {

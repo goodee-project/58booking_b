@@ -21,13 +21,15 @@ public class CustomerService {
 	}
 	
 	// String loginCompanyId
-	public List<Map<String, Object>> getCustomerList(int currentPage, int rowPerPage, String orderKind, String loginCompanyId){
+	public List<Map<String, Object>> getCustomerList(int currentPage, int rowPerPage, String orderKind, String loginCompanyId, String optionWord, String searchWord){
 		int beginRow = (currentPage-1)*rowPerPage;
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("beginRow", beginRow);
 		paramMap.put("rowPerPage", rowPerPage);
 		paramMap.put("orderKind", orderKind);
 		paramMap.put("loginCompanyId", loginCompanyId);
+		paramMap.put("optionWord", optionWord);
+		paramMap.put("searchWord", searchWord);
 		return customerMapper.selectCustomerList(paramMap);
 	}
 }

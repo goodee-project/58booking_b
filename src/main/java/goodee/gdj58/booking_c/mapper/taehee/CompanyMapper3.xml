@@ -32,6 +32,13 @@
 		FROM booking_product 
 		WHERE booking_company_id = #{companyId}
 	</select>
+	<select id="selectCompanyOffday" resultType="java.util.Map">
+		SELECT
+			booking_company_offday_date offday
+			, booking_company_offday_memo memo
+		FROM booking_company_offday
+		WHERE booking_company_id = #{companyId}
+	</select>
 	
 	
 	<!-- 예약관리 -->
