@@ -14,6 +14,8 @@ import goodee.gdj58.booking_c.vo.Question;
 @Mapper
 public interface CompanyMapper3 {
 	// 상퓸관리
+	// 3) 수정
+	int updateProduct(Product product);
 	// 2) 등록
 	int insertProduct(Product product);
 	// 1) 목록

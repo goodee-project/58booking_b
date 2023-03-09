@@ -12,17 +12,42 @@ import goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3;
 import goodee.gdj58.booking_c.vo.Booking;
 import goodee.gdj58.booking_c.vo.BookingCancel;
 import goodee.gdj58.booking_c.vo.Company;
+import goodee.gdj58.booking_c.vo.Product;
 import goodee.gdj58.booking_c.vo.Question;
 
 @Service
 @Transactional
 public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
+	
+	
 	// 상품관리
+	// 3) 상태변경
+	public int modifyProduct(Product product) {
+		return companyMapper.updateProduct(product);
+	}
+	// 2) 등록
+	
 	// 1) 목록
+	public List<Map<String, Object>> getProductLis(int currentPage, int rowPerPage, Company loginCom) {
+		int beginRow = (currentPage - 1) * rowPerPage;
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("beginRow", beginRow);
+		paramMap.put("rowPerPage", rowPerPage);
+		paramMap.put("loginCom", loginCom);
+		return companyMapper.selectProduct(paramMap);
+	}
 	public List<Map<String, Object>> getOffday(String companyId) {
 		return companyMapper.selectCompanyOffday(companyId);
 	}
+	
+	// 1) 목록 페이징
+	public int getProductCount(String companyId) {
+		return companyMapper.productCount(companyId);
+	}
+	
+	
+	
 	// 예약관리
 	// 3) 취소
 	public int addBookingCancel(Booking booking, BookingCancel bookingCancel) {
@@ -49,6 +74,8 @@ public class CompanyService3 {
 	public int getBookingCount(String companyId) {
 		return companyMapper.bookingCount(companyId);
 	}
+	
+	
 	
 	// 문의사항 
 	// 4) 상세보기

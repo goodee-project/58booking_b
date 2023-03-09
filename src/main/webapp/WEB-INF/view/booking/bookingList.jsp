@@ -9,7 +9,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="Ansonika">
-		<title>예약 | 예약관리</title>
+		<title>예약 | 예약</title>
 		
 		<!-- Favicons-->
 		<link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath}/resources/admin_section/image/x-icon">

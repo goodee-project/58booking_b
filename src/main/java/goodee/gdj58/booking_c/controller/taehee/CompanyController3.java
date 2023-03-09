@@ -20,6 +20,7 @@ import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.Booking;
 import goodee.gdj58.booking_c.vo.BookingCancel;
 import goodee.gdj58.booking_c.vo.Company;
+import goodee.gdj58.booking_c.vo.Product;
 import goodee.gdj58.booking_c.vo.Question;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,11 +30,39 @@ public class CompanyController3 {
 	@Autowired CompanyService3 companyService;
 	
 	// 상품관리
-	// 3) 수정
+	// 3) 상태변경
+	@PostMapping("/company/modifyProduct")
+	public String modifyProduct(Product product) {		
+		companyService.modifyProduct(product);
+		return "redirect:/company/productList";
+	}
 	
 	// 2) 목록
 	@GetMapping("/company/productList")
-	public String getProduct(HttpSession session) {
+	public String getProduct(Model model, HttpSession session
+			, @RequestParam(value = "currentPage", defaultValue = "1") int currentPage
+			, @RequestParam(value = "rowPerPage", defaultValue = "10") int rowPerPage) {
+		Company loginCom = (Company)session.getAttribute("loginCompany");
+		model.addAttribute("loginCom", loginCom);
+		int count = companyService.getProductCount(loginCom.getCompanyId());
+		List<Map<String, Object>> list = companyService.getProductLis(currentPage, rowPerPage, loginCom);
+		int page = 10; // 페이징 목록 개수
+		int beginPage = ((currentPage - 1)/page) * page + 1; // 시작 페이지
+		int endPage = beginPage + page - 1; // 페이징 목록 끝
+		int lastPage = (int)Math.ceil((double)count / (double)rowPerPage); // 마지막 페이지
+		if(endPage > lastPage) {
+			endPage = lastPage;
+		}
+		
+		model.addAttribute("list", list);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("rowPerPage", rowPerPage);
+		model.addAttribute("beginPage", beginPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("lastPage", lastPage);
+		log.debug(FontColor.GREEN+ beginPage + "  <=  beginPage");
+		log.debug(FontColor.GREEN + endPage + "  <=  endPage");
+		log.debug(FontColor.GREEN + lastPage + "  <=  lastPage");
 		return "/product/productList";
 	}
 	
@@ -88,12 +117,11 @@ public class CompanyController3 {
 		model.addAttribute("beginPage", beginPage);
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("lastPage", lastPage);
-		log.debug("\u001B[31m" + beginPage + "  <=  beginPage");
-		log.debug("\u001B[31m" + endPage + "  <=  endPage");
-		log.debug("\u001B[31m" + lastPage + "  <=  lastPage");
+		log.debug(FontColor.GREEN + beginPage + "  <=  beginPage");
+		log.debug(FontColor.GREEN + endPage + "  <=  endPage");
+		log.debug(FontColor.GREEN + lastPage + "  <=  lastPage");
 		return "/booking/bookingList";
 	}
-	
 	
 	// 문의사항
 	// 4) 상세보기

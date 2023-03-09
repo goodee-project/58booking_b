@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3">
 	<!-- 상품관리 -->
+	<!-- 3) 수정 -->
+	<update id="updateProduct" parameterType="goodee.gdj58.booking_c.vo.Product">
+		UPDATE booking_product SET booking_product_open = #{productOpen} WHERE booking_product_no = #{productNo}
+	</update>
 	<!-- 2) 등록 -->
 	<insert id="insertProduct"  parameterType="goodee.gdj58.booking_c.vo.Product">
 		INSERT booking_product(
@@ -25,7 +29,15 @@
 	
 	<!-- 1) 목록 -->
 	<select id="selectProduct" resultType="java.util.Map" parameterType="java.util.Map">
-	
+		SELECT
+			booking_product_no productNo  
+			, booking_product_name name
+			, booking_product_price price
+			, booking_product_open open
+			, booking_product_max_people max
+			, booking_product_min_people min
+		FROM booking_product
+		WHERE booking_company_id = #{loginCom.companyId}
 	</select>
 	<select id="productCount" resultType="int">
 		SELECT COUNT(*) 

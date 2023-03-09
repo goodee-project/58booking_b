@@ -39,7 +39,7 @@
               <a href="${pageContext.request.contextPath}/company/bookingList">예약관리</a>
             </li>
             <li>
-              <a href="${pageContext.request.contextPath}/company/addProduct">상품관리</a>
+              <a href="${pageContext.request.contextPath}/company/productList">상품관리</a>
             </li>
             <li>
               <a href="${pageContext.request.contextPath}/company/questionList">문의사항</a>

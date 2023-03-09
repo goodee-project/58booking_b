@@ -8,7 +8,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="Ansonika">
-		<title>예약 | 상품</title>
+		<title>예약 | 상품관리</title>
 		
 		<!-- Favicons-->
 		<link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath}/resources/admin_section/image/x-icon">
@@ -38,54 +38,6 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 		<script>
 			$(document).ready(function(){
-				// 예약번호, 상태
-				let productNo  = '';
-				let open = '';
-				
-				// 비공개->공개 처리
-				$('.deleteBtn').click(function(){
-					productNo = $(this).data('id');
-					open = $(this).data('open');
-					//console.log(productNo + " : " + open );
-					
-					// vo로 POST
-					$.ajax({    			
-						 type: 'POST',
-						 url: "/58booking_b/company/modifyProduct",
-						 data: {"productNo" : productNo, "productOpen" : open},
-						 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-						 success: function(data) {
-							 alert(open + "로 변경 완료");
-							 document.location.reload(); // 승인완료 후 페이지리로드
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-							alert("ERROR");
-						},
-					});
-				});
-				
-				// 비공개->공개 처리
-				$('.approveBtn').click(function(){
-					productNo = $(this).data('id');
-					open = $(this).data('open');
-					// console.log(productNo + " : " + open );
-					
-					// vo로 POST
-					$.ajax({    			
-						 type: 'POST',
-						 url: "/58booking_b/company/modifyProduct",
-						 data: {"productNo" : productNo, "productOpen" : open},
-						 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-						 success: function(data) {
-							 alert(open + "로 변경 완료");
-							 document.location.reload(); // 승인완료 후 페이지리로드
-						},
-						error: function(jqXHR, textStatus, errorThrown) {
-							alert("ERROR");
-						},
-					});
-				});
-			
 			});
 		</script>
 	</head>
@@ -102,65 +54,22 @@
 	        <li class="breadcrumb-item">
 	          <a href="${pageContext.request.contextPath}/index">Dashboard</a>
 	        </li>
-	        <li class="breadcrumb-item active">상품목록</li>
+	        <li class="breadcrumb-item active">Add listing</li>
 	      </ol>
 	    	<div class="box_general">
 			<div class="header_box">
-				<h2 class="d-inline-block">상품목록</h2>
+				<h2 class="d-inline-block">Listings</h2>
 				<div class="filter">
-          <div class="styled-select short">
-				<select name="orderby">
-					<option value="Any time">Any time</option>
-					<option value="Latest">Latest</option>
-					<option value="Oldest">Oldest</option>
-				</select>
-          </div>
+			        <div class="styled-select short">
+						<select name="orderby">
+							<option value="Any time">Any time</option>
+							<option value="Latest">Latest</option>
+							<option value="Oldest">Oldest</option>
+						</select>
+			        </div>
 				</div>
 			</div>
-			<div class="list_general">
-				<ul>
-					<c:forEach var="p" items="${list}">
-						<li>
-							
-							<figure><img src="${pageContext.request.contextPath}/resources/admin_section/img/item_1.jpg" alt=""></figure>
-							<small>Hotel</small>
-							<h4>${p.name}</h4>
-							<p>${p.price}원 </p>
-							<p>최소 ${p.min}명 ~ 최대 ${p.max}명</p>
-							<ul class="buttons">
-								<c:choose> 
-									<c:when test="${p.open eq '공개'}">
-										<li><a class="btn_1 gray approve approveBtn" data-id="${p.productNo}" data-open="비공개"><i class="fa fa-fw fa-times-circle-o"></i>공개중</a></li>								
-									</c:when> 
-									<c:when test="${p.open eq '비공개'}">
-										<li><a class="btn_1 gray delete deleteBtn" data-id="${p.productNo}" data-open="공개"><i class="fa fa-fw fa-times-circle-o"></i>비공개중</a></li>								
-									</c:when>
-								</c:choose>
-							</ul>
-						</li>
-					</c:forEach>
-				</ul>
-			</div>
 		</div>
-		<!-- /box_general-->
-		<nav aria-label="...">
-			<ul class="pagination pagination-sm add_bottom_30">
-				<li class="page-item disabled">
-					<a class="page-link" href="" tabindex="-1">Previous</a>
-				</li>
-				<c:forEach var="i" begin="${beginPage}" end="${endPage}" step="1">
-					<li class="page-item">
-						<a class="page-link" href="${pageContext.request.contextPath}/company/productList?currentPage=${i}">${i}</a>
-					</li>
-				</c:forEach>
-				<li class="page-item">
-				</li>
-				<li class="page-item">
-					<a class="page-link" href="#">Next</a>
-				</li>
-			</ul>
-		</nav>
-		<!-- /pagination-->
 	    </div>
 	  </div>
 
