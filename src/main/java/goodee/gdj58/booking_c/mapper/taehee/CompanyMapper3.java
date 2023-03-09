@@ -19,6 +19,7 @@ public interface CompanyMapper3 {
 	// 1) 목록
 	List<Map<String, Object>> selectProduct(Map<String, Object> paramMap);
 	int productCount(String companyId);
+	List<Map<String, Object>> selectCompanyOffday(String companyId);
 	
 	// 예약관리
 	// 3) 취소

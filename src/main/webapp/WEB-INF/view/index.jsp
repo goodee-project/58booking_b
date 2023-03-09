@@ -49,6 +49,13 @@
 	        </li>
 	        <li class="breadcrumb-item active">Main</li>
 	      </ol>
+			<div>
+				프로젝트 설명 써두기
+				
+			
+			
+			</div>
+			
 			
 		  </div>
 		  <!-- /.container-fluid-->
