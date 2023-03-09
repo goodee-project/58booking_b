@@ -55,21 +55,32 @@
 					<h2><i class="fa fa-bar-chart"></i>예약팀-기업</h2>
 				</div>
 				<p>
+					1) 스토리보드<br>
+					- 카카오 오븐을 사용하여 스토리보드를 작성했습니다.<br>
+					2) 통합 DB 생성<br>
+					- 플랫폼, 쇼핑몰팀, 예약팀 통합 DB 구현했습니다.<br>
+					3) 일정관리<br>
+					- 팀별 일정은 Notion을 활용하여 관리했습니다.<br>
+					4) gitHub<br>
+				</p>
+				<p>
 					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/UI.pdf')"><i class="fa fa-fw fa-eye"></i> UI/UX</button>
 					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/UI.pdf')"><i class="fa fa-fw fa-eye"></i> ERD</button>
+					<a href="https://chambray-alley-4a0.notion.site/70631427223d438dbefa955cd0e549fd" class="btn_1 " target="blank"><i class="fa fa-fw fa-eye"></i> Notion</a>
 					<a href="https://github.com/goodee-project/58booking_b" class="btn_1 " target="blank"><i class="fa fa-fw fa-eye"></i> git</a>
 				</p>
 				<div class="list_general">
 				<ul>
 					<li>
 						<h2>김민송</h2>
-						<strong>1. 고객 관리</strong>
+						<p>담당 기능 : 업체관리, 고객관리, 리뷰관리</p>
+						<h6>1. 고객 관리</h6>
 						<p>
 							1) SQL 동적 쿼리를 활용한 검색 기능<br>
 							- MyBatis의 기능으로 검색어가 있을 때만 조건을 추가하는 동적 쿼리를 활용했습니다.<br>
 							- MyBatis의 기능으로 클릭한 분류별로 오름차순/내림차순이 되는 동적 쿼리를 활용했습니다.<br>
 						</p>
-						<strong>2. 예약 관리</strong>
+						<h6>2. 업체 관리</h6>
 						<p>
 							1) SQL 계층형 구조 테이블 활용<br>
 							- 업체 카테고리를 계층형 테이블로 만들어 사용했습니다.<br>
@@ -87,7 +98,8 @@
 					</li>
 					<li>
 						<h2>민태희</h2>
-						<strong>1. 예약관리</strong> 
+						<p>담당 기능 : 상품관리, 예약관리, 문의사항</p>
+						<h6>1. 예약관리</h6> 
 						<p>
 							1) Ajax 활용 예약상태 변경<br>
 							- Ajax를 이용하여 post 방식으로 상태 변경 가능하게 구현했습니다.<br>
@@ -99,7 +111,7 @@
 							- 예약수정 <br>
 							- 예약 수정과 확정, 취소시 고객에게 메일 안내(스케줄러, 메일API 사용예정)<br>
 						</p>
-						<strong>2. 상품관리</strong>
+						<h6>2. 상품관리</h6>
 						<p>
 							1) Ajax 활용 공개 여부 변경<br>
 							- Ajax를 이용하여 post 방식으로 공개 여부 변경 가능하게 구현했습니다.<br>
@@ -108,7 +120,7 @@
 							- 상품등록(FullCalendar 라이브러리, Ajax 사용예정)<br>
 							- 상품수정 <br>
 						</p>
-						<strong>3. 문의사항</strong> 
+						<h6>3. 문의사항</h6> 
 						<p>
 							- 플랫폼에 문의글을 남길 수 있고 답변이 없을 경우 삭제가 가능합니다.<br>
 						</p>
@@ -116,27 +128,49 @@
 					</li>
 					<li>
 						<h2>이가을</h2>
-						<strong>1. 고객 관리</strong>
-						<p>
-							1) SQL 동적 쿼리를 활용한 검색 기능<br>
-							- MyBatis의 기능으로 검색어가 있을 때만 조건을 추가하는 동적 쿼리를 활용했습니다.<br>
-							- MyBatis의 기능으로 클릭한 분류별로 오름차순/내림차순이 되는 동적 쿼리를 활용했습니다.<br>
-						</p>
-						<strong>2. 예약 관리</strong>
-						<p>
-							1) SQL 계층형 구조 테이블 활용<br>
-							- 업체 카테고리를 계층형 테이블로 만들어 사용했습니다.<br>
-							- Ajax 기술을 활용하여 상위 카테고리에 해당하는 하위 카테고리만 나오도록 동적 셀렉트 박스를 구현했습니다.<br>
-							<br>
-							2) SQL 임시 테이블 및 날짜 함수 활용<br>
-							- 임시 테이블을 활용하여 등록하는 날짜 기준으로 선택한 요일을 찾도록 했습니다.<br>
-							- 1년간 지정한 요일의 날짜가 DB에 추가되도록 했습니다.<br>
-							<br>
-							3) FullCalendar 라이브러리 사용<br>
-							- JAVA의 Calendar API를 이용한 달력 구현은 경험이 있어서, 새로운 걸 해보고자 많이 쓰이는 FullCalendar 라이브러리를 사용했습니다.<br>
-							- 일정 관리를 위한 라이브러리지만, 예약이라는 프로젝트 성격에 맞게 월 달력에서 모든 일정을 휴무일의 개념으로 사용했습니다. <br>
-							- Ajax 기술을 활용하여 비동기로 DB와 연결했습니다.<br>
-						</p>
+						<p>담당 기능 : 업체 로그인, 업체 가입, 아이디/비밀번호 찾기, 업체:고객 채팅, 통계</p>
+
+						<h6>1. 업체 로그인</h6>
+						<P>
+						 1) 구현완료 <br>
+						  - 로그인 분기 : 플랫폼 미승인(로그인 불가), 플랫폼 승인 후 최초 로그인(업체 상세정보 등록), 일반 로그인(업체 메인) <br>
+						 <br>
+						 2) 구현중 <br>
+						  - 구글 리캡챠v2 API를 이용하여 로그인 시도 횟수가 3회 넘어갈 시 실행
+						</P>
+						
+						<h6>2. 업체 기본정보 CRUD</h6>
+						<P>
+						 1) 구현완료 <br>
+						   - 구글 SMTP서버와 javaMail API, ajax를 이용하여 이메일 인증 <br>
+						   - 이메일 인증과 jquery동적 태그를 이용하여 업체 가입 구현 <br>
+						 <br>
+						 2) 구현중 <br>
+						   - 업체 기본정보 조회(업체 메인) <br>
+						   - 업체 기본정보 수정
+						 </P>
+						 
+						<h6>3. 아이디 찾기/비밀번호 찾기</h6>
+						<P>
+						 1) 구현완료 <br>
+						   - 이메일 인증과 동적 쿼리를 이용하여 아이디/비밀번호 찾기 구현
+						</P>
+						
+						<h6>4. 업체:고객 채팅</h6>
+						<P>
+						 1) 미구현 <br>
+						  - webSocket API 이용하여 구현
+						</P>
+						
+						<h6>5. 통계</h6>
+						<P>
+						 1) 미구현 <br>
+						  - 예약통계(신규예약, 취소예약, 확정예약, 방문예약, 환불) <br>
+						  - 매출통계(일별, 월별, 년도별) <br> 
+						  - 리뷰통계(점수별) <br>
+						  - 엑셀 내려받기 통계
+						</P>
+						
 					</li>
 				</ul>
 			</div>
