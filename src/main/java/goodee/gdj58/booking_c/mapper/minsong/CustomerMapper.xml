@@ -20,7 +20,14 @@
 		FROM customer c 
 				INNER JOIN booking b ON c.customer_id = b.customer_id
 				INNER JOIN total_id ti ON c.customer_id = ti.id 
-		WHERE b.booking_company_id = #{loginCompanyId} AND ti.total_id_deactive_memo IS NULL
+		WHERE b.booking_company_id = #{loginCompanyId} 
+				AND ti.total_id_deactive_memo IS NULL
+				<if test="optionWord.equals('id')">
+					AND c.customer_id LIKE CONCAT('%', #{searchWord}, '%')
+				</if>
+				<if test="optionWord.equals('name')">
+					AND c.customer_name LIKE CONCAT('%', #{searchWord}, '%')
+				</if>
 		GROUP BY c.customer_id
 		<trim prefix="ORDER BY">
 			<if test="orderKind == 'bookingCountASC'">  bookingCount ASC </if>
