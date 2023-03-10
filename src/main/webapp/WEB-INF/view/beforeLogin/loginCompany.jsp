@@ -31,12 +31,8 @@
 <link href="${pageContext.request.contextPath}/resources/admin_section/vendor/dropzone.css" rel="stylesheet">
 <!-- WYSIWYG Editor -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/admin_section/js/editor/summernote-bs4.css">
-<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
-<link href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
-<link href="${pageContext.request.contextPath}/resources/css/vendors.css" rel="stylesheet">
 <!-- Your custom styles -->
 <link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
-
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <!-- 리캡챠 -->
 <script src="https://www.google.com/recaptcha/api.js"></script>
@@ -114,22 +110,22 @@
 						<tr>
 							<th>ID</th>
 							<td>
-								<input type="text" id="id" name="companyId">
+								<input type="text" id="id" name="companyId" class="form-control">
 							</td>
 						</tr>
 						<tr>
 							<th>PW</th>
 							<td>
-								<input type="password" id="pw" name="companyPw">
+								<input type="password" id="pw" name="companyPw" class="form-control">
 							</td>
 						</tr>
 					</table>
 					
 					<!-- 로그인 정보 저장 여부 -->
-					<div class="checkboxes float-start">
-						<label class="container_check">Remember me
+					<div class="float-start">
+						<label>
 							<input type="checkbox" id="saveLoginInfo">
-							<span class="checkmark"></span>
+							<span class="checkmark">Remember me</span>
 						</label>
 					</div>
 					
