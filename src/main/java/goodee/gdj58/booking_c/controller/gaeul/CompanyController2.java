@@ -27,10 +27,19 @@ public class CompanyController2 {
 	@Autowired TotalIdService2 totalIdService;
 	@Autowired CompanyDetailService2 companyDetailService;
 	
+	// 로그아웃
+	@GetMapping("/company/logout")
+	public String logout(HttpSession session) {
+		
+		// 세션 삭제
+		session.invalidate();
+		return "redirect:http://15.165.143.58/58platform/integrationPage";
+	}
+	
 	// 업체 기본정보 조회(업체 메인)
 	@GetMapping("/company/companyBasicInfo/companyMain")
 	public String companyMain() {
-		return "companyBasicInfo/companyMain";
+		return "/index";
 	}
 	
 	// 업체 비밀번호 변경
@@ -133,10 +142,10 @@ public class CompanyController2 {
 		// 3. 상세정보 등록여부 확인
 		if(companyDetailService.getComDetailById(com.getCompanyId()) == 0) {
 			log.debug(FontColor.BLUE+"플랫폼 승인 후 최초 로그인, 업체 상세정보 등록");
-			return "redirect:/company/addCompanyDetail"; // 업체 상세정보 등록페이지로 이동
+			return "redirect:/company/index"; // 업체 상세정보 등록페이지로 이동
 		}
 		
 		log.debug(FontColor.BLUE+"업체 메인페이지로 이동");
-		return "redirect:/company/companyBasicInfo/companyMain";
+		return "redirect:/index";
 	}
 }
