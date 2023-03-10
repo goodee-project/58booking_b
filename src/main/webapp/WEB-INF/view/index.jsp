@@ -64,8 +64,8 @@
 					4) gitHub<br>
 				</p>
 				<p>
-					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/UI.pdf')"> 화면설계</button>
-					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/UI.pdf')">ERD</button>
+					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/UI & UX 통합.pdf')"> 화면설계</button>
+					<button type="button" class="btn_1 btn-sm btn-outline-primary" onclick="window.open('/58booking_b/resources/admin_section/erd.png')">ERD</button>
 					<a href="https://chambray-alley-4a0.notion.site/70631427223d438dbefa955cd0e549fd" class="btn_1 " target="blank"> Notion</a>
 					<a href="https://github.com/goodee-project/58booking_b" class="btn_1 " target="blank">git</a>
 				</p>
