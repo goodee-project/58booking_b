@@ -122,7 +122,7 @@ public class CompanyController2 {
 	}
 	@PostMapping("/beforeLogin/loginCompany")
 	public String loginCompany(Company com, HttpSession session) {
-		
+
 		// 1. 로그인 정보 확인
 		Company resultCompany = companyService.getCompanyByIdPw(com);
 		if(resultCompany == null) {
@@ -136,16 +136,16 @@ public class CompanyController2 {
 		TotalId totalId = totalIdService.getActive(com.getCompanyId());
 		if(totalId.getTotalIdActive().equals("비활성화")) { // 비활성화이면
 			log.debug(FontColor.BLUE+"플랫폼 미승인, 로그인 불가");
-			return "redirect:/beforeLogin/loginCompany"; // 로그인 페이지로 다시 이동(알림도 같이)
+			//return "redirect:/beforeLogin/loginCompany"; // 로그인 페이지로 다시 이동(알림도 같이)
 		}
 		
 		// 3. 상세정보 등록여부 확인
 		if(companyDetailService.getComDetailById(com.getCompanyId()) == 0) {
 			log.debug(FontColor.BLUE+"플랫폼 승인 후 최초 로그인, 업체 상세정보 등록");
-			return "redirect:/company/index"; // 업체 상세정보 등록페이지로 이동
+			//return "redirect:/company/index"; // 업체 상세정보 등록페이지로 이동
 		}
-		
+
 		log.debug(FontColor.BLUE+"업체 메인페이지로 이동");
-		return "redirect:/index";
+		return "index";
 	}
 }
