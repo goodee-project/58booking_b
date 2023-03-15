@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.gaeul.CompanyImgMapper2">
 
+	<!-- 업체 사진 조회 -->
+	<select id="selectComImgList"
+			parameterType="java.lang.String"
+			resultType="goodee.gdj58.booking_c.vo.CompanyImg">
+		SELECT
+			booking_company_img_no companyImgNo
+			, booking_company_img_save_name companyImgSaveName
+			, booking_company_img_level companyImgLevel
+		FROM booking_company_img
+		WHERE booking_company_id = #{id}
+	</select>
+
 	<!-- 업체 회원가입 시 이미지 등록 -->
 	<insert id="insertCompanyImg"
 			parameterType="goodee.gdj58.booking_c.vo.CompanyImg">

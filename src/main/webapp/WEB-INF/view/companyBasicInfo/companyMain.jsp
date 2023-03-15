@@ -37,6 +37,31 @@
 
 <!-- 제이쿼리 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$('#modiBtn').click(function(){
+			if($('#newPw').val() == ''){
+				$('#newPwMsg').text('새 비밀번호를 입력하세요.');
+				$('#pwCkMsg').text('');
+				return;
+			}
+			if($('#pwCk').val() == ''){
+				$('#pwCkMsg').text('새 비밀번호 확인을 입력하세요.');
+				$('#newPwMsg').text('');
+				return;
+			}
+			if($('#pwCk').val() != $('#newPw').val()){
+				$('#pwCkMsg').text('');
+				$('#newPwMsg').text('');
+				$('#msg').text('두 비밀번호가 일치하지 않습니다.');
+				return;
+			}
+			
+			$('#modiForm').submit();
+			
+		});
+	});
+</script>
 <style type="text/css">
 	.form-size{
 		width:220px;
@@ -93,7 +118,7 @@
 				<table class="mx-auto table w-75">
 					<tr>
 						<th class="w-10 align-middle">ID</th>
-						<td>${com.companyId}</td>
+						<td colspan="3">${com.companyId}</td>
 					</tr>
 					<tr>
 						<th class="align-middle" colspan="1">이메일</th>
@@ -101,27 +126,65 @@
 					</tr>
 					<tr>
 						<th class="align-middle">PW</th>
-						<td colspan="3">비밀번호 변경</td>
+						<td colspan="3">
+							<!-- 모달 링크 -->
+							<a data-toggle="modal" data-target="#exampleModal" class="btn_1">비밀번호 변경</a>
+							<!-- 모달 내용 -->
+							<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true" role="dialog">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+									
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">비밀번호 변경하기</h5>
+											<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">×</span>
+											</button>
+										</div>
+										
+										<form action="${pageContext.request.contextPath}/company/companyBasicInfo/modifyCompanyPw" method="post" id="modiForm">
+											<div class="modal-body">
+												<input type="hidden" name="companyEmail" value="${com.companyEmail}">
+												<input type="hidden" name="companyId" value="${com.companyId}">
+												<table class="table table-borderless">
+													<tr>
+														<td><div id="msg" style="color:red;"></div></td>
+													</tr>
+													<tr>
+														<th class="align-middle">새 비밀번호</th>
+														<td>
+															<input type="password" name="companyPw" id="newPw" class="form-control">
+															<div id="newPwMsg" style="color:red;"></div>
+														</td>
+													</tr>
+													<tr>
+														<th class="align-middle">새 비밀번호 확인</th>
+														<td>
+															<input type="password" id="pwCk" class="form-control">
+															<div id="pwCkMsg" style="color:red;"></div>
+														</td>
+													</tr>
+												</table>
+											</div>
+											<div class="modal-footer">
+												<button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
+												<button type="button" id="modiBtn" class="btn btn-primary">변경</button>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</td>
 					</tr>
 					<tr>
 						<th class="align-middle">업체사진</th>
 						<td colspan="3">
-							<div>* 업체 사진은 3개를 등록하여야 합니다.(이미지 클릭 시 대표사진으로 지정)</div>
 							<!-- 사진미리보기 -->
-					        <div class="imgs_wrap">
-				        		<img id="img0">
-				        		<img id="img1">
-				        		<img id="img2">
+							<div class="imgs_wrap">
+								<c:forEach var="img" items="${imgList}">
+					        		<img src="${pageContext.request.contextPath}/upload/${img.companyImgSaveName}">
+					        	</c:forEach>
 					        </div>
-					        <!-- 사진등록 -->
-							<div style="display:flex;">
-								<div class="upload_btn">
-							        <input type="file" name="companyImg" accept="image/*" id="inputImg0" style="display:none;">
-							        <button type="button" id="inputImgBtn0" class="btn_1">사진등록</button>
-							    </div>
-						        <div class="upload_btn" id="target0"></div>
-						    	<div class="upload_btn" id="target1"></div>
-						    </div>
+					        
 						</td>
 					</tr>
 					<tr>
@@ -148,7 +211,7 @@
 					</tr>
 					<tr>
 						<td colspan="4" class="text-right align-middle">
-							<button type="button" id="addBtn" class="btn_1 mb-3 mt-2">정보수정</button>
+							<a href="${pageContext.request.contextPath}/company/companyBasicInfo/modifyCompany" class="btn_1 mb-3 mt-2">정보수정</a>
 						</td>
 					</tr>
 				</table>
@@ -330,71 +393,6 @@
 	            $('#img1').css("filter", "");
 	            $('#img2').css("filter", "brightness(0.8)");
 	        });
-		});
-		
-		
-		// 아이디 중복확인
-		$('#idCkBtn').click(function(){
-			console.log('dd');
-			$.ajax({
-				url:'idCk' // 요청보낼 컨트롤러 맵핑주소
-				, type:'get' // 맵핑 방식
-				, data: {id:$('#idCk').val()} // 보낼 데이터
-				, success:function(model){ // model -> 컨트롤러(idCk)에서 받아오는 값
-					if(model=='yes'){
-						$('#id').val($('#idCk').val());
-					} else {
-						alert($('#idCk').val()+'는 사용중인 아이디입니다.');
-					}
-				}
-			});
-		});
-		
-		// 이메일 인증
-		var code = ''; // 인증번호를 담을 변수
-		$('#emailCkBtn').click(function() {
-			if($('#email1').val() == ''){ // 이메일 유효성 확인
-				alert('이메일을 입력해주세요.');
-			} else {
-				$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
-				
-				$.ajax({
-					url:'emailCk'
-					, type:'get'
-					, data:{companyEmail1:$('#email1').val(), companyEmail2:$('#email2').val()}
-					, success:function(model) {
-						code = model;
-						console.log(code);
-						
-						if(code == 'fail'){
-							alert('인증번호 전송에 실패하였습니다. 입력한 이메일을 확인해주세요.');
-							$('#email').attr('disabled',false); // 입력 재활성화
-							$('#emailCkBtn').attr('disabled',false); // 버튼 재활성화
-						} else {
-							alert('인증번호가 전송되었습니다. 전송된 인증번호를 입력해주세요.');
-							$('#codeCk').attr('disabled',false); // 인증번호 입력 활성화
-							$('#codeCkBtn').attr('disabled',false); // 인증확인 버튼 활성화
-							$('#email').attr('value', $('#email1').val()+'@'+$('#email2').val());
-						}
-					}			
-				});
-			}
-		});
-		
-		// 인증번호 비교
-		var ckResult = false; // 이메일 인증 성공 여부를 담을 변수 (false : 인증실패, true : 인증성공)
-		$('#codeCkBtn').click(function() {
-			if($('#codeCk').val() == code){ // 인증번호 일치 시
-				$('#email1').attr('readonly',true);
-				$('#email2').attr('readonly',true);
-				$('#emailCkBtn').attr('disabled',true); // 중복 전송 방지위한 비활성화
-				$('#codeCkBtn').attr('disabled',true); // 중복 인증 방지위한 버튼 비활성화
-				alert('이메일 인증에 성공하였습니다.');
-				ckResult = true;
-				console.log(ckResult);
-			} else { // 인증번호 실패 시
-				alert('이메일 인증에 실패하였습니다.\n인증번호를 확인해주세요.');
-			}
 		});
 		
 		// 유효성 확인 후 폼 제출

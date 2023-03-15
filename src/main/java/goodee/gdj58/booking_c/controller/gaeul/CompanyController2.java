@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import goodee.gdj58.booking_c.service.gaeul.CompanyDetailService2;
+import goodee.gdj58.booking_c.service.gaeul.CompanyImgService2;
 import goodee.gdj58.booking_c.service.gaeul.CompanyService2;
 import goodee.gdj58.booking_c.service.gaeul.TotalIdService2;
 import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.Company;
+import goodee.gdj58.booking_c.vo.CompanyImg;
 import goodee.gdj58.booking_c.vo.TotalId;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,8 +29,40 @@ public class CompanyController2 {
 	@Autowired CompanyService2 companyService;
 	@Autowired TotalIdService2 totalIdService;
 	@Autowired CompanyDetailService2 companyDetailService;
+	@Autowired CompanyImgService2 companyImgService;
+	
+	// 업제 기본정보 수정
+	@GetMapping("/company/companyBasicInfo/modifyCompany")
+	public String modifyCompany(HttpSession session, Model model) {
+		
+		Company loginCompany = (Company)session.getAttribute("loginCompany");
+		String id = loginCompany.getCompanyId();
+		
+		Company com = companyService.getCompany(id); // 업체 기본정보
+		List<CompanyImg> imgList = companyImgService.getComImgList(id);
+		model.addAttribute("com", com);
+		model.addAttribute("imgList", imgList);
+		
+		return "companyBasicInfo/modifyCompany";
+	}
 	
 	
+	// 업체 비밀번호 변경
+	@PostMapping("/company/companyBasicInfo/modifyCompanyPw")
+	public String modifyCompanyPwAfterLogin(Company com) {
+		
+		log.debug(FontColor.BLUE+"email : "+com.getCompanyEmail());
+		log.debug(FontColor.BLUE+"id : "+com.getCompanyId());
+		log.debug(FontColor.BLUE+"pw : "+com.getCompanyPw());
+		
+		int row = companyService.modifyCompanyPw(com.getCompanyEmail(), com.getCompanyId(), com.getCompanyPw());
+		if(row == 0) {
+			log.debug(FontColor.BLUE+"비밀번호 변경실패");
+		} else {
+			log.debug(FontColor.BLUE+"비밀번호 변경성공");
+		}
+		return "redirect:/company/companyBasicInfo/companyMain";
+	}
 	
 	// 업체 기본정보 조회(업체 메인)
 	@GetMapping("/company/companyBasicInfo/companyMain")
@@ -37,12 +71,24 @@ public class CompanyController2 {
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
 		String id = loginCompany.getCompanyId();
 		
-		Company com = companyService.getCompany(id);
+		Company com = companyService.getCompany(id); // 업체 기본정보
+		List<CompanyImg> imgList = companyImgService.getComImgList(id);
 		model.addAttribute("com", com);
+		model.addAttribute("imgList", imgList);
 		
 		return "companyBasicInfo/companyMain";
 	}
 	
+	// 로그아웃
+	@GetMapping("/company/logout")
+	public String logout(HttpSession session, Model model) {
+		// 세션 삭제
+		session.invalidate();
+		model.addAttribute("msg", "로그아웃 하였습니다.");
+		return "/beforeLogin/loginCompany";
+	}
+	
+	// ************************************* 로그인 전
 	// 업체 비밀번호 변경
 	@GetMapping("/beforeLogin/modifyCompanyPw")
 	public String findCompanyPw(Model model,
@@ -113,15 +159,6 @@ public class CompanyController2 {
 		log.debug(FontColor.BLUE+"업체가입 성공");
 		model.addAttribute("msg", "가입에 성공하였습니다. 플랫폼 승인 후 로그인 가능합니다.");
 		return "beforeLogin/loginCompany"; // 로그인 페이지로 이동
-	}
-	
-	// 로그아웃
-	@GetMapping("/company/logout")
-	public String logout(HttpSession session, Model model) {
-		// 세션 삭제
-		session.invalidate();
-		model.addAttribute("msg", "로그아웃 하였습니다.");
-		return "/beforeLogin/loginCompany";
 	}
 	
 	// 업체 로그인
