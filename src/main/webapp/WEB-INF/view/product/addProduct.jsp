@@ -34,26 +34,97 @@
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/admin_section/js/editor/summernote-bs4.css">
 		<!-- Your custom styles -->
 		<link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
-		
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-		
+				
 		<!-- fullcalender -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
 		<script>
-			document.addEventListener('DOMContentLoaded', function() {
-				var calendarEl = document.getElementById('calendar');
-				var calendar = new FullCalendar.Calendar(calendarEl, {
-					initialView: 'dayGridMonth'
-				});
-				calendar.render();
-			});
-		</script>
-		<script>
-			$(document).ready(function(){
-				$.ajax({ // 컨트롤러와 통신	    			
+			  document.addEventListener('DOMContentLoaded', function() {
+				let arr = []; //업체 휴무일 확인용
+			    var calendarEl = document.getElementById('calendar');
+			 	// 기업 휴무일 가져오기 
+			    var request = $.ajax({   			
 					 method: 'get',
 					 url: "/58booking_b/companyOffday"
+				});
+			 	
+			    request.done(function(data){
+			    	// 원래 휴무를 배열에 넣고 시작
+			  	  $.each(data, function(index, item) {
+			  		  arr.push(item.start);
+			  			let comOffday = item.title +" "+ item.start+"<br>"
+			  		    $('#comOff').append(comOffday);
+			  		});
+			    	
+				    var calendar = new FullCalendar.Calendar(calendarEl, {
+				      initialView: 'dayGridMonth'
+				      , selectable: true
+				      , events: data // 휴무일 넣어주기
+				      , dateClick: function(info){ // 버튼 클릭 시 이벤트 추가 모달
+				    	  if(!arr.includes(info.dateStr)){ // 휴무일 배열에 없으면 실행
+				    		  $("#calendarModal").modal("show"); // modal 나타내기
+				    		  $("#calendar_start_date").attr("value", info.dateStr); // 모달에 클릭 날짜값
+	                             //console.log(info.dateStr);
+	                            $("#addCalendar").on("click",function(){  // modal 추가 버튼 클릭 시
+	                                // 유효성검사
+	                                var start_date = $("#calendar_start_date").val();
+	                                var content = $("#calendar_content").val();
+	                            	console.log(content);
+	                                if(content != null && content != ""){
+	                                	var obj = {
+	                                        "title" : content,
+	                                        "start" : start_date
+	                                    }
+	                                    console.log(obj);
+	                                	let productOffday = content +" "+ start_date+"<input type='hidden' name='productOffdayDate' value='"+start_date+"'> <input type='hidden' name='productOffdayMemo' value='"+content+"''>"+"<br>"
+	                                    console.log(productOffday);
+	                                    $('#productOff').append(productOffday);
+	    		    		  			$("#calendar_content").val(""); // 모달에 클릭 날짜값
+	                                    arr.push(info.dateStr);
+		                                calendar.addEvent(obj);
+	                                }
+	                            });
+				    	  }else{
+				    		  alert('이미 휴무일로 지정된 날입니다.');
+				    	  }
+                        }
+				    });
+					calendar.render();
+			    });
+			  });
+			$(document).ready(function(){
+				$('#btn').click(function() {
+					// 유효성 검사
+					if($('#productName').val() == '') {
+						alert('상품명을 입력해주세요');
+						$('#productName').focus();
+						return;
+					} else if($('#productOptionName').val() == '') {
+						alert('옵션명을 입력해주세요');
+						$('#productOptionName').focus();
+						return;
+					} else if($('#productOptionMemo').val() == '') {
+						alert('옵션 설명을 입력해주세요');
+						$('#productOptionMemo').focus();
+						return;
+					} else if($('#productOptionPrice').val() == '') {
+						alert('옵션가격을 입력해주세요');
+						$('#productOptionPrice').focus();
+						return;
+					} else if($('#productPrice').val() == '') {
+						alert('가격을 입력해주세요');
+						$('#productPrice').focus();
+						return;
+					} else if($('#productMinPeople').val() == '') {
+						alert('최소인원을 입력해주세요');
+						$('#productMinPeople').focus();
+						return;
+					} else if($('#productMaxPeople').val() == '') {
+						alert('최대인원을 입력해주세요');
+						$('#productMaxPeople').focus();
+						return;
+					} 
+					$('#addForm').submit();
 				});
 			});
 		</script>
@@ -63,7 +134,6 @@
 	 	<!-- Navigation-->
 		<jsp:include page="/WEB-INF/view/inc/nav.jsp"></jsp:include>
 		<!-- /Navigation-->
-		
 	  <div class="content-wrapper">
 	    <div class="container-fluid">
 	      <!-- Breadcrumbs-->
@@ -71,31 +141,12 @@
 	        <li class="breadcrumb-item">
 	          <a href="#">Dashboard</a>
 	        </li>
-	        <li class="breadcrumb-item active">Add listing</li>
+	        <li class="breadcrumb-item active">Add Product</li>
 	      </ol>
+	      <form id="addForm" method="post" action="${pageContext.request.contextPath}/company/addProduct" enctype="multipart/form-data">
 			<div class="box_general padding_bottom">
 				<div class="header_box version_2">
 					<h2><i class="fa fa-file"></i>상품정보</h2>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>Photos</label>
-							<form action="/file-upload" class="dropzone dz-clickable">
-								<div class="dz-default dz-message">
-									<span>Drop files here to upload</span>
-								</div>
-							</form>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>미리보기 넣기</label>
-							<div>
-							
-							</div>
-						</div>
-					</div>
 				</div>
 				<!-- /row-->
 				<div class="row">
@@ -112,6 +163,17 @@
 						</div>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+						    <input type='file' id='product_detail_image' name="productImg" accept="image/jpg,image/png,image/jpeg,image/gif" onchange="setDetailImage(event);"/>
+						    <input type='file' id='product_detail_image' name="productImg" accept="image/jpg,image/png,image/jpeg,image/gif" onchange="setDetailImage(event);"/>
+						    <input type='file' id='product_detail_image' name="productImg" accept="image/jpg,image/png,image/jpeg,image/gif" onchange="setDetailImage(event);"/>
+						</div>
+					    <div id="images_container"></div>
+					</div>
+				</div>
+				
 			</div>
 			<!-- /box_general-->
 			
@@ -129,7 +191,7 @@
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>최대 인원</label>
-							<input type="text" class="form-control">
+							<input type="text" class="form-control" name="productMaxPeople" id=productMaxPeople>
 						</div>
 					</div>
 				</div>
@@ -147,7 +209,14 @@
 							
 					</div>
 					<div class="col-md-6">
-						테스트
+						<h4><i class="fa fa-clock-o"></i>휴무일</h4>
+						<div id="comOff" class="mb-4">
+						
+						</div>
+						<h4><i class="fa fa-clock-o"></i>상품휴무일</h4>
+						<div id="productOff">
+						
+						</div>
 					</div>
 				</div>
 				
@@ -167,17 +236,17 @@
 									<div class="row">
 										<div class="col-md-4">
 											<div class="form-group">
-												<input type="text" class="form-control" placeholder="Title" name="productOptionName" id="productOptionName">
+												<input type="text" class="form-control" placeholder="옵션명" name="productOptionName" id="productOptionName">
 											</div>
 										</div>
 										<div class="col-md-4">
 											<div class="form-group">
-												<input type="text" class="form-control" placeholder="Description" name="productOptionMemo" id="productOptionMemo">
+												<input type="text" class="form-control" placeholder="설명" name="productOptionMemo" id="productOptionMemo">
 											</div>
 										</div>
 										<div class="col-md-2">
 											<div class="form-group">
-												<input type="text" class="form-control"  placeholder="Price" name="productOptionPrice" id="productOptionPrice">
+												<input type="text" class="form-control"  placeholder="가격" name="productOptionPrice" id="productOptionPrice">
 											</div>
 										</div>
 										<div class="col-md-2 d-flex align-items-center">
@@ -189,13 +258,14 @@
 								</td>
 							</tr>
 						</table>
-						<a href="#0" class="btn_1 gray add-pricing-list-item"><i class="fa fa-fw fa-plus-circle"></i>Add Option</a>
+						<a href="#0" class="btn_1 gray add-pricing-list-item"><i class="fa fa-fw fa-plus-circle"></i>옵션추가</a>
 						</div>
 				</div>
 				<!-- /row-->
 			</div>
 			<!-- /box_general-->
-			<p><a href="#0" class="btn_1 medium">Save</a></p>
+			</form>
+			<p><a class="btn_1 medium" id="btn" >Save</a></p>
 		  </div>
 		  <!-- /.container-fluid-->
 	   	</div>
@@ -229,7 +299,51 @@
 	        </div>
 	      </div>
 	    </div>
-
+		<!-- modal 추가 -->
+	    <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	        aria-hidden="true">
+	        <div class="modal-dialog" role="document">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <h5 class="modal-title" id="exampleModalLabel">휴무일을 입력하세요.</h5>
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">&times;</span>
+	                    </button>
+	                </div>
+	                <div class="modal-body">
+	                    <div class="form-group">
+	                        <label for="taskId" class="col-form-label">휴무사유</label>
+	                        <input type="text" class="form-control" id="calendar_content" name="calendar_content" value="">
+	                        <label for="taskId" class="col-form-label">시작 날짜</label>
+	                        <input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="" readonly="readonly">
+	                    </div>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn btn-warning" data-dismiss="modal" id="addCalendar">추가</button>
+	                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+	                </div>
+	    
+	            </div>
+	        </div>
+	    </div>
+	    
+	    <script>
+		function setDetailImage(event){
+			for(var image of event.target.files){
+				var reader = new FileReader();
+				
+				reader.onload = function(event){
+					var img = document.createElement("img");
+					img.setAttribute("src", event.target.result);
+					img.setAttribute("class", "col-lg-6");
+					document.querySelector("div#images_container").appendChild(img);
+				};
+				
+				console.log(image);
+				reader.readAsDataURL(image);
+			}
+		}
+	</script>
 	    <!-- Custom scripts for all pages-->
 	    <script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
 	    

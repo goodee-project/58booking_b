@@ -1,8 +1,11 @@
 package goodee.gdj58.booking_c.controller.taehee;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import goodee.gdj58.booking_c.service.taehee.CompanyService3;
 import goodee.gdj58.booking_c.util.FontColor;
@@ -21,6 +22,9 @@ import goodee.gdj58.booking_c.vo.Booking;
 import goodee.gdj58.booking_c.vo.BookingCancel;
 import goodee.gdj58.booking_c.vo.Company;
 import goodee.gdj58.booking_c.vo.Product;
+import goodee.gdj58.booking_c.vo.ProductImg;
+import goodee.gdj58.booking_c.vo.ProductOffday;
+import goodee.gdj58.booking_c.vo.ProductOption;
 import goodee.gdj58.booking_c.vo.Question;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,6 +64,7 @@ public class CompanyController3 {
 		model.addAttribute("beginPage", beginPage);
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("lastPage", lastPage);
+		log.debug(FontColor.GREEN+ rowPerPage + "  <=  rowPerPage");
 		log.debug(FontColor.GREEN+ beginPage + "  <=  beginPage");
 		log.debug(FontColor.GREEN + endPage + "  <=  endPage");
 		log.debug(FontColor.GREEN + lastPage + "  <=  lastPage");
@@ -71,9 +76,38 @@ public class CompanyController3 {
 	public String addProduct(HttpSession session) {
 		return "/product/addProduct";
 	}
+	
 	@PostMapping("/company/addProduct")
-	public String addProduct() {
-		return "redirect:/company/productList";
+	public String addProduct(HttpSession session, HttpServletRequest request, Product product
+								,@RequestParam(value="productImg") List<MultipartFile> productImg
+								,@RequestParam(value = "productOptionName") String[] productOptionName
+								,@RequestParam(value = "productOptionMemo") String[] productOptionMemo
+								,@RequestParam(value = "productOptionPrice") int[] productOptionPrice
+								,@RequestParam(value = "productOffdayDate") String[] productOffdayDate
+								,@RequestParam(value = "productOffdayMemo") String[] productOffdayMemo) {
+		Company loginCom = (Company)session.getAttribute("loginCompany");
+		product.setCompanyId(loginCom.getCompanyId());
+		product.setProductOpen("비공개");
+		companyService.addProduct(product);
+		int productNo = product.getProductNo();
+		ProductOption productOption = new ProductOption();
+		for(int i = 0; i<productOptionName.length; i++) {
+			productOption.setProductNo(productNo);
+			productOption.setProductOptionName(productOptionName[i]);
+			productOption.setProductOptionMemo(productOptionMemo[i]);
+			productOption.setProductOptionPrice(productOptionPrice[i]);
+			companyService.addOption(productOption);
+		}
+		ProductOffday productOffday = new ProductOffday();
+		for(int i = 0; i<productOffdayDate.length; i++) {
+			productOffday.setProductNo(productNo);
+			productOffday.setProductOffdayDate(productOffdayDate[i]);
+			productOffday.setProductOffdayMemo(productOffdayMemo[i]);
+			companyService.addOff(productOffday);
+		}
+		String path = request.getServletContext().getRealPath("/upload/product/");
+		companyService.addImg(productImg, productNo, path);
+		return "redirect:/company/addProduct";
 	}
 	
 	// 예약관리

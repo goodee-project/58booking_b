@@ -105,18 +105,19 @@
 	        <li class="breadcrumb-item active">상품목록</li>
 	      </ol>
 	    	<div class="box_general">
-			<div class="header_box">
-				<h2 class="d-inline-block">상품목록</h2>
-				<div class="filter">
-          <div class="styled-select short">
-				<select name="orderby">
-					<option value="Any time">Any time</option>
-					<option value="Latest">Latest</option>
-					<option value="Oldest">Oldest</option>
-				</select>
-          </div>
+				<div class="header_box">
+					<h2 class="d-inline-block">상품목록</h2>
+					<a class="btn_1 gray approve approveBtn" href="${pageContext.request.contextPath}/company/addProduct">상품 등록</a>
+					<div class="filter">
+			          <div class="styled-select short">
+							<select name="orderby">
+								<option value="Any time">Any time</option>
+								<option value="Latest">Latest</option>
+								<option value="Oldest">Oldest</option>
+							</select>
+			          </div>
+					</div>
 				</div>
-			</div>
 			<div class="list_general">
 				<ul>
 					<c:forEach var="p" items="${list}">

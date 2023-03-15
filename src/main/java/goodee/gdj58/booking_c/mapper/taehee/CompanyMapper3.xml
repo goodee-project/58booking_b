@@ -6,7 +6,49 @@
 	<update id="updateProduct" parameterType="goodee.gdj58.booking_c.vo.Product">
 		UPDATE booking_product SET booking_product_open = #{productOpen} WHERE booking_product_no = #{productNo}
 	</update>
+	
 	<!-- 2) 등록 -->
+	<insert id="insertImg" parameterType="goodee.gdj58.booking_c.vo.ProductImg">
+		INSERT booking_product_img(
+				booking_product_no
+				, booking_product_img_save_name
+				, booking_product_img_origin_name
+				, booking_product_img_kind
+				, booking_product_img_size
+		) VALUES (
+				#{productNo}
+				, #{productImgSaveName}
+				, #{productImgOriginName}
+				, #{productImgKind}
+				, #{productImgSize}
+		)
+	
+	</insert>
+	<insert id="insertOffday" parameterType="goodee.gdj58.booking_c.vo.ProductOffday">
+		INSERT booking_product_offday(
+				booking_product_no
+				, booking_product_offday_date
+				, booking_product_offday_memo
+		) VALUES (
+				#{productNo}
+				, #{productOffdayDate}
+				, #{productOffdayMemo}
+		)
+	</insert>
+	<insert id="insertOption" parameterType="goodee.gdj58.booking_c.vo.ProductOption">
+		INSERT booking_product_option(
+				booking_product_no
+				, booking_product_option_name
+				, booking_product_option_memo
+				, booking_product_option_price
+		) VALUES (
+			#{productNo}
+			, #{productOptionName}
+			, #{productOptionMemo}
+			, #{productOptionPrice}
+		)
+		
+	</insert>
 	<insert id="insertProduct"  parameterType="goodee.gdj58.booking_c.vo.Product">
 		INSERT booking_product(
 				booking_company_id
