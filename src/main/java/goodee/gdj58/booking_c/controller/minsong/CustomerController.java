@@ -52,6 +52,6 @@ public class CustomerController {
 		model.addAttribute("optionWord", optionWord);
 		model.addAttribute("searchWord", searchWord);
 
-		return "customerList";
+		return "customer/customerList";
 	}
 }

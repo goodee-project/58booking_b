@@ -11,11 +11,11 @@ import goodee.gdj58.booking_c.vo.CompanyType;
 
 @Mapper
 public interface CompanyMapper {
+	CompanyDetail selectCompanyDetail(String companyId);
 	int insertCompanyOffdayOfWeek(Map<String, Object> paramMap);
 	String selectCompanyOffdayOfWeek(int dayNo);
 	int insertCompanyOffday(CompanyOffday companyOffday);
 	List<CompanyOffday> selectCompanyOffdayList(String companyId);
-	String selectCompanyTypeContent(int companyTypeNo);
 	List<CompanyType> selectCompanyTypeList();
 	int insertCompanyDetail(CompanyDetail companyDetail);
 }

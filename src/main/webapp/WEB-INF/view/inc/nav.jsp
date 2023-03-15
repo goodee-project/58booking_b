@@ -22,10 +22,13 @@
           </a>
           <ul class="sidenav-second-level collapse show" id="collapseMylistings">
             <li>
-              <a href="${pageContext.request.contextPath}/company/addCompanyDetail">업체등록</a>
+              <a href="${pageContext.request.contextPath}/company/modifyCompanyDetail">업체관리</a>
             </li>
             <li>
               <a href="${pageContext.request.contextPath}/company/customerList">고객관리</a>
+            </li>
+            <li>
+              <a href="${pageContext.request.contextPath}/company/reviewList">리뷰관리</a>
             </li>
           </ul>
         </li>

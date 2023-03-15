@@ -25,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyDetailRestController {
 	@Autowired CompanyService companyService;
 	
+	// 예약일 (페이지 연 날짜 이후)
+	
 	// 휴무일
 	@GetMapping("/offday")
 	public List<Map<String, Object>> getOffday(HttpSession session){

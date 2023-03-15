@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CompanyDetail {
 	private String companyId;
-	private String companyTypeContent;
+	private int companyTypeNo;
 	private String openTime;
 	private String closeTime;
 	private String additionService;

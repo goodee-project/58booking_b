@@ -9,18 +9,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goodee.gdj58.booking_c.mapper.minsong.CompanyMapper;
-import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.CompanyDetail;
 import goodee.gdj58.booking_c.vo.CompanyOffday;
 import goodee.gdj58.booking_c.vo.CompanyType;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @Transactional
 public class CompanyService {
 	@Autowired 
 	private CompanyMapper companyMapper;
+	
+	public CompanyDetail getCompanyDetail(String companyId) {
+		return companyMapper.selectCompanyDetail(companyId);
+	}
 	
 	public int addCompanyOffdayOfWeek(String companyId, String dayOfWeek, int cnt) {
 		Map<String, Object> paramMap = new HashMap<>();
@@ -44,9 +45,9 @@ public class CompanyService {
 		return companyMapper.selectCompanyOffdayList(companyId);
 	}
 	
-	public String getcompanyTypeContent(int companyTypeNo) {
-		return companyMapper.selectCompanyTypeContent(companyTypeNo);
-	}
+//	public String getcompanyTypeContent(int companyTypeNo) {
+//		return companyMapper.selectCompanyTypeContent(companyTypeNo);
+//	}
 	
 	public List<CompanyType> getCompanyTypeList(){
 //		log.debug(FontColor.PURPLE+"======service=========>"+companyMapper.selectCompanyTypeList());

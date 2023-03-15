@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="Ansonika">
-	<title>예약 | 업체 등록</title>
+	<title>예약 | 업체 정보 수정</title>
 	
 	<!-- Favicons-->
 	<link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath}/resources/admin_section/image/x-icon">
@@ -37,78 +37,30 @@
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
-<c:if test="${msg != null}">
-	<script>
-		$(document).ready(function(){
-			var msg = '<c:out value="${msg}"/>';;
-			alert(msg);
-		});
-	</script>
-</c:if>
 <script>
-	function changeType(value){
-		let typeNo = value;
-		console.log(typeNo);
-		
-		$.ajax({
-			url:'/58booking_b/companyType'
-			, type:'get'
-			, data : {typeNo}
-			, success:function(model){
-				 $('#targetSel').children("option").remove();
-				 $('#targetSel').append("<option>"+'==옵션선택=='+"</option>");	// 첫 번째 옵션 선택자리
-				for(let i = 0; i < model.length ; i++){
-					let option = '';
-					if(model[i].parentNo == typeNo){
-			        	option = "<option value='" + model[i].companyTypeNo + "'>" + model[i].companyTypeContent + "</option>";        
-					}
-			        //대상 셀렉트박스에 추가
-			        $('#targetSel').append(option);
-			   }
-			}
-		});
-	}
-	
-	function selectKeyword(value){
-		$('#targetSpan').html('');	// 바뀌면 초기화
-		
-		let keywordNo = value;
-		//console.log(keywordNo);
-		
-		$.ajax({
-			url:'/58booking_b/companyType'
-			, type:'get'
-			, data : {keywordNo}
-			, success:function(model){
-				for(let i = 0; i < model.length ; i++){
-					if(model[i].parentNo == keywordNo){
-						console.log(model[i].companyTypeContent+"<=======");
-						$('#targetSpan').html($('#targetSpan').html() + model[i].companyTypeContent + ' ');        
-					}
-			   }
-			}
-		});
-	}
-
-	//function check(checkbox){
-    //	if(checkbox.checked == true){
-	//		console.log('클릭');
-	//   		calendar.addEvent({'title':'정기휴무', 'start':'2023-03-22'});	    		
-    //	}
-    //}
-
-  // fullCalendar
-  document.addEventListener('DOMContentLoaded', function() {
+// fullCalendar
+document.addEventListener('DOMContentLoaded', function() {
 	let arr = [];
 	let idx = 0;
 	
-	
-    var calendarEl = document.getElementById('calendar');
-    var request = $.ajax({
-        url: "/58booking_b/offday"
-        , method: "GET"
-    });
-    request.done(function(data){
+  var calendarEl = document.getElementById('calendar');
+  var request = $.ajax({
+      url: "/58booking_b/offday"
+      , method: "GET"
+  });
+  request.done(function(data){
+	  // 원래 휴무를 배열에 넣고 시작
+	  $.each(data, function(index, item) {
+		  arr.push(item.start);
+		// 나중에 hidden으로 바꾸기
+	    	let offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+item.start+"' id='offday"+idx+"'>";
+		    $('#targetCal').append(offday);
+		    let reason = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+item.title+"' id='reason"+idx+"'>";
+		    $('#targetCal').append(reason);
+		      
+		    idx++;
+		});
+	  
 	    var calendar = new FullCalendar.Calendar(calendarEl, {
 	      locale: 'ko'
 	      , dayMaxEventRows: 1
@@ -127,36 +79,22 @@
 		    	  arr.push(info.dateStr);
 		    	  
 		    	    // 나중에 hidden으로 바꾸기
-			    	let offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+info.dateStr+"' id='offday"+idx+"'>";
+			    	offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+info.dateStr+"' id='offday"+idx+"'>";
 				    $('#targetCal').append(offday);
-				    let reason = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+$('#memo').val()+"' id='reason"+idx+"'>";
+				    reason = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+$('#memo').val()+"' id='reason"+idx+"'>";
 				    $('#targetCal').append(reason);
 				      
 				    idx++;
+	    	  }else{
+	    		  alert('이미 휴무일로 지정된 날입니다.');
 	    	  }
 	    	  
-		    	//date = info.dateStr
-		    	//let input = prompt(date+"를 휴무일로 설정하시겠습니까? 휴무 사유를 작성해 주세요.");
-		    	//// 취소 누르면 그냥 종료
-		    	//if(input == null){
-		    	//	return;
-		    	//}
-		    	//// 휴무 사유 유효성 검사
-		    	//if(input.length < 1 || input.trim() == ''){
-		    	//	alert('휴무 사유를 입력해 주세요');
-		    	//	return;
-		    	//}
-		        //// ★★★휴무일로 설정하시겠습니까? 확인 누르면★★★
-		        //let offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+date+"'>"
-		        //$('#targetCal').append(offday);
-		        //let memo = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+input+"'>"
-		        //$('#targetCal').append(memo);
 	      }
 	      , eventClick: function(info){
 	    	  info.event.remove();
 	    	  let filtered = arr.filter((element) => element !== info.event.startStr);	// 특정 요소 삭제
 	      	  arr = filtered;
-	    	  // 아래에 데이터가 추가되어 있다면
+	    	  // 이 페이지에서 새롭게 휴무 추가
 	    	  if(idx > 0){
 		    	  for(let i = 0; i < idx+1; i++){
 		    		  if(info.event.startStr == $('#offday'+i).val()){
@@ -165,15 +103,18 @@
 		    		  }
 		    	  }	    		  
 	    	  }
+	    	  
+	    	  {	    		  
+	    		  let workingday = "근무일: "+"<input type='text' name='companyWorkingdayDate' value='"+info.event.startStr+"' id='workingday"+idx+"'>";
+				  $('#targetCal').append(workingday);
+	    	  }
+	    	  
 	      }
 	    });
-   	
+ 	
 		calendar.render();
-    });
   });
-</script>
-
-<script>
+});
 </script>
 </head>
 <body class="fixed-nav sticky-footer" id="page-top">
@@ -188,27 +129,13 @@
 	        <li class="breadcrumb-item">
 	          <a href="${pageContext.request.contextPath}/index">Dashboard</a>
 	        </li>
-	        <li class="breadcrumb-item active">업체 등록</li>
+	        <li class="breadcrumb-item active">업체 수정</li>
 	      </ol>
 	      
-			<form method="post" action="${pageContext.request.contextPath}/company/addCompanyDetail" id="form">
-				<!-- 업체 유형 -->
+			<form method="post" action="${pageContext.request.contextPath}/company/modifyCompanyDetail" id="form">
 				<div>
 					<h3>업체 유형</h3>
-					<!-- depth == 0 -->
-					<select onchange="changeType(this.value)" id="testSel">
-						<option>==옵션선택==</option>
-						<c:forEach var="ct" items="${typeList}">
-							<c:if test="${ct.depth == 0}">
-								<option value="${ct.companyTypeNo}">${ct.companyTypeContent}</option>
-							</c:if>
-						</c:forEach>
-					</select>
-					<!-- depth == 1 -->
-					<select id="targetSel" onchange="selectKeyword(this.value)" name="companyTypeNo">
-					</select>
-					
-					<div>검색 키워드 예시: <span id="targetSpan"></span></div>
+					<div>업체 유형은 변경할 수 없습니다.</div>
 				</div>
 				<!-- 운영 시간 -->
 			 	<div>
@@ -221,7 +148,7 @@
 			 		<select name="openTime">
 			 			<option>==개장시간==</option>
 			 			<c:forEach var="i" items="${timetable}">
-			 				<option>${i}</option>
+			 				<option <c:if test="${i eq openTime}">selected</c:if>>${i}</option>
 			 			</c:forEach>
 			 		</select>
 			 		~
@@ -232,7 +159,7 @@
 			 		<select name="closeTime">
 			 			<option>==마감시간==</option>
 			 			<c:forEach var="i" items="${timetable}">
-			 				<option>${i}</option>
+			 				<option <c:if test="${i eq closeTime}">selected</c:if>>${i}</option>
 			 			</c:forEach>
 			 		</select>
 			 	</div>
@@ -240,7 +167,7 @@
 			 	<div>
 			 		<h3>부가 서비스</h3>
 			 		<c:forEach var="i" items="${addtionalService}">
-			 			<input type="checkbox" name="additionService" value="${i}">${i}
+			 			<input type="checkbox" name="additionService" value="${i}" <c:if test="${additionService.contains(i)}">checked</c:if>>${i}
 			 		</c:forEach>
 			 	</div>
 			 	<!-- 휴무일 -->
@@ -263,7 +190,7 @@
 				 	<div id="targetCal">
 				 	</div>
 		 		</div>
-			 	<button type="submit">등록</button>
+			 	<button type="submit">수정</button>
 		 	</form>
 		 </div>
 	  </div>
