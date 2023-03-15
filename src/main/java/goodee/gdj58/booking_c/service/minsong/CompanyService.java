@@ -3,6 +3,7 @@ package goodee.gdj58.booking_c.service.minsong;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,11 @@ import goodee.gdj58.booking_c.vo.CompanyType;
 public class CompanyService {
 	@Autowired 
 	private CompanyMapper companyMapper;
+	
+	public Set<String> getBookingDate(String companyId){
+//	public List<String> getBookingDate(String companyId){
+		return companyMapper.selectBookingDate(companyId);
+	}
 	
 	public CompanyDetail getCompanyDetail(String companyId) {
 		return companyMapper.selectCompanyDetail(companyId);

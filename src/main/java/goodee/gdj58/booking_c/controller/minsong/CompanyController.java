@@ -1,6 +1,7 @@
 package goodee.gdj58.booking_c.controller.minsong;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -133,11 +134,18 @@ public class CompanyController {
 		CompanyDetail companyDetail = companyService.getCompanyDetail(companyId);
 		log.debug(FontColor.PURPLE+companyDetail.getAdditionService().contains("제로페이")+"<--------");
 		
+		// 예약 정보
+		Set<String> bookingDate = companyService.getBookingDate(companyId);
+//		List<String> bookingDate = companyService.getBookingDate(companyId);
+		log.debug(FontColor.PURPLE+bookingDate+"<=======예약일자 목록");
+
+		
 		model.addAttribute("openTime", companyDetail.getOpenTime().substring(0, 5));
 		model.addAttribute("closeTime", companyDetail.getCloseTime().substring(0, 5));
 		model.addAttribute("additionService", companyDetail.getAdditionService());
 		model.addAttribute("timetable", timetable);
 		model.addAttribute("addtionalService", addtionalService);
+//		model.addAttribute("bookingDate", bookingDate);
 		model.getAttribute("msg");
 		return "companyDetail/modifyCompanyDetail";
 	}

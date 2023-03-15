@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper	namespace="goodee.gdj58.booking_c.mapper.minsong.CompanyMapper">
+	<select id="selectBookingDate" parameterType="String" resultType="String">
+		SELECT SUBSTR(booking_date, 1, 10) bookingDate	<!-- 여기서 자르면 jsp로 넘어갈 때 - 계산해서 숫자로 넘어감 -->
+		<!-- 
+		SELECT booking_date bookingDate
+		 -->
+		FROM booking
+		WHERE booking_company_id = #{companyId} AND booking_date >= CURDATE()
+	</select>
+
 	<select id="selectCompanyDetail" parameterType="String" resultType="goodee.gdj58.booking_c.vo.CompanyDetail">
 		SELECT booking_company_type_no companyTypeNo
 				, booking_company_opentime openTime

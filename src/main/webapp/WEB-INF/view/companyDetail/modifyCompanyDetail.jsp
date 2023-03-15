@@ -42,12 +42,23 @@
 document.addEventListener('DOMContentLoaded', function() {
 	let arr = [];
 	let idx = 0;
+	let bookingDateArr = [];
 	
   var calendarEl = document.getElementById('calendar');
   var request = $.ajax({
       url: "/58booking_b/offday"
       , method: "GET"
   });
+  // 이미 예약된 날짜
+  var bookingDate = $.ajax({
+      url: "/58booking_b/bookingDate"
+          , method: "GET"
+          , success:function(model){
+        	  for(let i = 0; i < model.length; i++){
+        		  bookingDateArr.push(model[i]);
+        	  }
+          }
+      });
   request.done(function(data){
 	  // 원래 휴무를 배열에 넣고 시작
 	  $.each(data, function(index, item) {
@@ -68,6 +79,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	      , selectable: true
 	      , events: data
 	      , dateClick: function(info) { 
+    		  // 예약 여부 확인
+    		  for(let i = 0; i < bookingDateArr.length; i++){
+    			  if(info.dateStr == bookingDateArr[i]){
+    				  alert('이미 예약되어 있는 날짜입니다. 예약 취소 후 휴무일로 지정해 주세요.');
+    				  return;
+    			  }
+    		  }
+    		  
 	    	  // 휴무 사유 유효성 검사 후		    		  
 	    	  if($('#memo').val().length < 1 || $('#memo').val().trim() == ''){	
 				alert('휴무 사유를 입력해 주세요.');
@@ -75,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	    	  }
 	    	  
 	    	  if(!arr.includes(info.dateStr)){
+	    		  
 		    	  calendar.addEvent({'title':$('#memo').val(), 'start': info.dateStr});
 		    	  arr.push(info.dateStr);
 		    	  
@@ -104,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		    	  }	    		  
 	    	  }
 	    	  
+	    	  // 삭제할 날 == 이전에 휴무일이었지만 해제한 날(정기휴무 제외)
 	    	  {	    		  
 	    		  let workingday = "근무일: "+"<input type='text' name='companyWorkingdayDate' value='"+info.event.startStr+"' id='workingday"+idx+"'>";
 				  $('#targetCal').append(workingday);

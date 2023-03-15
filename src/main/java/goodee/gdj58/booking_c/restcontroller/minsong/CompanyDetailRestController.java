@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import goodee.gdj58.booking_c.service.minsong.CompanyService;
@@ -25,7 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyDetailRestController {
 	@Autowired CompanyService companyService;
 	
-	// 예약일 (페이지 연 날짜 이후)
+	// 예약일
+	@GetMapping("/bookingDate")
+	public Set<String> getBookingDate(HttpSession session){
+		Set<String> bookingDate = companyService.getBookingDate(((Company)session.getAttribute("loginCompany")).getCompanyId());
+//		List<String> bookingDate = companyService.getBookingDate(companyId);
+		log.debug(FontColor.PURPLE+bookingDate+"<=======예약일자 목록");
+		return bookingDate;
+	}
 	
 	// 휴무일
 	@GetMapping("/offday")
