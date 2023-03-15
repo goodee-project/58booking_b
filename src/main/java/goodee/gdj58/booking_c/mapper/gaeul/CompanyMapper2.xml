@@ -2,6 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.gaeul.CompanyMapper2">
 
+	<!-- 업체 기본정보 조회 -->
+	<select id="selectCompany"
+			parameterType="java.lang.String"
+			resultType="goodee.gdj58.booking_c.vo.Company">
+		SELECT
+			booking_company_id companyId
+			, booking_company_email companyEmail
+			, booking_company_name companyName
+			, booking_company_phone companyPhone
+			, booking_company_address companyAddress
+			, booking_company_ceo companyCeo
+			, booking_company_number companyNumber
+			, booking_company_bank companyBank
+			, booking_company_account companyAccount
+		FROM booking_company
+		WHERE booking_company_id = #{id}
+	</select>
+	
 	<!-- 업체 비밀번호 변경 -->
 	<update id="updateCompanyPw"
 			parameterType="goodee.gdj58.booking_c.vo.Company">

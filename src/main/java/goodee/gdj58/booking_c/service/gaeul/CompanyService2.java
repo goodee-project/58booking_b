@@ -1,5 +1,6 @@
 package goodee.gdj58.booking_c.service.gaeul;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +25,11 @@ public class CompanyService2 {
 	@Autowired CompanyMapper2 companyMapper;
 	@Autowired TotalIdMapper2 totalIdMapper;
 	@Autowired CompanyImgMapper2 companyImgMapper;
+	
+	// 업체 기본정보 조회
+	public Company getCompany(String id) {
+		return companyMapper.selectCompany(id);
+	}
 	
 	// 업체 비밀번호 변경
 	public int modifyCompanyPw(String companyEmail, String companyId, String companyPw) {
@@ -52,10 +58,7 @@ public class CompanyService2 {
 	}
 	
 	// 업체 회원가입
-	public String addCompany(Company com, List<MultipartFile> comImgs, String companyEmail, int choose) {
-		
-		// 서비스 수정
-		// Company com, List<MultipartFile> comImgs, String companyEmail, int choose
+	public String addCompany(Company com, List<MultipartFile> comImgs, String companyEmail, int choose, String path) {
 		
 		// 1. totalId
 		// 데이터 가공
@@ -89,13 +92,18 @@ public class CompanyService2 {
 			// 파일정보 가져오기
 			MultipartFile mf = comImgs.get(i);
 			String companyImgOriginName =  mf.getOriginalFilename(); // 확장자포함이름
-			String newName = UUID.randomUUID().toString().replace("-", ""); // 확장자 미포함, 랜덤 문자열 생성 시 사용하는 api
-			String ext = companyImgOriginName.substring(companyImgOriginName.lastIndexOf(".")+1);
-			String companyImgSaveName = newName+"."+ext;
-			log.debug("\u001B[32m"+"companyImgOriginName------>"+companyImgOriginName);
-			log.debug("\u001B[32m"+"companyImgSaveName------>"+companyImgSaveName);
 			String companyImgKind = mf.getContentType(); // 확장자
 			int companyImgSize = (int)mf.getSize(); // 파일용량
+			
+			// 랜덤한 파일명 생성
+			String newName = UUID.randomUUID().toString().replace("-", ""); // 확장자 미포함, 랜덤 문자열 생성 시 사용하는 api
+			String ext = companyImgOriginName.substring(companyImgOriginName.lastIndexOf(".")+1); // 확장자 추출
+			
+			String companyImgSaveName = newName+"."+ext; // 저장이름
+			
+			
+			log.debug("\u001B[32m"+"companyImgOriginName------>"+companyImgOriginName);
+			log.debug("\u001B[32m"+"companyImgSaveName------>"+companyImgSaveName);
 			
 			// companyImg에 담기
 			CompanyImg img = new CompanyImg();
@@ -104,21 +112,33 @@ public class CompanyService2 {
 			img.setCompanyImgSaveName(companyImgSaveName);
 			img.setCompanyImgKind(companyImgKind);
 			img.setCompanyImgSize(companyImgSize);
+			
+			// 대표사진 여부
 			if(choose == i) {
 				img.setCompanyImgLevel("Y");
 				log.debug(FontColor.BLUE+(i+1)+"번째 사진 대표사진으로 등록");
 			} else {
 				img.setCompanyImgLevel("N");
 			}
-			// 추후 수정!!!!!
-			// choose 값(int) 가져와서 i와 비교
-			// choose와 i값이 같을때 해당 사진을 대표사진으로
 			
-			// 입력 실행
+			// db에 입력
 			int imgRow = companyImgMapper.insertCompanyImg(img);
 			if(imgRow == 0) {
 				log.debug(FontColor.BLUE+(i+1)+"번째 companyImg 입력 실패");
 				return "업체사진 입력 실패";
+			}
+			
+			// 업로드
+			File f = new File(path+"\\"+companyImgSaveName);
+			// 빈파일(f)에 mf안의 업로드된 파일을 복사
+			try {
+				mf.transferTo(f);
+			} catch(Exception e) {
+			 	e.printStackTrace();
+			 	// 파일 업로드에 실패하면
+			 	// try catch 절이 필요로 하지 않는 runtimexception 발생시켜서
+			 	// 어노테이션(trancational)이 감지하여 롤백될 수 있도록
+			 	throw new RuntimeException();
 			}
 		}
 		log.debug(FontColor.BLUE+"모든 정보 입력 성공");

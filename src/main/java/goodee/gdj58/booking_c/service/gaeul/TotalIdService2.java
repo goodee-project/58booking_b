@@ -23,10 +23,9 @@ public class TotalIdService2 {
 	public String getId(String id) {
 
 		TotalId totalId = totalIdMapper.selectIdForCheck(id);
-		String resultId = totalId.getId();
 		
 		String result = "no"; // yes : 아이디 사용가능, no : 아이디 사용불가
-		if(resultId.equals(id)) {
+		if(totalId == null) {
 			result = "yes";
 		}
 		return result;

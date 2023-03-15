@@ -8,6 +8,9 @@ import goodee.gdj58.booking_c.vo.Company;
 @Mapper
 public interface CompanyMapper2 {
 	
+	// 업체 기본정보 조회
+	Company selectCompany(String id);
+	
 	// 업체 비밀번호 변경
 	int updateCompanyPw(Company com);
 	

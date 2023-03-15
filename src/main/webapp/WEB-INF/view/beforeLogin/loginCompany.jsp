@@ -108,20 +108,19 @@
 		<div class="container-fluid">
 		<button type=button id="test" style="display:none;">dddd</button>
 			<!-- 본문 입력 -->
-			<div class="box_general w-50 mx-auto">
-				<h2>예약 업체 로그인</h2>
+			<div class="box_general w-50 mx-auto pt-4 pb-2">
 				<form action="${pageContext.request.contextPath}/beforeLogin/loginCompany" method="post" id="loginForm">
 					<!-- 로그인 폼 -->
-					<table class="table">
+					<table class="table table-borderless w-50 mx-auto">
 						<tr>
-							<th>ID</th>
-							<td>
+							<th class="align-middle text-center">ID</th>
+							<td class="text-center">
 								<input type="text" id="id" name="companyId" class="form-control">
 							</td>
 						</tr>
 						<tr>
-							<th>PW</th>
-							<td>
+							<th class="align-middle text-center">PW</th>
+							<td class="text-center">
 								<input type="password" id="pw" name="companyPw" class="form-control">
 							</td>
 						</tr>
@@ -139,19 +138,19 @@
 					<div class="g-recaptcha" data-sitekey="6LevqtkkAAAAALTd1rpqiYdFT1OHY14wxlqMG89a"></div>
 					
 					<!-- 아이디찾기/비밀번호 찾기 링크 -->
-					<div>
+					<div class="text-center mb-3 mt-5">
 						<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디 찾기</a>
 						<span> | </span>
 						<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호 찾기</a>
 					</div>
 					
 					<!-- 로그인 버튼 -->
-					<div>
-						<button type="button" id="loginBtn" class="btn_1 rounded full-width">login</button>
+					<div class="text-center mb-5 mt-3">
+						<button type="button" id="loginBtn" class="btn-lg btn_1">LOGIN</button>
 					</div>
 					
-					<div class="text-center add_top_10">
-						<strong><a href="${pageContext.request.contextPath}/beforeLogin/addCompany">Sign up</a></strong>
+					<div class="text-center mb-4">
+						<strong>새로운 업체 등록을 원하시나요? <a href="${pageContext.request.contextPath}/beforeLogin/addCompany">Sign up</a></strong>
 					</div>
 				</form>
 			</div><!-- 본문 끝 -->

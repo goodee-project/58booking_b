@@ -2,6 +2,7 @@ package goodee.gdj58.booking_c.controller.gaeul;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,19 +28,19 @@ public class CompanyController2 {
 	@Autowired TotalIdService2 totalIdService;
 	@Autowired CompanyDetailService2 companyDetailService;
 	
-	// 로그아웃
-	@GetMapping("/company/logout")
-	public String logout(HttpSession session, Model model) {
-		// 세션 삭제
-		session.invalidate();
-		model.addAttribute("msg", "로그아웃 하였습니다.");
-		return "/beforeLogin/loginCompany";
-	}
+	
 	
 	// 업체 기본정보 조회(업체 메인)
 	@GetMapping("/company/companyBasicInfo/companyMain")
-	public String companyMain() {
-		return "index";
+	public String companyMain(HttpSession session, Model model) {
+		
+		Company loginCompany = (Company)session.getAttribute("loginCompany");
+		String id = loginCompany.getCompanyId();
+		
+		Company com = companyService.getCompany(id);
+		model.addAttribute("com", com);
+		
+		return "companyBasicInfo/companyMain";
 	}
 	
 	// 업체 비밀번호 변경
@@ -90,14 +91,10 @@ public class CompanyController2 {
 		return "beforeLogin/addCompany";
 	}
 	@PostMapping("/beforeLogin/addCompany")
-	public String addCompany(Company com,
+	public String addCompany(Company com, HttpServletRequest request, Model model,
 					@RequestParam(value="companyImg") List<MultipartFile> comImgs,
 					@RequestParam(value="companyEmail") String companyEmail,
 					@RequestParam(value="choose") int choose) {
-		// 대표사진선택값(name=choose)도 받아오기
-		// @RequestParam(value="choose") int choose
-		// 서비스도 수정
-		// boolean result = companyService.addCompany(com, comImgs, companyEmail, choose);
 		
 		log.debug(FontColor.CYAN+"com : "+com.toString());
 		log.debug(FontColor.CYAN+"comImg : "+comImgs.size());
@@ -105,14 +102,26 @@ public class CompanyController2 {
 		log.debug(FontColor.CYAN+"companyEmail : "+companyEmail);
 		log.debug(FontColor.CYAN+"choose : "+choose);
 		
-		String result = companyService.addCompany(com, comImgs, companyEmail, choose);
+		String path = request.getServletContext().getRealPath("/upload/"); // 파일 저장 경로
+		log.debug(FontColor.BLUE+"파일저장경로 : "+path);
+		String result = companyService.addCompany(com, comImgs, companyEmail, choose, path);
 		if(!result.equals("성공")) { // 반환 결과가 성공이 아닐 시
 			log.debug(FontColor.BLUE+result);
 			return "redirect:/beforeLogin/addCompany"; // 가입 다시 진행
 		}
 		
 		log.debug(FontColor.BLUE+"업체가입 성공");
-		return "redirect:/beforeLogin/loginCompany"; // 로그인 페이지로 이동
+		model.addAttribute("msg", "가입에 성공하였습니다. 플랫폼 승인 후 로그인 가능합니다.");
+		return "beforeLogin/loginCompany"; // 로그인 페이지로 이동
+	}
+	
+	// 로그아웃
+	@GetMapping("/company/logout")
+	public String logout(HttpSession session, Model model) {
+		// 세션 삭제
+		session.invalidate();
+		model.addAttribute("msg", "로그아웃 하였습니다.");
+		return "/beforeLogin/loginCompany";
 	}
 	
 	// 업체 로그인
@@ -146,10 +155,10 @@ public class CompanyController2 {
 		if(companyDetailService.getComDetailById(com.getCompanyId()) == 0) {
 			log.debug(FontColor.BLUE+"플랫폼 승인 후 최초 로그인, 업체 상세정보 등록");
 			model.addAttribute("msg", "업체 상세정보가 입력되지 않았습니다. 등록 페이지로 이동합니다.");
-			return "companyDetail/addCompanyDetail"; // 업체 상세정보 등록페이지로 이동
+			return "redirect:/company/addCompanyDetail"; // 업체 상세정보 등록페이지로 이동
 		}
 
 		log.debug(FontColor.BLUE+"업체 메인페이지로 이동");
-		return "index";
+		return "redirect:/company/companyBasicInfo/companyMain";
 	}
 }
