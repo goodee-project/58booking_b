@@ -107,7 +107,7 @@ public class CompanyController3 {
 		}
 		String path = request.getServletContext().getRealPath("/upload/product/");
 		companyService.addImg(productImg, productNo, path);
-		return "redirect:/company/addProduct";
+		return "redirect:/company/productList";
 	}
 	
 	// 예약관리
