@@ -37,6 +37,14 @@
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
+<c:if test="${msg != null}">
+	<script>
+		$(document).ready(function(){
+			var msg = '<c:out value="${msg}"/>';;
+			alert(msg);
+		});
+	</script>
+</c:if>
 <script>
 	function changeType(value){
 		let typeNo = value;

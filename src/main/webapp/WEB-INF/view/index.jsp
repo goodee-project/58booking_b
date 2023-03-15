@@ -32,7 +32,6 @@
 	  <link href="${pageContext.request.contextPath}/resources/admin_section/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
 	  <!-- Your custom styles -->
 	  <link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
-		
 	</head>
 	
 	<body class="fixed-nav sticky-footer" id="page-top">

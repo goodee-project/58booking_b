@@ -29,17 +29,17 @@ public class CompanyController2 {
 	
 	// 로그아웃
 	@GetMapping("/company/logout")
-	public String logout(HttpSession session) {
-		
+	public String logout(HttpSession session, Model model) {
 		// 세션 삭제
 		session.invalidate();
-		return "redirect:http://15.165.143.58/58platform/integrationPage";
+		model.addAttribute("msg", "로그아웃 하였습니다.");
+		return "/beforeLogin/loginCompany";
 	}
 	
 	// 업체 기본정보 조회(업체 메인)
 	@GetMapping("/company/companyBasicInfo/companyMain")
 	public String companyMain() {
-		return "/index";
+		return "index";
 	}
 	
 	// 업체 비밀번호 변경
@@ -117,17 +117,19 @@ public class CompanyController2 {
 	
 	// 업체 로그인
 	@GetMapping("/beforeLogin/loginCompany")
-	public String loginCompany() {
+	public String loginCompany(Model model) {
+		model.getAttribute("msg");
 		return "beforeLogin/loginCompany";
 	}
 	@PostMapping("/beforeLogin/loginCompany")
-	public String loginCompany(Company com, HttpSession session) {
+	public String loginCompany(Company com, HttpSession session, Model model) {
 
 		// 1. 로그인 정보 확인
 		Company resultCompany = companyService.getCompanyByIdPw(com);
 		if(resultCompany == null) {
 			log.debug(FontColor.BLUE+"로그인 실패 : 일치하는 정보 없음");
-			return "redirect:/beforeLogin/loginCompany";
+			model.addAttribute("msg", "일치하는 정보가 없습니다.");
+			return "beforeLogin/loginCompany";
 		}
 		session.setAttribute("loginCompany", resultCompany);
 		log.debug(FontColor.BLUE+"로그인 성공, 세션에 정보 저장");
@@ -136,13 +138,15 @@ public class CompanyController2 {
 		TotalId totalId = totalIdService.getActive(com.getCompanyId());
 		if(totalId.getTotalIdActive().equals("비활성화")) { // 비활성화이면
 			log.debug(FontColor.BLUE+"플랫폼 미승인, 로그인 불가");
-			//return "redirect:/beforeLogin/loginCompany"; // 로그인 페이지로 다시 이동(알림도 같이)
+			model.addAttribute("msg", "가입 허가가 되지 않았습니다. 플랫폼에 문의하세요.");
+			return "beforeLogin/loginCompany"; // 로그인 페이지로 다시 이동(알림도 같이)
 		}
 		
 		// 3. 상세정보 등록여부 확인
 		if(companyDetailService.getComDetailById(com.getCompanyId()) == 0) {
 			log.debug(FontColor.BLUE+"플랫폼 승인 후 최초 로그인, 업체 상세정보 등록");
-			//return "redirect:/company/index"; // 업체 상세정보 등록페이지로 이동
+			model.addAttribute("msg", "업체 상세정보가 입력되지 않았습니다. 등록 페이지로 이동합니다.");
+			return "companyDetail/addCompanyDetail"; // 업체 상세정보 등록페이지로 이동
 		}
 
 		log.debug(FontColor.BLUE+"업체 메인페이지로 이동");

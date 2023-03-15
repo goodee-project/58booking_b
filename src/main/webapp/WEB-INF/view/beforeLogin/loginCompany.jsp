@@ -36,14 +36,20 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <!-- 리캡챠 -->
 <script src="https://www.google.com/recaptcha/api.js"></script>
+<c:if test="${msg != null}">
+	<script>
+		$(document).ready(function(){
+			var msg = '<c:out value="${msg}"/>';;
+			alert(msg);
+		});
+	</script>
+</c:if>
 <script>
 	// 쿠키 설정 변경(리캡챠 사용위함)
 	document.cookie = "crossCookie=bar; SameSite=None; Secure";
-	
-	$(document).ready(function(){	
+	$(document).ready(function(){
 		// 사이트 키 값은 등록한 도메인에 매핑됨
 		// 구글 리캡챠
-		
 		$('#test').click(function(){
 			alert( document.cookie );
 		});

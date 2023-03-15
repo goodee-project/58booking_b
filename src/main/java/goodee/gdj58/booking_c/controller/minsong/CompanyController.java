@@ -30,6 +30,7 @@ public class CompanyController {
 		List<CompanyType> typeList = companyService.getCompanyTypeList();
 		log.debug(FontColor.PURPLE+"===============>"+typeList);
 		model.addAttribute("typeList", typeList);
+		model.getAttribute("msg");
 		return "companyDetail/addCompanyDetail";
 	}
 	@PostMapping("/company/addCompanyDetail")
