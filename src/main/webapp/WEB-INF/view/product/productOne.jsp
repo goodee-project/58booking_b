@@ -35,9 +35,34 @@
 		<!-- Your custom styles -->
 		<link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
 		
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+		<!-- fullcalender -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
 		<script>
-			$(document).ready(function(){
+			  document.addEventListener('DOMContentLoaded', function() {
+				let arr = []; //업체 휴무일 확인용
+			    var calendarEl = document.getElementById('calendar');
+			 	// 기업 휴무일 가져오기 
+			    var request = $.ajax({   			
+					 method: 'get',
+					 url: "/58booking_b/companyOffday"
+				});
+			 	
+			    request.done(function(data){
+			    	// 원래 휴무를 배열에 넣고 시작
+			  	  $.each(data, function(index, item) {
+			  		  arr.push(item.start);
+			  			let comOffday = item.title +" "+ item.start+"<br>"
+			  		    $('#comOff').append(comOffday);
+			  		});
+			    	
+				    var calendar = new FullCalendar.Calendar(calendarEl, {
+				      initialView: 'dayGridMonth'
+				      , selectable: true
+				      , events: data // 휴무일 넣어주기
+				    });
+					calendar.render();
+			    });
 			});
 		</script>
 	</head>
@@ -52,27 +77,150 @@
 	      <!-- Breadcrumbs-->
 	      <ol class="breadcrumb">
 	        <li class="breadcrumb-item">
-	          <a href="${pageContext.request.contextPath}/index">Dashboard</a>
+	          <a href="#">Dashboard</a>
 	        </li>
-	        <li class="breadcrumb-item active">Add listing</li>
+	        <li class="breadcrumb-item active">Product One</li>
 	      </ol>
-	    	<div class="box_general">
-			<div class="header_box">
-				<h2 class="d-inline-block">Listings</h2>
-				<div class="filter">
-			        <div class="styled-select short">
-						<select name="orderby">
-							<option value="Any time">Any time</option>
-							<option value="Latest">Latest</option>
-							<option value="Oldest">Oldest</option>
-						</select>
-			        </div>
+			<div class="box_general padding_bottom">
+				<div class="header_box version_2">
+					<h2><i class="fa fa-file"></i>상품상세보기</h2>
+				</div>
+				<!-- /row-->
+				<c:forEach var="p" items="${list}">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>상품명</label>
+							${p.productName}
+							<input type="text" class="form-control" name="productName" id="productName">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>가격</label>
+							${p.productPrice}
+							<input type="text" class="form-control" placeholder="상품가격" name="productPrice" id="productPrice">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+						    <input type='file' id='product_detail_image' name="productImg" accept="image/jpg,image/png,image/jpeg,image/gif" onchange="setDetailImage(event);"/>
+						    <input type='file' id='product_detail_image' name="productImg" accept="image/jpg,image/png,image/jpeg,image/gif" onchange="setDetailImage(event);"/>
+						    <input type='file' id='product_detail_image' name="productImg" accept="image/jpg,image/png,image/jpeg,image/gif" onchange="setDetailImage(event);"/>
+						</div>
+					    <div id="images_container"></div>
+					</div>
+				</div>
+				</c:forEach>
+			</div>
+			<!-- /box_general-->
+			
+			<div class="box_general padding_bottom">
+				<div class="header_box version_2">
+					<h2><i class="fa fa-map-marker"></i>세부사항</h2>
+				</div>
+				<div class="row">
+				<c:forEach var="p" items="${list}">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>최소 인원</label>
+							<div>${p.productMin}</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>최대 인원</label>
+							<div>${p.productMax}</div>
+						</div>
+					</div>
+				</c:forEach>
+				</div>
+				<!-- /row-->
+			</div>
+			<!-- /box_general-->
+			
+			<div class="box_general padding_bottom">
+				<div class="header_box version_2">
+					<h2><i class="fa fa-clock-o"></i>상품 휴무</h2>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div id='calendar'></div>
+							
+					</div>
+					<div class="col-md-6">
+						<h4><i class="fa fa-clock-o"></i>휴무일</h4>
+						<div id="comOff" class="mb-4">
+						
+						</div>
+						<h4><i class="fa fa-clock-o"></i>상품휴무일</h4>
+						<div id="productOff">
+						
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	    </div>
-	  </div>
-
+			<!-- /box_general-->
+			
+			<div class="box_general padding_bottom">
+				<div class="header_box version_2">
+					<h2><i class="fa fa-dollar"></i>옵션</h2>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<h6>option</h6>
+						<table id="pricing-list-container" style="width:100%;">
+							<tr class="pricing-list-item">
+								<td>
+									<div class="row">
+										<div class="col-md-4">
+											<div class="form-group">
+												<input type="text" class="form-control" placeholder="옵션명" name="productOptionName" id="productOptionName">
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<input type="text" class="form-control" placeholder="설명" name="productOptionMemo" id="productOptionMemo">
+											</div>
+										</div>
+										<div class="col-md-2">
+											<div class="form-group">
+												<input type="text" class="form-control"  placeholder="가격" name="productOptionPrice" id="productOptionPrice">
+											</div>
+										</div>
+										<div class="col-md-2 d-flex align-items-center">
+											<div class="form-group">
+												<a class="delete" href="#"><i class="fa fa-fw fa-remove"></i></a>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+						<a href="#0" class="btn_1 gray add-pricing-list-item"><i class="fa fa-fw fa-plus-circle"></i>옵션추가</a>
+						</div>
+				</div>
+				<!-- /row-->
+			</div>
+			<!-- /box_general-->
+			
+		  </div>
+		  <!-- /.container-fluid-->
+	   	</div>
+	    <!-- /.container-wrapper-->
+	    <footer class="sticky-footer">
+	      <div class="container">
+	        <div class="text-center">
+	          <small>Copyright © PANAGEA 2021</small>
+	        </div>
+	      </div>
+	    </footer>
+	    <!-- Scroll to Top Button-->
+	    <a class="scroll-to-top rounded" href="#page-top">
+	      <i class="fa fa-angle-up"></i>
+	    </a>
 	    <!-- Logout Modal-->
 	    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	      <div class="modal-dialog" role="document">
@@ -90,6 +238,33 @@
 	          </div>
 	        </div>
 	      </div>
+	    </div>
+		<!-- modal 추가 -->
+	    <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	        aria-hidden="true">
+	        <div class="modal-dialog" role="document">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <h5 class="modal-title" id="exampleModalLabel">휴무일을 입력하세요.</h5>
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">&times;</span>
+	                    </button>
+	                </div>
+	                <div class="modal-body">
+	                    <div class="form-group">
+	                        <label for="taskId" class="col-form-label">휴무사유</label>
+	                        <input type="text" class="form-control" id="calendar_content" name="calendar_content" value="">
+	                        <label for="taskId" class="col-form-label">시작 날짜</label>
+	                        <input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="" readonly="readonly">
+	                    </div>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn btn-warning" data-dismiss="modal" id="addCalendar">추가</button>
+	                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+	                </div>
+	    
+	            </div>
+	        </div>
 	    </div>
 
 	    <!-- Custom scripts for all pages-->

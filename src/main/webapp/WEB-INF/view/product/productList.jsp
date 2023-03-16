@@ -125,7 +125,7 @@
 							
 							<figure><img src="${pageContext.request.contextPath}/resources/admin_section/img/item_1.jpg" alt=""></figure>
 							<small>Hotel</small>
-							<h4>${p.name}</h4>
+							<h4><a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">${p.name}</a></h4>
 							<p>${p.price}원 </p>
 							<p>최소 ${p.min}명 ~ 최대 ${p.max}명</p>
 							<ul class="buttons">

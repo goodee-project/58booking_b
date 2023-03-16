@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3;
+import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.Booking;
 import goodee.gdj58.booking_c.vo.BookingCancel;
 import goodee.gdj58.booking_c.vo.Company;
-import goodee.gdj58.booking_c.vo.CompanyImg;
 import goodee.gdj58.booking_c.vo.Product;
 import goodee.gdj58.booking_c.vo.ProductImg;
 import goodee.gdj58.booking_c.vo.ProductOffday;
@@ -28,9 +28,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
-	
-	
 	// 상품관리
+	// 4) 상세보기
+	public List<Map<String, Object>> getProductOne(int productNo) {
+		return companyMapper.selectProductOne(productNo);
+	}
+	public List<Map<String, Object>> getProductOption(int productNo) {
+		return companyMapper.selectProductOption(productNo);
+	}
+	public List<Map<String, Object>> getProductOffday(int productNo) {
+		return companyMapper.selectProductOffday(productNo);
+	}
+	
 	// 3) 상태변경
 	public int modifyProduct(Product product) {
 		return companyMapper.updateProduct(product);
@@ -51,27 +60,30 @@ public class CompanyService3 {
 			// 컨텐츠타입, 사이즈, 이름 모두 저장해야함
 			String productImgOriginName =  mf.getOriginalFilename(); // 확장자 포함 이름
 			String productImgKind = mf.getContentType(); // 컨텐츠타입
-			int productImgSize = (int)mf.getSize(); // 사이즈 
-			
-			String newName = UUID.randomUUID().toString().replace("-", ""); // 랜덤문자열 생성 api
-			String ext = productImgOriginName.substring(productImgOriginName.lastIndexOf(".")+1); // 확장자 이름 필요
-			
-			String productImgSaveName = newName+"."+ext; // 저장이름
-			
-			ProductImg img = new ProductImg();
-			img.setProductNo(productNo);
-			img.setProductImgOriginName(productImgOriginName);
-			img.setProductImgSaveName(productImgSaveName);
-			img.setProductImgKind(productImgKind);
-			img.setProductImgSize(productImgSize);
-			row += companyMapper.insertImg(img);
-			File f = new File(path+productImgSaveName);
-			try {
-				mf.transferTo(f); 
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException();
-			} 
+			if(!productImgKind.equals("application/octet-stream")) {
+				log.debug(FontColor.GREEN+productImgKind);
+				int productImgSize = (int)mf.getSize(); // 사이즈 
+				
+				String newName = UUID.randomUUID().toString().replace("-", ""); // 랜덤문자열 생성 api
+				String ext = productImgOriginName.substring(productImgOriginName.lastIndexOf(".")+1); // 확장자 이름 필요
+				
+				String productImgSaveName = newName+"."+ext; // 저장이름
+				
+				ProductImg img = new ProductImg();
+				img.setProductNo(productNo);
+				img.setProductImgOriginName(productImgOriginName);
+				img.setProductImgSaveName(productImgSaveName);
+				img.setProductImgKind(productImgKind);
+				img.setProductImgSize(productImgSize);
+				row += companyMapper.insertImg(img);
+				File f = new File(path+productImgSaveName);
+				try {
+					mf.transferTo(f); 
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new RuntimeException();
+				} 
+			}
 		}
 		return row;
 	}

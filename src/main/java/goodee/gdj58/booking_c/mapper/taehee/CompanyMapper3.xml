@@ -2,6 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3">
 	<!-- 상품관리 -->
+	<!-- 4) 상세보기 -->
+	<select id="selectProductOne" resultType="java.util.Map">
+		SELECT booking_product_no productNo
+			, booking_product_name productName
+			, booking_product_price productPrice
+			, booking_product_open productOpen
+			, booking_product_min_people productMin
+			, booking_product_min_people productMax
+		FROM booking_product
+		WHERE booking_product_no = #{productNo}
+	</select>
+	<select id="selectProductOption" resultType="java.util.Map">
+		SELECT booking_product_option_name optionName
+			, booking_product_option_memo optionMemo
+			, booking_product_option_price optionPrice
+		FROM booking_product_option 
+		WHERE booking_product_no = #{productNo}
+	</select>
+	<select id="selectProductOffday" resultType="java.util.Map">
+		SELECT booking_product_offday_date offday
+			, booking_product_offday_memo memo
+		FROM booking_product_offday
+		WHERE booking_product_no = 120
+	</select>
+	
 	<!-- 3) 수정 -->
 	<update id="updateProduct" parameterType="goodee.gdj58.booking_c.vo.Product">
 		UPDATE booking_product SET booking_product_open = #{productOpen} WHERE booking_product_no = #{productNo}
@@ -80,6 +105,7 @@
 			, booking_product_min_people min
 		FROM booking_product
 		WHERE booking_company_id = #{loginCom.companyId}
+		ORDER BY booking_product_open ASC, booking_product_no DESC
 	</select>
 	<select id="productCount" resultType="int">
 		SELECT COUNT(*) 

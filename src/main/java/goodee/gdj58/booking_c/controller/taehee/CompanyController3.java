@@ -1,9 +1,7 @@
 package goodee.gdj58.booking_c.controller.taehee;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,7 +20,6 @@ import goodee.gdj58.booking_c.vo.Booking;
 import goodee.gdj58.booking_c.vo.BookingCancel;
 import goodee.gdj58.booking_c.vo.Company;
 import goodee.gdj58.booking_c.vo.Product;
-import goodee.gdj58.booking_c.vo.ProductImg;
 import goodee.gdj58.booking_c.vo.ProductOffday;
 import goodee.gdj58.booking_c.vo.ProductOption;
 import goodee.gdj58.booking_c.vo.Question;
@@ -34,6 +31,13 @@ public class CompanyController3 {
 	@Autowired CompanyService3 companyService;
 	
 	// 상품관리
+	@GetMapping("/company/productOne")
+	public String getProductOne(Model model, @RequestParam(value = "productNo") int productNo) {
+		List<Map<String, Object>> list = companyService.getProductOne(productNo);
+		model.addAttribute("list", list);
+		return "/product/productOne";
+	}
+	
 	// 3) 상태변경
 	@PostMapping("/company/modifyProduct")
 	public String modifyProduct(Product product) {		
@@ -90,6 +94,9 @@ public class CompanyController3 {
 		product.setProductOpen("비공개");
 		companyService.addProduct(product);
 		int productNo = product.getProductNo();
+		
+		String path = request.getServletContext().getRealPath("/upload/product/");
+		companyService.addImg(productImg, productNo, path);
 		ProductOption productOption = new ProductOption();
 		for(int i = 0; i<productOptionName.length; i++) {
 			productOption.setProductNo(productNo);
@@ -105,8 +112,6 @@ public class CompanyController3 {
 			productOffday.setProductOffdayMemo(productOffdayMemo[i]);
 			companyService.addOff(productOffday);
 		}
-		String path = request.getServletContext().getRealPath("/upload/product/");
-		companyService.addImg(productImg, productNo, path);
 		return "redirect:/company/productList";
 	}
 	
