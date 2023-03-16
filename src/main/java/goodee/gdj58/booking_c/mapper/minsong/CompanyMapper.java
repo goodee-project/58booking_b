@@ -12,6 +12,7 @@ import goodee.gdj58.booking_c.vo.CompanyType;
 
 @Mapper
 public interface CompanyMapper {
+	List<Map<String, Object>> selectDayOfOffday(String companyId);
 	int deleteOffday(Map<String, Object> paramMap);
 	int countOffday(Map<String, Object> paramMap);
 	int updateCompanyDetail(CompanyDetail companyDetail);

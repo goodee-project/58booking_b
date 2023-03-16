@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper	namespace="goodee.gdj58.booking_c.mapper.minsong.CompanyMapper">
+	<select id="selectDayOfOffday" parameterType="String" resultType="java.util.Map">
+		SELECT DAYOFWEEK(booking_company_offday_date) companyOffdayDay
+				, booking_company_offday_date companyOffdayDate
+		FROM booking_company_offday
+		WHERE booking_company_offday_memo = '정기휴무' AND booking_company_id = #{companyId}
+	</select>
+
 	<delete id="deleteOffday" parameterType="java.util.Map">
 		DELETE 
 		FROM booking_company_offday
@@ -11,7 +18,7 @@
 				</if>
 	</delete>
 
-	<select id="countOffday" parameterType="java.util.Map">
+	<select id="countOffday" parameterType="java.util.Map" resultType="int">
 		SELECT COUNT(*)
 		FROM booking_company_offday
 		WHERE booking_company_id = #{companyId} AND booking_company_offday_date = #{offdayDate}

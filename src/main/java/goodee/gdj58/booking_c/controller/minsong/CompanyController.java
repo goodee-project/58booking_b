@@ -1,6 +1,8 @@
 package goodee.gdj58.booking_c.controller.minsong;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -84,7 +86,7 @@ public class CompanyController {
 		int row = companyService.addCompanyDetail(companyDetail);
 		
 		if(row != 1) {
-			return "company/addCompanyDetail";
+			return "companyDetail/addCompanyDetail";
 		}
 		
 		// 2. CompanyOffday
@@ -103,7 +105,7 @@ public class CompanyController {
 			}
 			
 			if(row == 0) {
-				return "company/addCompanyDetail";
+				return "companyDetail/addCompanyDetail";
 			}
 		}
 		
@@ -147,7 +149,6 @@ public class CompanyController {
 				if(Integer.parseInt(hour) < 10) {
 					hour = "0"+hour;
 				}
-				log.debug(FontColor.PURPLE+"========시간 자르기=======>"+hour);
 				sb = sb.append(hour).append(time[i].substring(2));
 				
 				time[i] = sb+"";
@@ -155,6 +156,13 @@ public class CompanyController {
 		}
 		log.debug(FontColor.PURPLE+time[0]+", "+time[1]+":::::::::::::::시간");
 		log.debug(FontColor.PURPLE+ampm[0]+", "+ampm[1]+":::::::::::::::오전오후");
+		// 정기 휴무
+		boolean[] days = {false, false, false, false, false, false, false};
+		List<Map<String, Object>> dayOfOffday = companyService.getDayOfOffday(companyId);
+		log.debug(FontColor.PURPLE+dayOfOffday+":::::::::::::::되나?");
+		for(Map<String, Object> map : dayOfOffday) {
+			days[(int)map.get("companyOffdayDay")-1] = true;
+		}
 		
 		// 예약 정보
 		Set<String> bookingDate = companyService.getBookingDate(companyId);
@@ -168,7 +176,10 @@ public class CompanyController {
 		model.addAttribute("timetable", timetable);
 		model.addAttribute("addtionalService", addtionalService);
 //		model.addAttribute("bookingDate", bookingDate);
+		model.addAttribute("days", days);
 		model.getAttribute("msg");
+		
+		log.debug(FontColor.PURPLE+"modifyCompanyDetail GetMapping 끝");
 		return "companyDetail/modifyCompanyDetail";
 	}
 	@PostMapping("/company/modifyCompanyDetail")
@@ -210,9 +221,10 @@ public class CompanyController {
 	log.debug(FontColor.PURPLE+"========부가서비스=======>"+companyDetail.getAdditionService());
 	
 	int row = companyService.modifyCompanyDetail(companyDetail);
+	log.debug(FontColor.PURPLE+"업데이트 row : "+row);
 	
 	if(row != 1) {
-		return "company/modifyCompanyDetail";
+		return "companyDetail/modifyCompanyDetail";
 	}
 	
 	// 2. CompanyOffday
@@ -232,21 +244,64 @@ public class CompanyController {
 		}
 		
 		if(row == 0) {
-			return "company/modifyCompanyDetail";
+			log.debug(FontColor.PURPLE+"휴무일 삭제 row : "+row);
+			return "companyDetail/modifyCompanyDetail";
 		}
 	}
 	
 	// 1-2. 휴무일 삭제(요일)
 	row = 0;
-	for(int i = 1; i < 8; i++) {
-		int num = i;
-		if(!IntStream.of(dayofweek).anyMatch(x -> x == num)) {	// 체크 안 돼 있으면
-			String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
-			// 쿼리 돌리기
-			for(int j = 0; j < 365; j+=7) {
-				log.debug(FontColor.PURPLE+j+"요일 계산");
-				companyService.removeOffday(loginCompanyId, date, j);					
+//	for(int i = 1; i < 8; i++) {
+//		int num = i;
+//		if(!IntStream.of(dayofweek).anyMatch(x -> x == num)) {	// 체크 안 돼 있으면
+//			String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
+//			// 쿼리 돌리기
+//			for(int j = 0; j < 365; j+=7) {
+//				log.debug(FontColor.PURPLE+j+"요일 계산");
+//				companyService.removeOffday(loginCompanyId, date, j);					
+//			}
+//		}
+//	}
+	List<Map<String, Object>> dayOfOffday = companyService.getDayOfOffday(loginCompanyId);
+	Set<Integer> days = new HashSet<>();
+	for(Map<String, Object> map : dayOfOffday) {
+		days.add((int)map.get("companyOffdayDay"));	// 요일 중복없이 한 번씩만 넣기
+	}
+	
+	if(dayofweek == null) {
+		String date = "";
+		// 쿼리 돌리기
+//		if(dayOfOffday != null) {			
+			for(Map<String, Object> map : dayOfOffday) {
+				date = String.valueOf(map.get("companyOffdayDate"));
+				log.debug(FontColor.PURPLE+date+"??????????????");
+				row += companyService.removeOffday(loginCompanyId, date, (int)map.get("companyOffdayDay"));					
+				log.debug(FontColor.PURPLE+row+"???????????????");
+				
+				if(row == 0) {
+					log.debug(FontColor.PURPLE+"휴무일 요일 삭제 row : "+row);
+					return "companyDetail/modifyCompanyDetail";
+				}
 			}
+//		}
+	}else {		
+		for(int i = 1; i < 8; i++) {
+			int num = i;
+			if(days.contains(i) && !IntStream.of(dayofweek).anyMatch(x -> x == num)) {	// 기존에 있던 요일을 해제했다면 
+				String date = "";
+				// 쿼리 돌리기
+				for(Map<String, Object> map : dayOfOffday) {
+					if(i == (int)map.get("companyOffdayDay")) {	// 조건에 부합하는 요일이라면		
+						date = String.valueOf(map.get("companyOffdayDate"));
+						row += companyService.removeOffday(loginCompanyId, date, i);					
+						
+						if(row == 0) {
+							log.debug(FontColor.PURPLE+"휴무일 요일 삭제 row : "+row);
+							return "companyDetail/modifyCompanyDetail";
+						}
+					}
+				}
+			}	
 		}
 	}
 
@@ -258,12 +313,14 @@ public class CompanyController {
 				companyOffday.setCompanyOffdayDate(companyOffdayDate[i]);
 				companyOffday.setCompanyOffdayMemo(companyOffdayMemo[i]);
 				row += companyService.addCompanyOffday(companyOffday);
+
+				if(row == 0) {
+					log.debug(FontColor.PURPLE+"휴무일 추가 row : "+row);
+					return "companyDetail/modifyCompanyDetail";
+				}
 			}
 		}
 		
-		if(row == 0) {
-			return "company/modifyCompanyDetail";
-		}
 	}
 	
 	// 2-2. 휴무일 추가(요일)
@@ -275,18 +332,21 @@ public class CompanyController {
 			log.debug(FontColor.PURPLE+date+"<--------");
 			// 쿼리 돌리기
 			for(int j = 0; j < 365; j+=7) {
-				log.debug(FontColor.PURPLE+j+"요일 계산");
-				if(companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
-					companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);						
+//				log.debug(FontColor.PURPLE+j+"요일 계산");
+//				if(companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {
+				if(companyOffdayDate == null || companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
+					row += companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);
+					
+					if(row == 0) {
+						log.debug(FontColor.PURPLE+"휴무일 요일 추가 row : "+row);
+						return "companyDetail/modifyCompanyDetail";
+					}					
 				}
 			}
 		}
 		
-		if(row == 0) {
-			return "company/modifyCompanyDetail";
-		}
 	}
 	
-	return "redirect:/company/addCompanyDetail";
+	return "redirect:/company/modifyCompanyDetail";
 	}
 }

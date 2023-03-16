@@ -219,13 +219,13 @@
 				 	<div>
 				 		<div>정기 휴무(중복 선택 가능):</div>
 				 		<span>매주</span>
-				 		<input type="checkbox" name="dayofweek" value="2">월	<!-- onClick="check(this)" -->
-				 		<input type="checkbox" name="dayofweek" value="3">화
-				 		<input type="checkbox" name="dayofweek" value="4">수
-				 		<input type="checkbox" name="dayofweek" value="5">목
-				 		<input type="checkbox" name="dayofweek" value="6">금
-				 		<input type="checkbox" name="dayofweek" value="7">토
-				 		<input type="checkbox" name="dayofweek" value="1">일
+				 		<input type="checkbox" name="dayofweek" value="2" <c:if test="${days[1]}">checked</c:if>>월	<!-- onClick="check(this)" -->
+				 		<input type="checkbox" name="dayofweek" value="3" <c:if test="${days[2]}">checked</c:if>>화
+				 		<input type="checkbox" name="dayofweek" value="4" <c:if test="${days[3]}">checked</c:if>>수
+				 		<input type="checkbox" name="dayofweek" value="5" <c:if test="${days[4]}">checked</c:if>>목
+				 		<input type="checkbox" name="dayofweek" value="6" <c:if test="${days[5]}">checked</c:if>>금
+				 		<input type="checkbox" name="dayofweek" value="7" <c:if test="${days[6]}">checked</c:if>>토
+				 		<input type="checkbox" name="dayofweek" value="1" <c:if test="${days[0]}">checked</c:if>>일
 				 	</div>
 				 	<div id='calendar'>
 				 	</div>

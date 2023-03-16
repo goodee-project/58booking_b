@@ -20,6 +20,11 @@ public class CompanyService {
 	@Autowired 
 	private CompanyMapper companyMapper;
 	
+	// 정기휴무 요일
+	public List<Map<String, Object>> getDayOfOffday(String companyId){
+		return companyMapper.selectDayOfOffday(companyId);
+	}
+	
 	// 휴무일 삭제
 	public int removeOffday(String companyId, String offdayDate, int dayNum) {
 		Map<String, Object> paramMap = new HashMap<>();
