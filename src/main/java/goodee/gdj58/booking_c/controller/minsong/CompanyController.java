@@ -2,6 +2,7 @@ package goodee.gdj58.booking_c.controller.minsong;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import javax.servlet.http.HttpSession;
 
@@ -115,7 +116,9 @@ public class CompanyController {
 				// 쿼리 돌리기
 				for(int j = 0; j < 365; j+=7) {
 					log.debug(FontColor.PURPLE+j+"요일 계산");
-					companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);
+					if(companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
+						companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);						
+					}
 				}
 			}
 		}
@@ -132,16 +135,35 @@ public class CompanyController {
 		
 		// 기존 업체 정보
 		CompanyDetail companyDetail = companyService.getCompanyDetail(companyId);
-		log.debug(FontColor.PURPLE+companyDetail.getAdditionService().contains("제로페이")+"<--------");
+		// 오후 반영
+		String[] time = {companyDetail.getOpenTime().substring(0, 5), companyDetail.getCloseTime().substring(0, 5)};
+		String[] ampm = {"am", "am"};
+		
+		for(int i = 0; i < 2; i++) {
+			if(Integer.parseInt(time[i].substring(0, 2)) > 12) {
+				ampm[i] = "pm";
+				StringBuilder sb = new StringBuilder();
+				String hour = (Integer.parseInt(time[i].substring(0, 2))-12)+"";
+				if(Integer.parseInt(hour) < 10) {
+					hour = "0"+hour;
+				}
+				log.debug(FontColor.PURPLE+"========시간 자르기=======>"+hour);
+				sb = sb.append(hour).append(time[i].substring(2));
+				
+				time[i] = sb+"";
+			}
+		}
+		log.debug(FontColor.PURPLE+time[0]+", "+time[1]+":::::::::::::::시간");
+		log.debug(FontColor.PURPLE+ampm[0]+", "+ampm[1]+":::::::::::::::오전오후");
 		
 		// 예약 정보
 		Set<String> bookingDate = companyService.getBookingDate(companyId);
 //		List<String> bookingDate = companyService.getBookingDate(companyId);
 		log.debug(FontColor.PURPLE+bookingDate+"<=======예약일자 목록");
 
-		
-		model.addAttribute("openTime", companyDetail.getOpenTime().substring(0, 5));
-		model.addAttribute("closeTime", companyDetail.getCloseTime().substring(0, 5));
+		model.addAttribute("ampm", ampm);
+		model.addAttribute("openTime", time[0]);
+		model.addAttribute("closeTime", time[1]);
 		model.addAttribute("additionService", companyDetail.getAdditionService());
 		model.addAttribute("timetable", timetable);
 		model.addAttribute("addtionalService", addtionalService);
@@ -187,44 +209,81 @@ public class CompanyController {
 	log.debug(FontColor.PURPLE+"========마감=======>"+companyDetail.getCloseTime());
 	log.debug(FontColor.PURPLE+"========부가서비스=======>"+companyDetail.getAdditionService());
 	
-	int row = companyService.addCompanyDetail(companyDetail);
+	int row = companyService.modifyCompanyDetail(companyDetail);
 	
 	if(row != 1) {
-	return "company/addCompanyDetail";
+		return "company/modifyCompanyDetail";
 	}
 	
 	// 2. CompanyOffday
-	row = 0;
 	
 	CompanyOffday companyOffday = new CompanyOffday();
 	companyOffday.setCompanyId(loginCompanyId);
 	
-	if(companyOffdayDate != null) {			
-		for(int i = 0; i < companyOffdayDate.length; i++) {
-			if(!companyOffdayDate[i].equals("")) {
-			companyOffday.setCompanyOffdayDate(companyOffdayDate[i]);
-			companyOffday.setCompanyOffdayMemo(companyOffdayMemo[i]);
-			row += companyService.addCompanyOffday(companyOffday);
+	
+	// 휴무일 삭제 먼저 하고 휴무일 추가 (기존 휴무일 고려, 새로운 사유로 갱신하기 위함)
+	// 1-1. 휴무일 삭제(개별)
+	row = 0;
+	if(companyWorkingdayDate != null) {			
+		for(int i = 0; i < companyWorkingdayDate.length; i++) {
+			if(!companyWorkingdayDate[i].equals("")) {
+				row += companyService.removeOffday(loginCompanyId, companyWorkingdayDate[i], 0);
 			}
 		}
 		
 		if(row == 0) {
-			return "company/addCompanyDetail";
+			return "company/modifyCompanyDetail";
 		}
 	}
 	
+	// 1-2. 휴무일 삭제(요일)
+	row = 0;
+	for(int i = 1; i < 8; i++) {
+		int num = i;
+		if(!IntStream.of(dayofweek).anyMatch(x -> x == num)) {	// 체크 안 돼 있으면
+			String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
+			// 쿼리 돌리기
+			for(int j = 0; j < 365; j+=7) {
+				log.debug(FontColor.PURPLE+j+"요일 계산");
+				companyService.removeOffday(loginCompanyId, date, j);					
+			}
+		}
+	}
+
+	// 2-1. 휴무일 추가(개별)
+	row = 0;
+	if(companyOffdayDate != null) {			
+		for(int i = 0; i < companyOffdayDate.length; i++) {
+			if(!companyOffdayDate[i].equals("") && companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 이전에 등록된 날 제외
+				companyOffday.setCompanyOffdayDate(companyOffdayDate[i]);
+				companyOffday.setCompanyOffdayMemo(companyOffdayMemo[i]);
+				row += companyService.addCompanyOffday(companyOffday);
+			}
+		}
+		
+		if(row == 0) {
+			return "company/modifyCompanyDetail";
+		}
+	}
 	
-	// 요일별
+	// 2-2. 휴무일 추가(요일)
+	row = 0;
 	if(dayofweek != null) {			
 		for(int i = 0; i < dayofweek.length; i++) {
-		// 해당 요일의 날짜 구하기
-		String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
-		log.debug(FontColor.PURPLE+date+"<--------");
-		// 쿼리 돌리기
+			// 해당 요일의 날짜 구하기
+			String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
+			log.debug(FontColor.PURPLE+date+"<--------");
+			// 쿼리 돌리기
 			for(int j = 0; j < 365; j+=7) {
-			log.debug(FontColor.PURPLE+j+"요일 계산");
-			companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);
+				log.debug(FontColor.PURPLE+j+"요일 계산");
+				if(companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
+					companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);						
+				}
 			}
+		}
+		
+		if(row == 0) {
+			return "company/modifyCompanyDetail";
 		}
 	}
 	

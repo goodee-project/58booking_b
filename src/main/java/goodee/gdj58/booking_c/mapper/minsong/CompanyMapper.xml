@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper	namespace="goodee.gdj58.booking_c.mapper.minsong.CompanyMapper">
+	<delete id="deleteOffday" parameterType="java.util.Map">
+		DELETE 
+		FROM booking_company_offday
+		WHERE booking_company_id = #{companyId} 
+				AND booking_company_offday_date = #{offdayDate}
+				<if test="dayNum != 0">
+					AND booking_company_offday_memo = '정기휴무'
+				</if>
+	</delete>
+
+	<select id="countOffday" parameterType="java.util.Map">
+		SELECT COUNT(*)
+		FROM booking_company_offday
+		WHERE booking_company_id = #{companyId} AND booking_company_offday_date = #{offdayDate}
+	</select>
+
+	<update id="updateCompanyDetail" parameterType="goodee.gdj58.booking_c.vo.CompanyDetail">
+		UPDATE booking_company_detail
+		SET booking_company_opentime = #{openTime}
+				, booking_company_closetime = #{closeTime}
+				, booking_company_addition_service = #{additionService}
+		WHERE booking_company_id = #{companyId}
+	</update>
+
 	<select id="selectBookingDate" parameterType="String" resultType="String">
 		SELECT SUBSTR(booking_date, 1, 10) bookingDate	<!-- 여기서 자르면 jsp로 넘어갈 때 - 계산해서 숫자로 넘어감 -->
 		<!-- 

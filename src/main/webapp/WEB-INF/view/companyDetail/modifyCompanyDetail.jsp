@@ -38,104 +38,126 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
 <script>
-// fullCalendar
-document.addEventListener('DOMContentLoaded', function() {
-	let arr = [];
-	let idx = 0;
-	let bookingDateArr = [];
-	
-  var calendarEl = document.getElementById('calendar');
-  var request = $.ajax({
-      url: "/58booking_b/offday"
-      , method: "GET"
-  });
-  // 이미 예약된 날짜
-  var bookingDate = $.ajax({
-      url: "/58booking_b/bookingDate"
-          , method: "GET"
-          , success:function(model){
-        	  for(let i = 0; i < model.length; i++){
-        		  bookingDateArr.push(model[i]);
-        	  }
-          }
-      });
-  request.done(function(data){
-	  // 원래 휴무를 배열에 넣고 시작
-	  $.each(data, function(index, item) {
-		  arr.push(item.start);
-		// 나중에 hidden으로 바꾸기
-	    	let offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+item.start+"' id='offday"+idx+"'>";
-		    $('#targetCal').append(offday);
-		    let reason = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+item.title+"' id='reason"+idx+"'>";
-		    $('#targetCal').append(reason);
-		      
-		    idx++;
-		});
-	  
-	    var calendar = new FullCalendar.Calendar(calendarEl, {
-	      locale: 'ko'
-	      , dayMaxEventRows: 1
-	      , initialView: 'dayGridMonth'
-	      , selectable: true
-	      , events: data
-	      , dateClick: function(info) { 
-    		  // 예약 여부 확인
-    		  for(let i = 0; i < bookingDateArr.length; i++){
-    			  if(info.dateStr == bookingDateArr[i]){
-    				  alert('이미 예약되어 있는 날짜입니다. 예약 취소 후 휴무일로 지정해 주세요.');
-    				  return;
-    			  }
-    		  }
-    		  
-	    	  // 휴무 사유 유효성 검사 후		    		  
-	    	  if($('#memo').val().length < 1 || $('#memo').val().trim() == ''){	
-				alert('휴무 사유를 입력해 주세요.');
-	    		return;
-	    	  }
-	    	  
-	    	  if(!arr.includes(info.dateStr)){
+	// 바꾸려는 시간대 이외에 예약 있는지 확인
+</script>
+<script>
+	// fullCalendar
+	document.addEventListener('DOMContentLoaded', function() {
+		let arr = [];
+		let idx = 0;
+		let previousOffday = [];	// 이전 휴무일
+		let bookingDateArr = [];	// 수정일 이후 예약일
+		//let check = true;
+		
+	  var calendarEl = document.getElementById('calendar');
+	  var request = $.ajax({
+	      url: "/58booking_b/offday"
+	      , method: "GET"
+	  });
+	  // 이미 예약된 날짜
+	  var bookingDate = $.ajax({
+	      url: "/58booking_b/bookingDate"
+	          , method: "GET"
+	          , success:function(model){
+	        	  for(let i = 0; i < model.length; i++){
+	        		  bookingDateArr.push(model[i]);
+	        	  }
+	          }
+	      });
+	  request.done(function(data){
+		  // 원래 휴무를 배열에 넣고 시작
+		  $.each(data, function(index, item) {
+			  previousOffday.push(item.start);
+			// 나중에 hidden으로 바꾸기
+		    	let offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+item.start+"' id='offday"+idx+"'>";
+			    $('#targetCal').append(offday);
+			    let reason = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+item.title+"' id='reason"+idx+"'>";
+			    $('#targetCal').append(reason);
+			      
+			    idx++;
+			});
+		  
+		    var calendar = new FullCalendar.Calendar(calendarEl, {
+		      locale: 'ko'
+		      , dayMaxEventRows: 1
+		      , initialView: 'dayGridMonth'
+		      , selectable: true
+		      , events: data
+		      , dateClick: function(info) { 
+	    		  // 예약 여부 확인
+	    		  for(let i = 0; i < bookingDateArr.length; i++){
+	    			  if(info.dateStr == bookingDateArr[i]){
+	    				  alert('이미 예약되어 있는 날짜입니다. 예약 취소 후 휴무일로 지정해 주세요.');
+	    				  //check = false;
+	    				  return;
+	    			  }
+	    		  }
 	    		  
-		    	  calendar.addEvent({'title':$('#memo').val(), 'start': info.dateStr});
-		    	  arr.push(info.dateStr);
+		    	  // 휴무 사유 유효성 검사 후		    		  
+		    	  if($('#memo').val().length < 1 || $('#memo').val().trim() == ''){	
+					alert('휴무 사유를 입력해 주세요.');
+					//check = false;
+		    		return;
+		    	  }
 		    	  
-		    	    // 나중에 hidden으로 바꾸기
-			    	offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+info.dateStr+"' id='offday"+idx+"'>";
-				    $('#targetCal').append(offday);
-				    reason = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+$('#memo').val()+"' id='reason"+idx+"'>";
-				    $('#targetCal').append(reason);
-				      
-				    idx++;
-	    	  }else{
-	    		  alert('이미 휴무일로 지정된 날입니다.');
-	    	  }
-	    	  
-	      }
-	      , eventClick: function(info){
-	    	  info.event.remove();
-	    	  let filtered = arr.filter((element) => element !== info.event.startStr);	// 특정 요소 삭제
-	      	  arr = filtered;
-	    	  // 이 페이지에서 새롭게 휴무 추가
-	    	  if(idx > 0){
-		    	  for(let i = 0; i < idx+1; i++){
-		    		  if(info.event.startStr == $('#offday'+i).val()){
-			    		  $('#offday'+i).val('');
-			    		  $('#reason'+i).val('');
-		    		  }
-		    	  }	    		  
-	    	  }
-	    	  
-	    	  // 삭제할 날 == 이전에 휴무일이었지만 해제한 날(정기휴무 제외)
-	    	  {	    		  
-	    		  let workingday = "근무일: "+"<input type='text' name='companyWorkingdayDate' value='"+info.event.startStr+"' id='workingday"+idx+"'>";
-				  $('#targetCal').append(workingday);
-	    	  }
-	    	  
-	      }
-	    });
- 	
-		calendar.render();
-  });
-});
+		    	  // 위에서 예약날짜 거르므로 조건 추가할 필요 없음
+		    	  if(!arr.includes(info.dateStr)){
+		    		  
+			    	  calendar.addEvent({'title':$('#memo').val(), 'start': info.dateStr});
+			    	  arr.push(info.dateStr);
+			    	  
+			    	    // 나중에 hidden으로 바꾸기
+				    	offday = "휴무일: "+"<input type='text' name='companyOffdayDate' value='"+info.dateStr+"' id='offday"+idx+"'>";
+					    $('#targetCal').append(offday);
+					    reason = "휴무 사유: "+"<input type='text' name='companyOffdayMemo' value='"+$('#memo').val()+"' id='reason"+idx+"'>";
+					    $('#targetCal').append(reason);
+					      
+					    idx++;
+		    	  }else{
+		    		  alert('이미 휴무일로 지정된 날입니다.');
+		    	  }
+		    	  
+		      }
+		      , eventClick: function(info){
+		    	  info.event.remove();
+		    	  let filtered = arr.filter((element) => element !== info.event.startStr);	// 특정 요소 삭제
+		      	  arr = filtered;
+		    	  // 이 페이지에서 새롭게 휴무 추가
+		    	  if(idx > 0){
+			    	  for(let i = 0; i < idx+1; i++){
+			    		  if(info.event.startStr == $('#offday'+i).val()){
+				    		  $('#offday'+i).val('');
+				    		  $('#reason'+i).val('');
+			    		  }
+			    	  }	    		  
+		    	  }
+		    	  /* console.log(workingIdx+"<====workingIdx");
+		    	  if(workingIdx > 0){
+		    		  for(let i = 0; i < workingIdx+1; i++){
+			    		  if(info.event.startStr == $('#workingday'+i).val()){
+				    		  $('#workingday'+i).val('');
+			    		  }
+			    	  }	   
+		    	  } */
+		    	  
+		    	  let filteredPO = [];
+		    	  
+		    	  // 삭제할 날 == 이전에 휴무일이었지만 해제한 날(정기휴무 제외)
+		    	  if(previousOffday.includes(info.event.startStr)){	
+		    		  filteredPO = previousOffday.filter((element) => element !== info.event.startStr);	// 특정 요소 삭제
+		    		  previousOffday = filteredPO;
+		    		  
+		    		  console.log(previousOffday);
+		    		  
+		    		  let workingday = "근무일: "+"<input type='text' name='companyWorkingdayDate' value='"+info.event.startStr+"' id='workingday'>";
+					  $('#targetCal').append(workingday);
+		    	  }
+		      }
+		    });
+		    
+			calendar.render();
+	  });
+	});
 </script>
 </head>
 <body class="fixed-nav sticky-footer" id="page-top">
@@ -162,8 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			 	<div>
 			 		<h3>운영 시간</h3>
 			 		<select name="am_pm">
-			 			<option value="am">오전</option>
-			 			<option value="pm">오후</option>
+			 			<option value="am" <c:if test="${ampm[0] eq 'am'}">selected</c:if>>오전</option>
+			 			<option value="pm" <c:if test="${ampm[0] eq 'pm'}">selected</c:if>>오후</option>
 			 		</select>
 			 		<!-- 00~23 -->
 			 		<select name="openTime">
@@ -174,8 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			 		</select>
 			 		~
 			 		<select name="am_pm">
-			 			<option value="am">오전</option>
-			 			<option value="pm">오후</option>
+			 			<option value="am" <c:if test="${ampm[1] eq 'am'}">selected</c:if>>오전</option>
+			 			<option value="pm" <c:if test="${ampm[1] eq 'pm'}">selected</c:if>>오후</option>
 			 		</select>
 			 		<select name="closeTime">
 			 			<option>==마감시간==</option>
