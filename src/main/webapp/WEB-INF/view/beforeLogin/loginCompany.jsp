@@ -113,45 +113,63 @@
 					<!-- 로그인 폼 -->
 					<table class="table table-borderless w-50 mx-auto">
 						<tr>
-							<th class="align-middle text-center">ID</th>
-							<td class="text-center">
-								<input type="text" id="id" name="companyId" class="form-control">
+							<td class="text-center mt-2"><h2>COMPANY LOGIN</h2></td>
+						</tr>
+						<tr>
+							<td>
+								<div><strong>ID</strong></div>
+								<div>
+									<input type="text" id="id" name="companyId" class="form-control" placeholder="Enter ID">	
+								</div>
 							</td>
 						</tr>
 						<tr>
-							<th class="align-middle text-center">PW</th>
-							<td class="text-center">
-								<input type="password" id="pw" name="companyPw" class="form-control">
+							<td>
+								<div><strong>PW</strong></div>
+								<div>
+									<input type="password" id="pw" name="companyPw" class="form-control" placeholder="Enter Password">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><!-- 로그인 정보 저장 여부 -->
+								<div>
+									<label>
+										<input type="checkbox" id="saveLoginInfo">
+										<span class="checkmark">Remember me</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center"><!-- 리캡챠 -->
+								<div class="g-recaptcha" data-sitekey="6LevqtkkAAAAALTd1rpqiYdFT1OHY14wxlqMG89a"></div>
+							</td>
+						</tr>
+						<tr>
+							<td><!-- 로그인 버튼 -->
+								<div class="text-center mb-5">
+									<button type="button" id="loginBtn" class="btn btn-lg btn-primary">Login</button>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><!-- 아이디찾기/비밀번호 찾기 링크 -->
+								<div class="text-center mb-1 mt-3">
+									<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디 찾기</a>
+									<span> | </span>
+									<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호 찾기</a>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="text-center mb-4">
+									<strong>새로운 업체 등록을 원하시나요? <a href="${pageContext.request.contextPath}/beforeLogin/addCompany">Sign up</a></strong>
+								</div>
 							</td>
 						</tr>
 					</table>
-					
-					<!-- 로그인 정보 저장 여부 -->
-					<div class="float-start">
-						<label>
-							<input type="checkbox" id="saveLoginInfo">
-							<span class="checkmark">Remember me</span>
-						</label>
-					</div>
-					
-					<!-- 리캡챠 -->
-					<div class="g-recaptcha" data-sitekey="6LevqtkkAAAAALTd1rpqiYdFT1OHY14wxlqMG89a"></div>
-					
-					<!-- 아이디찾기/비밀번호 찾기 링크 -->
-					<div class="text-center mb-3 mt-5">
-						<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디 찾기</a>
-						<span> | </span>
-						<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호 찾기</a>
-					</div>
-					
-					<!-- 로그인 버튼 -->
-					<div class="text-center mb-5 mt-3">
-						<button type="button" id="loginBtn" class="btn-lg btn_1">LOGIN</button>
-					</div>
-					
-					<div class="text-center mb-4">
-						<strong>새로운 업체 등록을 원하시나요? <a href="${pageContext.request.contextPath}/beforeLogin/addCompany">Sign up</a></strong>
-					</div>
 				</form>
 			</div><!-- 본문 끝 -->
 		</div>

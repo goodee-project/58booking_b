@@ -92,6 +92,8 @@
 				<form action="${pageContext.request.contextPath}/beforeLogin/addCompany" method="post" encType="multipart/form-data" id="addForm">
 					<input type="hidden" id="email" name="companyEmail"><!-- 이메일 인증 후 value 변경 -->
 					<input type="hidden" id="level" name="choose"><!-- 대표사진설정 -->
+					<input type="hidden" id="la" name="latitude"><!-- 위도 -->
+					<input type="hidden" id="long" name="longtitude"><!-- 경도 -->
 					
 					<table class="mx-auto table w-75">
 						<tr>
@@ -164,15 +166,17 @@
 						<tr>
 							<th class="align-middle">전화번호</th>
 							<td colspan="3">
-								<input type="number" id="phone" name="companyPhone" class="form-control form-size">
+								<input type="text" id="phone" name="companyPhone" class="form-control form-size">
 							</td>
 						</tr>
 						<tr>
 							<th class="align-middle">업체주소</th>
 							<td colspan="3">
-								
-								<input type="text" id="address" name="companyAddress" readonly class="form-control w-50">
-								<input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색" class="btn_1">
+								<div class="mb-2">
+									<input type="text" id="address" name="companyAddress" readonly class="form-control form-size">
+									<input type="text" id="addressDetail" name="companyAddressDetail" class="form-control form-size" placeholder="상세주소 입력">
+									<input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색" class="btn_1">
+								</div>
 								<div id="map" style="width:600px;height:300px;margin-top:10px;display:none"></div>
 							</td>
 						</tr>
@@ -183,7 +187,7 @@
 							</td>
 							<th class="w-10 align-middle">사업자번호</th>
 							<td class="w-40">
-								<input type="number" id="number" name="companyNumber" class="form-control form-size">
+								<input type="text" id="number" name="companyNumber" class="form-control form-size">
 							</td>
 						</tr>
 						<tr>
@@ -193,7 +197,7 @@
 							</td>
 							<th class="w-10 align-middle">계좌번호</th>
 							<td class="w-40">
-								<input type="number" id="account" name="companyAccount" class="form-control form-size">
+								<input type="text" id="account" name="companyAccount" class="form-control form-size">
 							</td>
 						</tr>
 						<tr>
@@ -220,24 +224,16 @@
 								동의 거부 권리 사실 및 불이익 내용<br>
 								이용자는 동의를 거부할 권리가 있습니다. 동의를 거부할 경우에는 서비스 이용에 제한됨을 알려드립니다.<br>
 								<br>
-								<div>
+								<br>
+								<div class="text-center">
 									<label>
-										<input type="radio" class="agree" name="infoAgree" value="동의">약관 및 마케팅 동의
+										<input type="radio" class="agree" name="infoAgree" value="동의"> 약관 및 마케팅 동의
 									</label>
+									&nbsp;
 									<label>
-										<input type="radio" class="agree" name="infoAgree" value="미동의">약관 및 마케팅 미동의
+										<input type="radio" class="agree" name="infoAgree" value="미동의"> 약관 및 마케팅 미동의
 									</label>
 								</div>
-							</td>
-						</tr>
-						<tr>
-							<th class="align-middle">위도</th>
-							<td>
-								<input type="number" id="la" name="latitude" readonly class="form-control form-size">
-							</td>
-							<th class="align-middle">경도</th>
-							<td>
-								<input type="number" id="long" name="longtitude" readonly class="form-control form-size">
 							</td>
 						</tr>
 						<tr>
@@ -275,7 +271,7 @@
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
             center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-            level: 5 // 지도의 확대 레벨
+            level: 3 // 지도의 확대 레벨
         };
 
     //지도를 미리 생성
@@ -327,7 +323,6 @@
         }).open();
     }
 </script>
-
 <script>
 	$(document).ready(function(){
 		var imgCk = false;
@@ -529,6 +524,9 @@
 			} else if ($('#address').val() == ''){ // 업체주소
 				alert('업체주소를 입력해주세요.');
 				return false;
+			} else if ($('#addressDetail').val() == ''){ // 업체 상세주소
+				alert('업체 상세주소를 입력해주세요.');
+				return false;
 			} else if ($('#ceo').val() == ''){ // 사업자명
 				alert('사업자명을 입력해주세요.');
 				return false;
@@ -543,12 +541,6 @@
 				return false;
 			} else if ($('.agree:checked').val() == '미동의'){ // 약관동의
 				alert('약관에 동의해야만 가입이 가능합니다.');
-				return false;
-			} else if ($('#la').val() == ''){ // 위도
-				alert('위도를 입력해주세요.');
-				return false;
-			} else if ($('#long').val() == ''){ // 경도
-				alert('경도를 입력해주세요.');
 				return false;
 			} else {
 				allChecked = true;

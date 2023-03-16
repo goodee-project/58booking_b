@@ -12,10 +12,13 @@
 			, booking_company_name companyName
 			, booking_company_phone companyPhone
 			, booking_company_address companyAddress
+			, booking_company_address_detail companyAddressDetail
 			, booking_company_ceo companyCeo
 			, booking_company_number companyNumber
 			, booking_company_bank companyBank
 			, booking_company_account companyAccount
+			, booking_company_latitude latitude
+			, booking_company_longtitude longtitude
 		FROM booking_company
 		WHERE booking_company_id = #{id}
 	</select>
@@ -63,6 +66,7 @@
 			, booking_company_name
 			, booking_company_ceo
 			, booking_company_address
+			, booking_company_address_detail
 			, booking_company_phone
 			, booking_company_email
 			, booking_company_bank
@@ -77,6 +81,7 @@
 			, #{companyName}
 			, #{companyCeo}
 			, #{companyAddress}
+			, #{companyAddressDetail}
 			, #{companyPhone}
 			, #{companyEmail}
 			, #{companyBank}

@@ -62,7 +62,6 @@
 	.form-size{
 		width:220px;
 	}
-
 	th{
 		text-align: center;
 	}
@@ -76,20 +75,25 @@
 		display: inline;
 	}
     .imgs_wrap img {
-        width: 200px;
+        width: 300px;
+        height: 300px;
         filter: brightness(1);
         transition:1s;
         margin-bottom:10px;
-        margin-top:10px;
+        margin-top:5px;
     }
     .imgs_wrap img:hover {
-        width: 200px;
+        width: 300px;
         cursor: pointer;
         filter: brightness(0.8);
 		
     }  
     .upload_btn {
-		width: 200px;
+		width: 300px;
+    	text-align: center;
+    }
+    .imgLevel{
+    	width: 300px;
     	text-align: center;
     }
 </style>
@@ -111,74 +115,90 @@
 			
 			<!-- 본문 입력 -->
 			<div class="box_general">
-				<form>
+				<form action="${pageContext.request.contextPath}/company/companyBasicInfo/modifyCompany" method="post" encType="multipart/form-data" id="modiForm">
+					<input type="hidden" name="companyId" value="${com.companyId}"><!-- 아이디 -->
+					<input type="hidden" id="la" name="latitude" value="${com.latitude}"><!-- 위도 -->
+					<input type="hidden" id="long" name="longtitude" value="${com.longtitude}"><!-- 경도 -->
+					<input type="hidden" id="level" name="choose"><!-- 대표사진설정 -->
 					<table class="mx-auto table w-75">
 						<tr>
 							<th class="w-10 align-middle">ID</th>
-							<td colspan="3">
-								<input type="text" name="" value="${com.companyId}" readonly class="form-control">
-							</td>
+							<td colspan="3">${com.companyId}</td>
 						</tr>
 						<tr>
 							<th class="align-middle" colspan="1">이메일</th>
-							<td colspan="3">
-								<input type="text" name="" value="${com.companyEmail}" readonly class="form-control">
-							</td>
-						</tr>
-						<tr>
-							<th class="align-middle">PW</th>
-							<td colspan="3">********</td>
+							<td colspan="3">${com.companyEmail}</td>
 						</tr>
 						<tr>
 							<th class="align-middle">업체사진</th>
 							<td colspan="3">
-								<!-- 사진미리보기 -->
-								<div class="imgs_wrap">
-									<c:forEach var="img" items="${imgList}">
-						        		<img src="${pageContext.request.contextPath}/upload/${img.companyImgSaveName}">
+								<!-- 대표사진 여부 -->
+						        <div style="display:flex;">
+						        	<c:forEach var="img" items="${imgList}">
+										<c:if test="${img.companyImgLevel eq 'Y'}">
+											<div class="imgLevel"><i class="pending">대표사진</i></div>
+										</c:if>
+										<c:if test="${img.companyImgLevel eq 'N'}">
+											<div class="imgLevel"></div>
+										</c:if>
 						        	</c:forEach>
+							    </div>
+								<!-- 사진 -->
+								<div class="imgs_wrap">
+									<c:forEach var="img" items="${imgList}" varStatus="i">
+						        		<img id="img${i.index}" src="${pageContext.request.contextPath}/upload/${img.companyImgSaveName}">
+						        	</c:forEach>
+						        </div>
+						        <!-- 사진 변경 버튼 -->
+						        <div style="display:flex; justify-content: right">
+						        	<span class="mr-1"><a class="btn_1">사진변경</a></span>
 						        </div>
 							</td>
 						</tr>
 						<tr>
 							<th class="align-middle">업체명</th>
 							<td>
-								<input type="text" name="" value="${com.companyName}" readonly class="form-control">
+								<input type="text" id="name" name="companyName" value="${com.companyName}" readonly class="form-control form-size">
 							</td>
 							<th class="align-middle">전화번호</th>
 							<td>
-								<input type="text" name="" value="${com.companyPhone}" readonly class="form-control">
+								<input type="text" id="phone" name="companyPhone" value="${com.companyPhone}" readonly class="form-control form-size">
 							</td>
 						</tr>
 						<tr>
 							<th class="align-middle">업체주소</th>
-							<td colspan="3" class="align-middle">
-								<input type="text" name="" value="${com.companyAddress}" readonly class="form-control">
+							<td colspan="3">
+								<div class="mb-2">
+									<input type="text" id="address" name="companyAddress" readonly value="${com.companyAddress}" class="form-control form-size">
+									<input type="text" id="addressDetail" name="companyAddressDetail" class="form-control form-size" value="${com.companyAddressDetail}" placeholder="상세주소 입력">
+									<input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색" class="btn_1">
+								</div>
+								<div id="map" style="width:600px;height:300px;margin-top:10px;"></div>
 							</td>
 						</tr>
 						<tr>
 							<th class="w-10 align-middle">사업자명</th>
 							<td class="w-40">
-								<input type="text" name="" value="${com.companyCeo}" readonly class="form-control">
+								<input type="text" id="ceo" name="companyCeo" value="${com.companyCeo}" class="form-control form-size">
 							</td>
 							<th class="w-10 align-middle">사업자번호</th>
 							<td class="w-40">
-								<input type="text" name="" value="${com.companyNumber}" readonly class="form-control">
+								<input type="text" id="number" name="companyNumber" value="${com.companyNumber}" class="form-control form-size">
 							</td>
 						</tr>
 						<tr>
 							<th class="w-10 align-middle">은행</th>
 							<td class="w-40">
-								<input type="text" name="" value="${com.companyBank}" readonly class="form-control">
+								<input type="text" id="bank" name="companyBank" value="${com.companyBank}" class="form-control form-size">
 							</td>
 							<th class="w-10 align-middle">계좌번호</th>
 							<td class="w-40">
-								<input type="text" name="" value="${com.companyAccount}" readonly class="form-control">
+								<input type="text" id="account" name="companyAccount" value="${com.companyAccount}" class="form-control form-size">
 							</td>
 						</tr>
 						<tr>
 							<td colspan="4" class="text-right align-middle">
-								<a href="" class="btn_1 mb-3 mt-2">수정완료</a>
+								<button type="button" id="modiBtn" class="btn_1 mb-3 mt-2">수정완료</button>
 							</td>
 						</tr>
 					</table>
@@ -208,10 +228,17 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1019ec0068d27d2c4d9f0551986950d2&libraries=services"></script>
 <script>
+
+	var lat = '${com.latitude}';
+	var lng = '${com.longtitude}';
+	
+	console.log(lat);
+	console.log(lng);
+
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
-            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-            level: 5 // 지도의 확대 레벨
+            center: new daum.maps.LatLng(lat, lng), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
         };
 
     //지도를 미리 생성
@@ -220,7 +247,7 @@
     var geocoder = new daum.maps.services.Geocoder();
     //마커를 미리 생성
     var marker = new daum.maps.Marker({
-        position: new daum.maps.LatLng(37.537187, 127.005476),
+        position: new daum.maps.LatLng(lat, lng),
         map: map
     });
 
@@ -257,22 +284,20 @@
                         
                         $('#la').val(lat);
                         $('#long').val(lng);
+                        $('#addressDetail').val('');
                     }
                 });
             }
         }).open();
     }
 </script>
-
 <script>
 	$(document).ready(function(){
-		var imgCk = false;
 		
-		// 첫번째 사진 추가
+		// 첫번째 사진
         $('#inputImgBtn0').click(function(){ // 0버튼 눌리면
             $('#inputImg0').click(); // input0 열기
         });
-        
     	$('#inputImg0').change(function(e) { // 두번째 파일 등록 위한 동적 버튼 생성
     		
     		// 확장자 확인
@@ -282,10 +307,6 @@
 				alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
 				return;
 			}
-    		
-			var tag0 = "<input type='file' name='companyImg' accept='image/*' id='inputImg1' style='display:none;'>" +
-						"<button type='button' id='inputImgBtn1' class='btn_1'>사진등록</button>";
-			$('#target0').html(tag0);
 			
 			// 이미지 미리보기
 			var tmp = e.target.files[0];
@@ -301,91 +322,77 @@
             $('#img2').css("filter", "");
         });
 		
-		// 두번째 사진 추가
-		$(document).on('click', '#inputImgBtn1', function() {
-			$('#inputImg1').click(); // input1 열기
-			
-			$('#inputImg1').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
-				
-				// 확장자 확인
-	    		var thumbext = $('#inputImg1').val();
-	    		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
-				if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
-					alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
-					return;
-				}
-				
-				var tag1 = "<input type='file' name='companyImg' accept='image/*' id='inputImg2' style='display:none;'>" +
-							"<button type='button' id='inputImgBtn2' class='btn_1'>사진등록</button>";
-				$('#target1').html(tag1);
-				
-				var tmp = e.target.files[0];
-				var img = URL.createObjectURL(tmp);
-				$('#img1').attr('src', img);
-			});
-			
-			// 두번째 사진 클릭 시
-	    	$('#img1').click(function(){
-	            $('#level').attr('value', 1);
-	            $('#img0').css("filter", "");
-	            $('#img1').css("filter", "brightness(0.8)");
-	            $('#img2').css("filter", "");
-	        });
+    	
+		// 두번째 사진
+		$('#inputImgBtn1').click(function(){ // 1버튼 눌리면
+            $('#inputImg1').click(); // input1 열기
+        });
+		$('#inputImg1').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
+		
+			// 확장자 확인
+	   		var thumbext = $('#inputImg1').val();
+	   		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
+			if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
+				alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
+				return;
+			}
+		
+			var tmp = e.target.files[0];
+			var img = URL.createObjectURL(tmp);
+			$('#img1').attr('src', img);
 		});
 		
-		// 세번째 사진 추가
-		$(document).on('click', '#inputImgBtn2', function() {
-			$('#inputImg2').click(); // input2 열기
+		// 두번째 사진 클릭 시
+    	$('#img1').click(function(){
+            $('#level').attr('value', 1);
+            $('#img0').css("filter", "");
+            $('#img1').css("filter", "brightness(0.8)");
+            $('#img2').css("filter", "");
+        });
+		
+		
+		// 세번째 사진
+		$('#inputImgBtn2').click(function(){ // 2버튼 눌리면
+            $('#inputImg2').click(); // input2 열기
+        });
+		$('#inputImg2').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
 			
-			$('#inputImg2').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
-				
-				// 확장자 확인
-	    		var thumbext = $('#inputImg2').val();
-	    		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
-				if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
-					alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
-					return;
-				}
-				
-				var tmp = e.target.files[0];
-				var img = URL.createObjectURL(tmp);
-				$('#img2').attr('src', img);
-				
-				imgCk = true;
-			});
+			// 확장자 확인
+    		var thumbext = $('#inputImg2').val();
+    		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
+			if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
+				alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
+				return;
+			}
 			
-			// 세번째 사진 클릭 시
-	    	$('#img2').click(function(){
-	            $('#level').attr('value', 2);
-	            $('#img0').css("filter", "");
-	            $('#img1').css("filter", "");
-	            $('#img2').css("filter", "brightness(0.8)");
-	        });
+			var tmp = e.target.files[0];
+			var img = URL.createObjectURL(tmp);
+			$('#img2').attr('src', img);
+			
+			imgCk = true;
 		});
+		
+		// 세번째 사진 클릭 시
+    	$('#img2').click(function(){
+            $('#level').attr('value', 2);
+            $('#img0').css("filter", "");
+            $('#img1').css("filter", "");
+            $('#img2').css("filter", "brightness(0.8)");
+        });
+		
 		
 		// 유효성 확인 후 폼 제출
 		var allChecked = false; // 함수 결과값
-		$('#addBtn').click(function(){
+		$('#modiBtn').click(function(){
 			console.log(formCheck());
 			if(allChecked){
-				$('#addForm').submit();
+				$('#modiForm').submit();
 			}
 		});
 		
 		// 유효성 확인 함수
 		formCheck = function(){
-			var radioCk = $('input:radio[name=agree]').is(":checked");
-			
-			if($('#id').val() == ''){ // 아이디
-				alert('아이디를 입력해주세요.');
-				return false;
-			} else if (ckResult == false){ // 이메일
-				alert('이메일 인증을 해주세요.');
-				return false;
-			} else if ($('#pw').val() == ''){ // 비밀번호
-				alert('비밀번호를 입력해주세요.');
-				return false;
-			} else if (imgCk == false){ // 업로드된 이미지 갯수 확인
+			if(imgCk == false){ // 업로드된 이미지 갯수 확인
 				alert('모든 사진(3개)을 등록해주세요.');
 				return false;
 			} else if ($('#level').val() == ''){ // 대표사진
@@ -400,6 +407,9 @@
 			} else if ($('#address').val() == ''){ // 업체주소
 				alert('업체주소를 입력해주세요.');
 				return false;
+			} else if ($('#addressDetail').val() == ''){ // 업체 상세주소
+				alert('업체 상세주소를 입력해주세요.');
+				return false;
 			} else if ($('#ceo').val() == ''){ // 사업자명
 				alert('사업자명을 입력해주세요.');
 				return false;
@@ -411,15 +421,6 @@
 				return false;
 			} else if ($('#account').val() == ''){ // 계좌번호
 				alert('계좌번호를 입력해주세요.');
-				return false;
-			} else if ($('.agree:checked').val() == '미동의'){ // 약관동의
-				alert('약관에 동의해야만 가입이 가능합니다.');
-				return false;
-			} else if ($('#la').val() == ''){ // 위도
-				alert('위도를 입력해주세요.');
-				return false;
-			} else if ($('#long').val() == ''){ // 경도
-				alert('경도를 입력해주세요.');
 				return false;
 			} else {
 				allChecked = true;

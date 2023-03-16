@@ -9,6 +9,7 @@ public class Company {
 	private String companyName;
 	private String companyCeo;
 	private String companyAddress;
+	private String companyAddressDetail;
 	private String companyPhone;
 	private String companyEmail;
 	private String companyBank;

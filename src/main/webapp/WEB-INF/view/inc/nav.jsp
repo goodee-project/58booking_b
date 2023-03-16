@@ -67,6 +67,12 @@
             <li>
               <a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호찾기</a>
             </li>
+            <li>
+              <a href="${pageContext.request.contextPath}/company/companyBasicInfo/companyMain">업체 메인</a>
+            </li>
+            <li>
+              <a href="${pageContext.request.contextPath}/company/companyBasicInfo/modifyCompany">업체 기본정보 수정</a>
+            </li>
           </ul>
         </li>
       </ul>

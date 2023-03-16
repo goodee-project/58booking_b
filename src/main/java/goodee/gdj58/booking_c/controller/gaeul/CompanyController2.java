@@ -45,6 +45,15 @@ public class CompanyController2 {
 		
 		return "companyBasicInfo/modifyCompany";
 	}
+	@PostMapping("/company/companyBasicInfo/modifyCompany")
+	public String modifyCompany(Company com,
+			@RequestParam(value="companyImg") List<MultipartFile> comImgs,
+			@RequestParam(value="choose") int choose) {
+
+		log.debug(FontColor.BLUE+"Company : "+com.toString());
+		
+		return "redirect:/company/companyBasicInfo/companyMain";
+	}
 	
 	
 	// 업체 비밀번호 변경
@@ -72,7 +81,7 @@ public class CompanyController2 {
 		String id = loginCompany.getCompanyId();
 		
 		Company com = companyService.getCompany(id); // 업체 기본정보
-		List<CompanyImg> imgList = companyImgService.getComImgList(id);
+		List<CompanyImg> imgList = companyImgService.getComImgList(id); // 업체 사진
 		model.addAttribute("com", com);
 		model.addAttribute("imgList", imgList);
 		
