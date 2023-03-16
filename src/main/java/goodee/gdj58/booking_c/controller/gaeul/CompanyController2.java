@@ -46,30 +46,17 @@ public class CompanyController2 {
 		return "companyBasicInfo/modifyCompany";
 	}
 	@PostMapping("/company/companyBasicInfo/modifyCompany")
-	public String modifyCompany(Company com,
-			@RequestParam(value="companyImg") List<MultipartFile> comImgs,
-			@RequestParam(value="choose") int choose) {
+	public String modifyCompany(Company com) {
 
 		log.debug(FontColor.BLUE+"Company : "+com.toString());
 		
-		return "redirect:/company/companyBasicInfo/companyMain";
-	}
-	
-	
-	// 업체 비밀번호 변경
-	@PostMapping("/company/companyBasicInfo/modifyCompanyPw")
-	public String modifyCompanyPwAfterLogin(Company com) {
-		
-		log.debug(FontColor.BLUE+"email : "+com.getCompanyEmail());
-		log.debug(FontColor.BLUE+"id : "+com.getCompanyId());
-		log.debug(FontColor.BLUE+"pw : "+com.getCompanyPw());
-		
-		int row = companyService.modifyCompanyPw(com.getCompanyEmail(), com.getCompanyId(), com.getCompanyPw());
+		// 정보 수정 서비스
+		int row = companyService.modifyCompany(com);
 		if(row == 0) {
-			log.debug(FontColor.BLUE+"비밀번호 변경실패");
-		} else {
-			log.debug(FontColor.BLUE+"비밀번호 변경성공");
+			log.debug(FontColor.BLUE+"정보 수정 실패");
+			return "redirect:/company/companyBasicInfo/modifyCompany";
 		}
+		log.debug(FontColor.BLUE+"정보 수정 성공");
 		return "redirect:/company/companyBasicInfo/companyMain";
 	}
 	

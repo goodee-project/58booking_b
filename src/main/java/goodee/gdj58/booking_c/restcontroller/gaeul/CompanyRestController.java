@@ -1,15 +1,23 @@
 package goodee.gdj58.booking_c.restcontroller.gaeul;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import goodee.gdj58.booking_c.service.gaeul.CompanyImgService2;
 import goodee.gdj58.booking_c.service.gaeul.CompanyService2;
 import goodee.gdj58.booking_c.service.gaeul.MailSendService;
 import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.Company;
+import goodee.gdj58.booking_c.vo.CompanyImg;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -17,6 +25,49 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyRestController {
 	@Autowired CompanyService2 companyService;
 	@Autowired MailSendService mailSendService;
+	@Autowired CompanyImgService2 companyImgService;
+	
+	// 업체 사진 변경
+	@PostMapping("/company/companyBasicInfo/modifyCompanyImg")
+	public boolean modifyCompanyImg(HttpServletRequest request,
+			@RequestParam(value="companyId") String companyId,
+			@RequestParam(value="companyImg") List<MultipartFile> comImgs,
+			@RequestParam(value="choose") int choose){
+		
+		log.debug(FontColor.BLUE+"companyId : "+companyId);
+		log.debug(FontColor.BLUE+"companyImg : "+comImgs.size());
+		log.debug(FontColor.BLUE+"choose : "+choose);
+		
+		// 수정 서비스
+		String path = request.getServletContext().getRealPath("/upload/"); // 파일 저장 경로
+		log.debug(FontColor.BLUE+"파일저장경로 : "+path);
+		boolean result = companyImgService.modifyCompanyImg(companyId, comImgs, choose, path);
+		
+		
+		
+		// 이미지 리스트 조회 서비스
+		// List<CompanyImg> newImgs = new ArrayList<CompanyImg>();
+		
+		return result;
+	}
+	
+	// 업체 비밀번호 변경
+	@PostMapping("/company/companyBasicInfo/modifyCompanyPw")
+	public boolean modifyCompanyPwAfterLogin(
+			@RequestParam(value="companyEmail") String companyEmail,
+			@RequestParam(value="companyId") String companyId,
+			@RequestParam(value="companyPw") String companyPw) {
+		
+		log.debug(FontColor.BLUE+"email : "+companyEmail);
+		log.debug(FontColor.BLUE+"id : "+companyId);
+		log.debug(FontColor.BLUE+"pw : "+companyPw);
+		
+		int row = companyService.modifyCompanyPw(companyEmail, companyId, companyPw);
+		if(row == 0) {
+			return false; // 실패 시 false
+		}
+		return true; // 성공 시 true
+	}
 	
 	// 이메일 인중 후 아이디 조회
 	@PostMapping("/beforeLogin/findCompanyId")

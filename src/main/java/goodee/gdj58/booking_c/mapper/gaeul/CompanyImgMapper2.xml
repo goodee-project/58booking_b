@@ -2,6 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.gaeul.CompanyImgMapper2">
 
+	<!-- 업체 사진 수정 -->
+	<update id="updateCompanyImg"
+			parameterType="goodee.gdj58.booking_c.vo.CompanyImg">
+		UPDATE booking_company_img SET
+			booking_company_img_save_name = #{companyImgSaveName}
+			, booking_company_img_origin_name = #{companyImgOriginName}
+			, booking_company_img_kind = #{companyImgKind}
+			, booking_company_img_size = #{companyImgSize}
+			<if test="companyImgLevel != null">
+				, booking_company_img_level = #{companyImgLevel}
+			</if>
+		WHERE booking_company_img_no = #{companyImgNo}
+	</update>
+	
 	<!-- 업체 사진 조회 -->
 	<select id="selectComImgList"
 			parameterType="java.lang.String"
@@ -9,9 +23,13 @@
 		SELECT
 			booking_company_img_no companyImgNo
 			, booking_company_img_save_name companyImgSaveName
+			, booking_company_img_origin_name companyImgOriginName
 			, booking_company_img_level companyImgLevel
+			, booking_company_img_kind companyImgKind
+			, booking_company_img_size companyImgSize
 		FROM booking_company_img
 		WHERE booking_company_id = #{id}
+		ORDER BY booking_company_img_no ASC
 	</select>
 
 	<!-- 업체 회원가입 시 이미지 등록 -->

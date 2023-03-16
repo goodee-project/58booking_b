@@ -425,7 +425,6 @@
 		
 		// 아이디 중복확인
 		$('#idCkBtn').click(function(){
-			console.log('dd');
 			$.ajax({
 				url:'idCk' // 요청보낼 컨트롤러 맵핑주소
 				, type:'get' // 맵핑 방식

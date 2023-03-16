@@ -19,6 +19,7 @@
 <!-- GOOGLE WEB FONT -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
 <!-- Bootstrap core CSS-->
 <link href="${pageContext.request.contextPath}/resources/admin_section/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -48,11 +49,24 @@
 	// 쿠키 설정 변경(리캡챠 사용위함)
 	document.cookie = "crossCookie=bar; SameSite=None; Secure";
 	$(document).ready(function(){
+		
 		// 사이트 키 값은 등록한 도메인에 매핑됨
 		// 구글 리캡챠
 		$('#test').click(function(){
 			alert( document.cookie );
 		});
+		
+		
+		$('#eye').hover(function(){
+	    	$('#pw').toggleClass('active');
+	    	if($('#pw').hasClass('active')){
+		        $('#eye').attr('class',"fa fa-eye-slash fa-lg");
+		        $('#pw').attr('type',"text");
+	    	} else {
+	    		$('#eye').attr('class',"fa fa-eye fa-lg");
+		        $('#pw').attr('type',"password");
+	    	}
+	    });
 		
 		// 로그인 유효성
 		$('#loginBtn').click(function(){
@@ -126,8 +140,9 @@
 						<tr>
 							<td>
 								<div><strong>PW</strong></div>
-								<div>
+								<div style="position: relative;">
 									<input type="password" id="pw" name="companyPw" class="form-control" placeholder="Enter Password">
+									<i id="eye" class="fa fa-eye fa-lg" style="position: absolute; left: 90%; top: 15px;"></i>
 								</div>
 							</td>
 						</tr>
@@ -149,7 +164,7 @@
 						<tr>
 							<td><!-- 로그인 버튼 -->
 								<div class="text-center mb-5">
-									<button type="button" id="loginBtn" class="btn btn-lg btn-primary">Login</button>
+									<button type="button" id="loginBtn" class="btn btn-lg btn-primary">login</button>
 								</div>
 							</td>
 						</tr>

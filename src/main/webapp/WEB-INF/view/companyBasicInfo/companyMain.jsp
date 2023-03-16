@@ -20,6 +20,7 @@
 <!-- GOOGLE WEB FONT -->
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
 <!-- Bootstrap core CSS-->
 <link href="${pageContext.request.contextPath}/resources/admin_section/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -105,35 +106,37 @@
 											</button>
 										</div>
 										
-										<form action="${pageContext.request.contextPath}/company/companyBasicInfo/modifyCompanyPw" method="post" id="modiForm">
-											<div class="modal-body">
-												<input type="hidden" name="companyEmail" value="${com.companyEmail}">
-												<input type="hidden" name="companyId" value="${com.companyId}">
-												<table class="table table-borderless">
-													<tr>
-														<td><div id="msg" style="color:red;"></div></td>
-													</tr>
-													<tr>
-														<th class="align-middle">새 비밀번호</th>
-														<td>
+										<div class="modal-body">
+											<table class="table table-borderless">
+												<tr>
+													<td><div id="msg" style="color:red;"></div></td>
+												</tr>
+												<tr>
+													<th class="align-middle">새 비밀번호</th>
+													<td>
+														<div style="position: relative;">
 															<input type="password" name="companyPw" id="newPw" class="form-control">
-															<div id="newPwMsg" style="color:red;"></div>
-														</td>
-													</tr>
-													<tr>
-														<th class="align-middle">새 비밀번호 확인</th>
-														<td>
+															<i id="eye1" class="fa fa-eye fa-lg" style="position: absolute; left: 90%; top: 15px;"></i>
+														</div>
+														<div id="newPwMsg" style="color:red;"></div>
+													</td>
+												</tr>
+												<tr>
+													<th class="align-middle">새 비밀번호 확인</th>
+													<td>
+														<div style="position: relative;">
 															<input type="password" id="pwCk" class="form-control">
-															<div id="pwCkMsg" style="color:red;"></div>
-														</td>
-													</tr>
-												</table>
-											</div>
-											<div class="modal-footer">
-												<button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
-												<button type="button" id="modiBtn" class="btn btn-primary">변경</button>
-											</div>
-										</form>
+															<i id="eye2" class="fa fa-eye fa-lg" style="position: absolute; left: 90%; top: 15px;"></i>
+														</div>
+														<div id="pwCkMsg" style="color:red;"></div>
+													</td>
+												</tr>
+											</table>
+										</div>
+										<div class="modal-footer">
+											<button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
+											<button type="button" id="modiBtn" class="btn btn-primary">변경</button>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -164,7 +167,6 @@
 									</c:if>
 					        	</c:forEach>
 					        </div>
-					        
 						</td>
 					</tr>
 					<tr>
@@ -246,8 +248,34 @@
 	        map: map
 	    });
 	    
-	    // 유효성 확인
+	    
+	    // 비밀번호 보이기
+	    $('#eye1').hover(function(){
+	    	$('#newPw').toggleClass('active');
+	    	if($('#newPw').hasClass('active')){
+		        $('#eye1').attr('class',"fa fa-eye-slash fa-lg");
+		        $('#newPw').attr('type',"text");
+	    	} else {
+	    		$('#eye1').attr('class',"fa fa-eye fa-lg");
+		        $('#newPw').attr('type',"password");
+	    	}
+	    });
+	    $('#eye2').hover(function(){
+	    	$('#pwCk').toggleClass('active1');
+	    	if($('#pwCk').hasClass('active1')){
+		        $('#eye2').attr('class',"fa fa-eye-slash fa-lg");
+		        $('#pwCk').attr('type',"text");
+	    	} else {
+	    		$('#eye2').attr('class',"fa fa-eye fa-lg");
+		        $('#pwCk').attr('type',"password");
+	    	}
+	    });
+	    
+	    
+	    // 비밀번호 변경
 	    $('#modiBtn').click(function(){
+	    	
+	    	// 유효성 확인
 			if($('#newPw').val() == ''){
 				$('#newPwMsg').text('새 비밀번호를 입력하세요.');
 				$('#pwCkMsg').text('');
@@ -265,8 +293,22 @@
 				return;
 			}
 			
-			$('#modiForm').submit();
+			var companyEmail = '${com.companyEmail}';
+			var companyId = '${com.companyId}';
 			
+			// 변경 진행
+			$.ajax({
+				url:'modifyCompanyPw'
+				, type: 'post'
+				, data:{companyPw: $('#newPw').val(), companyEmail:companyEmail, companyId:companyId}
+				, success:function(model){ // true 성공, false 실패
+					if(model){
+						alert('비밀번호 변경을 완료하였습니다.');
+					} else {
+						alert('비밀번호 변경에 실패하였습니다.');
+					}
+				}
+			});
 		});
 	});
 </script>

@@ -26,6 +26,11 @@ public class CompanyService2 {
 	@Autowired TotalIdMapper2 totalIdMapper;
 	@Autowired CompanyImgMapper2 companyImgMapper;
 	
+	// 업체 기본정보 수정
+	public int modifyCompany(Company com) {
+		return companyMapper.updateCompany(com);
+	}
+	
 	// 업체 기본정보 조회
 	public Company getCompany(String id) {
 		return companyMapper.selectCompany(id);
@@ -88,7 +93,7 @@ public class CompanyService2 {
 		
 		// 3. companyImg
 		// 데이터 가공
-		for(int i=0; i<3; i++) {
+		for(int i=0; i<comImgs.size(); i++) {
 			// 파일정보 가져오기
 			MultipartFile mf = comImgs.get(i);
 			String companyImgOriginName =  mf.getOriginalFilename(); // 확장자포함이름

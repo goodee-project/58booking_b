@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,27 +36,176 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script>
 	$(document).ready(function(){
-		$('#modiBtn').click(function(){
-			if($('#newPw').val() == ''){
-				$('#newPwMsg').text('새 비밀번호를 입력하세요.');
-				$('#pwCkMsg').text('');
-				return;
-			}
-			if($('#pwCk').val() == ''){
-				$('#pwCkMsg').text('새 비밀번호 확인을 입력하세요.');
-				$('#newPwMsg').text('');
-				return;
-			}
-			if($('#pwCk').val() != $('#newPw').val()){
-				$('#pwCkMsg').text('');
-				$('#newPwMsg').text('');
-				$('#msg').text('두 비밀번호가 일치하지 않습니다.');
+		
+		// 첫번째 사진
+        $('#inputImgBtn0').click(function(){ // 0버튼 눌리면
+            $('#inputImg0').click(); // input0 열기
+        });
+    	$('#inputImg0').change(function(e) { // 두번째 파일 등록 위한 동적 버튼 생성
+    		
+    		// 확장자 확인
+    		var thumbext = $('#inputImg0').val();
+    		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
+			if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
+				alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
 				return;
 			}
 			
-			$('#modiForm').submit();
+			// 이미지 미리보기
+			var tmp = e.target.files[0];
+			var img = URL.createObjectURL(tmp);
+			$('#img0').attr('src', img);
+		});
+    	
+    	// 첫번째 사진 클릭 시
+    	$('#img0').click(function(){
+    		// 해당 요소에 속성 부여
+            $('#level').attr('value', 0);
+            $('#img0').css("filter", "brightness(0.8)");
+            $('#newLevel0').html("<i class='pending'>대표사진</i>");
+            // 그외 속성 제거
+            $('#img1').css("filter", "");
+            $('#img2').css("filter", "");
+            $('#newLevel1').html('');
+            $('#newLevel2').html('');
+        });
+		
+    	
+		// 두번째 사진
+		$('#inputImgBtn1').click(function(){ // 1버튼 눌리면
+            $('#inputImg1').click(); // input1 열기
+        });
+		$('#inputImg1').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
+		
+			// 확장자 확인
+	   		var thumbext = $('#inputImg1').val();
+	   		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
+			if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
+				alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
+				return;
+			}
+		
+			var tmp = e.target.files[0];
+			var img = URL.createObjectURL(tmp);
+			$('#img1').attr('src', img);
+		});
+		
+		// 두번째 사진 클릭 시
+    	$('#img1').click(function(){
+    		// 해당 요소에 속성 부여
+            $('#level').attr('value', 1);
+            $('#img1').css("filter", "brightness(0.8)");
+            $('#newLevel1').html("<i class='pending'>대표사진</i>");
+        	// 그외 속성 제거
+            $('#img0').css("filter", "");
+            $('#img2').css("filter", "");
+            $('#newLevel0').html('');
+            $('#newLevel2').html('');
+        });
+		
+		
+		// 세번째 사진
+		$('#inputImgBtn2').click(function(){ // 2버튼 눌리면
+            $('#inputImg2').click(); // input2 열기
+        });
+		$('#inputImg2').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
+			
+			// 확장자 확인
+    		var thumbext = $('#inputImg2').val();
+    		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
+			if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
+				alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
+				return;
+			}
+			
+			var tmp = e.target.files[0];
+			var img = URL.createObjectURL(tmp);
+			$('#img2').attr('src', img);
+			
+			imgCk = true;
+		});
+		
+		// 세번째 사진 클릭 시
+    	$('#img2').click(function(){
+    		// 해당 요소에 속성 부여
+            $('#level').attr('value', 2);
+            $('#img2').css("filter", "brightness(0.8)");
+            $('#newLevel2').html("<i class='pending'>대표사진</i>");
+            // 그외 속성 제거
+            $('#img0').css("filter", "");
+            $('#img1').css("filter", "");
+            $('#newLevel0').html('');
+            $('#newLevel1').html('');
+        });
+
+		
+		// 사진 수정 비동기 처리
+		// https://stackoverflow.com/questions/5392344/sending-multipart-formdata-with-jquery-ajax 참고
+		$('#imgModiBtn').click(function(){
+			
+			// 폼 정보를 data 변수에 담음
+			var form = $('#imgModiForm')[0];
+			var data = new FormData(form);
+			 
+			$.ajax({
+				type:'POST'
+				, enctype:'multipart/form-data'
+		        , url:'modifyCompanyImg'
+		        , data:data
+		        , processData: false // false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함
+		        , contentType: false // false로 선언 시 formData를 string으로 변환하지 않음
+		        , success: function (model) {
+		        	if(model == true){
+		        		alert("complete");	
+		        	} else {
+		        		alert("fail");
+		        	}
+		        }
+			});
 			
 		});
+		
+
+		// 사진 제외 유효성 확인 후 폼 제출
+		var allChecked = false; // 함수 결과값
+		$('#modiBtn').click(function(){
+			console.log(formCheck());
+			if(allChecked){
+				$('#modiForm').submit();
+			}
+		});
+		
+		// 사진 제외 유효성 확인 함수
+		formCheck = function(){
+			if ($('#name').val() == ''){ // 업체명
+				alert('업체명을 입력해주세요.');
+				return false;
+			} else if ($('#phone').val() == ''){ // 업체전화번호
+				alert('업체전화번호를 입력해주세요.');
+				return false;
+			} else if ($('#address').val() == ''){ // 업체주소
+				alert('업체주소를 입력해주세요.');
+				return false;
+			} else if ($('#addressDetail').val() == ''){ // 업체 상세주소
+				alert('업체 상세주소를 입력해주세요.');
+				return false;
+			} else if ($('#ceo').val() == ''){ // 사업자명
+				alert('사업자명을 입력해주세요.');
+				return false;
+			} else if ($('#number').val() == ''){ // 사업자번호
+				alert('사업자번호를 입력해주세요.');
+				return false;
+			} else if ($('#bank').val() == ''){ // 은행
+				alert('은행을 입력해주세요.');
+				return false;
+			} else if ($('#account').val() == ''){ // 계좌번호
+				alert('계좌번호를 입력해주세요.');
+				return false;
+			} else {
+				allChecked = true;
+	    		return true;
+	    	}
+		};
 	});
 </script>
 <style type="text/css">
@@ -115,11 +265,10 @@
 			
 			<!-- 본문 입력 -->
 			<div class="box_general">
-				<form action="${pageContext.request.contextPath}/company/companyBasicInfo/modifyCompany" method="post" encType="multipart/form-data" id="modiForm">
+				<!-- 사진 수정 폼 -->
+				<form method="post" enctype="multipart/form-data" id="imgModiForm">
 					<input type="hidden" name="companyId" value="${com.companyId}"><!-- 아이디 -->
-					<input type="hidden" id="la" name="latitude" value="${com.latitude}"><!-- 위도 -->
-					<input type="hidden" id="long" name="longtitude" value="${com.longtitude}"><!-- 경도 -->
-					<input type="hidden" id="level" name="choose"><!-- 대표사진설정 -->
+					<input type="hidden" id="level" name="choose" value="-1"><!-- 대표사진설정 -->
 					<table class="mx-auto table w-75">
 						<tr>
 							<th class="w-10 align-middle">ID</th>
@@ -130,31 +279,48 @@
 							<td colspan="3">${com.companyEmail}</td>
 						</tr>
 						<tr>
-							<th class="align-middle">업체사진</th>
+							<th class="w-10 align-middle">업체사진</th>
 							<td colspan="3">
 								<!-- 대표사진 여부 -->
 						        <div style="display:flex;">
-						        	<c:forEach var="img" items="${imgList}">
+						        	<c:forEach var="img" items="${imgList}" varStatus="i">
 										<c:if test="${img.companyImgLevel eq 'Y'}">
-											<div class="imgLevel"><i class="pending">대표사진</i></div>
+											<div id="newLevel${i.index}" class="imgLevel"><i class="pending">대표사진</i></div>
 										</c:if>
 										<c:if test="${img.companyImgLevel eq 'N'}">
-											<div class="imgLevel"></div>
+											<div id="newLevel${i.index}" class="imgLevel"></div>
 										</c:if>
 						        	</c:forEach>
 							    </div>
 								<!-- 사진 -->
-								<div class="imgs_wrap">
+			 					<div class="imgs_wrap">
 									<c:forEach var="img" items="${imgList}" varStatus="i">
 						        		<img id="img${i.index}" src="${pageContext.request.contextPath}/upload/${img.companyImgSaveName}">
 						        	</c:forEach>
 						        </div>
 						        <!-- 사진 변경 버튼 -->
-						        <div style="display:flex; justify-content: right">
-						        	<span class="mr-1"><a class="btn_1">사진변경</a></span>
+						        <div style="display:flex;">
+								    <c:forEach begin="0" end="${fn:length(imgList)-1}" step="1" var="i">
+							        	<div class="upload_btn">
+							        		<input type="file" name="companyImg" accept="image/*" id="inputImg${i}" style="display:none;">
+									        <button type="button" id="inputImgBtn${i}" class="btn_1 gray">변경</button>
+									    </div>
+							        </c:forEach>
 						        </div>
+						        <!-- 사진 수정 완료 버튼 -->
+						        <div style="display:flex; justify-content:right;">
+							    	<button type="button" id="imgModiBtn" class="btn_1">사진 수정완료</button>
+							    </div>
 							</td>
 						</tr>
+					</table>
+				</form>
+				<!-- 업체 정보 수정 폼 -->
+				<form action="${pageContext.request.contextPath}/company/companyBasicInfo/modifyCompany" method="post" id="modiForm">
+					<input type="hidden" name="companyId" value="${com.companyId}"><!-- 아이디 -->
+					<input type="hidden" id="la" name="latitude" value="${com.latitude}"><!-- 위도 -->
+					<input type="hidden" id="long" name="longtitude" value="${com.longtitude}"><!-- 경도 -->
+					<table class="mx-auto table w-75">
 						<tr>
 							<th class="align-middle">업체명</th>
 							<td>
@@ -290,144 +456,6 @@
             }
         }).open();
     }
-</script>
-<script>
-	$(document).ready(function(){
-		
-		// 첫번째 사진
-        $('#inputImgBtn0').click(function(){ // 0버튼 눌리면
-            $('#inputImg0').click(); // input0 열기
-        });
-    	$('#inputImg0').change(function(e) { // 두번째 파일 등록 위한 동적 버튼 생성
-    		
-    		// 확장자 확인
-    		var thumbext = $('#inputImg0').val();
-    		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
-			if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
-				alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
-				return;
-			}
-			
-			// 이미지 미리보기
-			var tmp = e.target.files[0];
-			var img = URL.createObjectURL(tmp);
-			$('#img0').attr('src', img);
-		});
-    	
-    	// 첫번째 사진 클릭 시
-    	$('#img0').click(function(){
-            $('#level').attr('value', 0);
-            $('#img0').css("filter", "brightness(0.8)");
-            $('#img1').css("filter", "");
-            $('#img2').css("filter", "");
-        });
-		
-    	
-		// 두번째 사진
-		$('#inputImgBtn1').click(function(){ // 1버튼 눌리면
-            $('#inputImg1').click(); // input1 열기
-        });
-		$('#inputImg1').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
-		
-			// 확장자 확인
-	   		var thumbext = $('#inputImg1').val();
-	   		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
-			if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
-				alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
-				return;
-			}
-		
-			var tmp = e.target.files[0];
-			var img = URL.createObjectURL(tmp);
-			$('#img1').attr('src', img);
-		});
-		
-		// 두번째 사진 클릭 시
-    	$('#img1').click(function(){
-            $('#level').attr('value', 1);
-            $('#img0').css("filter", "");
-            $('#img1').css("filter", "brightness(0.8)");
-            $('#img2').css("filter", "");
-        });
-		
-		
-		// 세번째 사진
-		$('#inputImgBtn2').click(function(){ // 2버튼 눌리면
-            $('#inputImg2').click(); // input2 열기
-        });
-		$('#inputImg2').change(function(e) { // 세번째 파일 등록 위한 동적 버튼 생성
-			
-			// 확장자 확인
-    		var thumbext = $('#inputImg2').val();
-    		thumbext = thumbext.slice(thumbext.indexOf(".") + 1).toLowerCase(); // 파일 확장자를 잘라내고, 비교를 위해 소문자로
-			if(thumbext != "jpg" && thumbext != "png" &&  thumbext != "gif" &&  thumbext != "bmp"){ // 확장자 확인
-				alert('이미지 파일(jpg, png, gif, bmp)만 등록 가능합니다.');
-				return;
-			}
-			
-			var tmp = e.target.files[0];
-			var img = URL.createObjectURL(tmp);
-			$('#img2').attr('src', img);
-			
-			imgCk = true;
-		});
-		
-		// 세번째 사진 클릭 시
-    	$('#img2').click(function(){
-            $('#level').attr('value', 2);
-            $('#img0').css("filter", "");
-            $('#img1').css("filter", "");
-            $('#img2').css("filter", "brightness(0.8)");
-        });
-		
-		
-		// 유효성 확인 후 폼 제출
-		var allChecked = false; // 함수 결과값
-		$('#modiBtn').click(function(){
-			console.log(formCheck());
-			if(allChecked){
-				$('#modiForm').submit();
-			}
-		});
-		
-		// 유효성 확인 함수
-		formCheck = function(){
-			if(imgCk == false){ // 업로드된 이미지 갯수 확인
-				alert('모든 사진(3개)을 등록해주세요.');
-				return false;
-			} else if ($('#level').val() == ''){ // 대표사진
-				alert('대표사진을 설정해주세요.');
-				return false;
-			} else if ($('#name').val() == ''){ // 업체명
-				alert('업체명을 입력해주세요.');
-				return false;
-			} else if ($('#phone').val() == ''){ // 업체전화번호
-				alert('업체전화번호를 입력해주세요.');
-				return false;
-			} else if ($('#address').val() == ''){ // 업체주소
-				alert('업체주소를 입력해주세요.');
-				return false;
-			} else if ($('#addressDetail').val() == ''){ // 업체 상세주소
-				alert('업체 상세주소를 입력해주세요.');
-				return false;
-			} else if ($('#ceo').val() == ''){ // 사업자명
-				alert('사업자명을 입력해주세요.');
-				return false;
-			} else if ($('#number').val() == ''){ // 사업자번호
-				alert('사업자번호를 입력해주세요.');
-				return false;
-			} else if ($('#bank').val() == ''){ // 은행
-				alert('은행을 입력해주세요.');
-				return false;
-			} else if ($('#account').val() == ''){ // 계좌번호
-				alert('계좌번호를 입력해주세요.');
-				return false;
-			} else {
-				allChecked = true;
-	    		return true;
-	    	}
-		};
-	});
 </script>
 </body>
 </html>
