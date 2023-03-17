@@ -35,18 +35,34 @@
 <link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <style>
+	.td-position{
+		position: relative;
+		left: 27.5%;
+	}
+	.size1{
+		width:280px;
+	}
+	.size2{
+		width:130px;
+	}
+	.form-control {
+		display: inline;
+	}
 	#resultId{
-		background-color: #eeeeee;
-		width:200px;
-		height:100px;
+		background-color: #e9ecef;
+	    width: 280px;
+	    height: 120px;
+	    border-radius: 5px;
+	    border: 2px solid #efefef;
 	}
 	#idHeader{
-		font-weight: strong;
-		text-aline: center;
+		font-size: 20px;
+    	margin-top: 10px;
 	}
 	#idBody{
-		color: red;
-		text-aline: center;
+		color: #fc5b62;
+	    font-size: 17px;
+	    margin-top: 15px;
 	}
 </style>
 </head>
@@ -57,60 +73,74 @@
 	
 	<div class="content-wrapper w-75 mx-auto" style="margin-left:0px">
 		<div class="container-fluid">   
+			<!-- Breadcrumbs-->
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="${pageContext.request.contextPath}/index">Home</a>
+				</li>
+				<li class="breadcrumb-item active">아이디 찾기</li>
+			</ol>
 			
 			<!-- 본문 입력 -->
 			<div class="box_general">
-				<h2>업체 아이디 찾기</h2>
 				<!-- 정보입력 폼 -->
-				<table>
+				<table class="mx-auto table table-borderless w-50">
 					<tr>
-						<th>이름(사업자명)</th>
-						<td>
-							<input type="text" id="name" name="companyCeo">
-							<div id="nameMsg" style="color: red;"></div>
+						<td class="text-center"><h3><strong>아이디 찾기</strong></h3></td>
+					</tr>
+					<tr>
+						<td class="td-position">
+							<div>이름(사업자명)</div>
+							<input type="text" id="name" name="companyCeo" class="form-control size1">
+							<div id="nameMsg" style="color: #fc5b62;"></div>
 						</td>
 					</tr>
 					<tr>
-						<th>이메일</th>
-						<td>
-							<input type="text" id="email1" name="companyEmail1">
+						<td class="td-position">
+							<div>이메일</div>
+							<input type="text" id="email1" name="companyEmail1" class="form-control size2">
 							<span>@</span>
-							<select id="email2" name="companyEmail2">
+							<select id="email2" name="companyEmail2" class="form-control size2">
 								<option value="gmail.com">gmail.com</option>
 								<option value="naver.com">naver.com</option>
 								<option value="daum.net">daum.net</option>
 								<option value="hanmail.net">hanmail.net</option>
 								<option value="nate.com">nate.com</option>
 							</select>
-							<button type="button" id="emailCkBtn">인증번호 발송</button>
-							<div id="emailMsg" style="color: red;"></div>
-							<div id="emailSendMsg" style="color: blue;"></div>
+							<button type="button" id="emailCkBtn" class="btn_1">인증번호 발송</button>
+							<div id="emailMsg" style="color: #fc5b62;"></div>
+							<div id="emailSendMsg" style="color: #0054a6;"></div>
 						</td>
 					</tr>
 					<tr>
-						<th>인증번호</th>
-						<td>
-							<input type="text" id="codeCk" disabled>
-							<button type="button" id="codeCkBtn" disabled>인증번호 확인</button>
-							<div id="codeMsg" style="color: red;"></div>
+						<td class="td-position">
+							<div>인증번호</div>
+							<input type="text" id="codeCk" disabled class="form-control size1">
+							<button type="button" id="codeCkBtn" disabled class="btn_1">인증번호 확인</button>
+							<div id="codeMsg" style="color: #fc5b62;"></div>
+						</td>
+					</tr>
+					<tr>
+						<!-- 아이디 조회 결과 -->
+						<td class="text-center"><div id="a"></div></td>
+					</tr>
+					<tr>
+						<td class="text-center">
+							<div><!-- 아이디찾기/비밀번호 찾기 링크 -->
+								<a href="${pageContext.request.contextPath}/beforeLogin/loginCompany">로그인</a>
+								<span> | </span>
+								<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호 찾기</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="text-center">
+							<div class="mt-3"><!-- 자주묻는 질문 링크 -->
+								<a href="#">자주묻는 질문</a>
+							</div>
 						</td>
 					</tr>
 				</table>
-			
-				<!-- 아이디 조회 결과 -->
-				<div id="a"></div>
-				
-				<!-- 아이디찾기/비밀번호 찾기 링크 -->
-				<div>
-					<a href="${pageContext.request.contextPath}/beforeLogin/loginCompany">로그인</a>
-					<span> | </span>
-					<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호 찾기</a>
-				</div>
-				
-				<!-- 자주묻는 질문 링크 -->
-				<div>
-					<a href="#">자주묻는 질문</a>
-				</div>
 			</div><!-- 본문 끝 -->
 		</div>
 	</div>

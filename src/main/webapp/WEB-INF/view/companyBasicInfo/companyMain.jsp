@@ -109,7 +109,7 @@
 										<div class="modal-body">
 											<table class="table table-borderless">
 												<tr>
-													<td><div id="msg" style="color:red;"></div></td>
+													<td colspan="2"><div id="msg" style="color:#fc5b62; text-align:center;"></div></td>
 												</tr>
 												<tr>
 													<th class="align-middle">새 비밀번호</th>
@@ -118,7 +118,7 @@
 															<input type="password" name="companyPw" id="newPw" class="form-control">
 															<i id="eye1" class="fa fa-eye fa-lg" style="position: absolute; left: 90%; top: 15px;"></i>
 														</div>
-														<div id="newPwMsg" style="color:red;"></div>
+														<div id="newPwMsg" style="color:#fc5b62;"></div>
 													</td>
 												</tr>
 												<tr>
@@ -128,7 +128,7 @@
 															<input type="password" id="pwCk" class="form-control">
 															<i id="eye2" class="fa fa-eye fa-lg" style="position: absolute; left: 90%; top: 15px;"></i>
 														</div>
-														<div id="pwCkMsg" style="color:red;"></div>
+														<div id="pwCkMsg" style="color:#fc5b62;"></div>
 													</td>
 												</tr>
 											</table>

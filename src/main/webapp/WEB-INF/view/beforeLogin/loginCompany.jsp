@@ -37,6 +37,8 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <!-- 리캡챠 -->
 <script src="https://www.google.com/recaptcha/api.js"></script>
+<!-- 쿠키 사용 -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 <c:if test="${msg != null}">
 	<script>
 		$(document).ready(function(){
@@ -48,15 +50,63 @@
 <script>
 	// 쿠키 설정 변경(리캡챠 사용위함)
 	document.cookie = "crossCookie=bar; SameSite=None; Secure";
+	
 	$(document).ready(function(){
+		
+		// 쿠키 사용한 아이디 저장 (https://gbsb.tistory.com/99 참고)
+		$("#id").val(Cookies.get('key')); // 저장된 쿠키를 받아와 아이디 값으로 지정
+		
+	    if($("#id").val() != ""){ // 아이디 값이 있다면
+	        $("#saveLoginInfo").attr("checked", true); // remember me 체크 상태로 두기
+	    }
+		    
+		$("#saveLoginInfo").change(function(){ // remember me 값이 바뀔 때
+		    if($("#saveLoginInfo").is(":checked")){ // 체크 상태면
+		        Cookies.set('key', $("#id").val(), { expires: 7 }); // 7일 동안 쿠키 보관
+		        console.log('아이디 : '+$("#id").val()+'쿠키에 저장');
+		    }else{ // 아니면
+		          Cookies.remove('key'); // 쿠키 정보 삭제
+		    }
+		});
+		     
+		$("#id").keyup(function(){ // 아이디 입력 시
+		    if($("#saveLoginInfo").is(":checked")){ // 체크 상태면
+		    	console.log('아이디 : '+$("#id").val()+'쿠키에 저장');
+		        Cookies.set('key', $("#id").val(), { expires: 7 }); // 7일 동안 쿠키 보관
+		    }
+		});
 		
 		// 사이트 키 값은 등록한 도메인에 매핑됨
 		// 구글 리캡챠
-		$('#test').click(function(){
-			alert( document.cookie );
-		});
+		/*
+			var captcha = 1;
+			$.ajax({
+		           url:'/verifyRecaptcha'
+		           , type:'post'
+		           , data:{recaptcha: $(".g-recaptcha-response").val()}
+		           , success: function(data) {
+		               switch (data) {
+		                  case 0:
+		                      console.log("자동 가입 방지 봇 통과");
+		                      captcha = 0;
+		              		break;
+		                  case 1:
+		                      alert("자동 가입 방지 봇을 확인 한뒤 진행 해 주세요.");
+		                      break;
+		                  default:
+		                      alert("자동 가입 방지 봇을 실행 하던 중 오류가 발생 했습니다. [Error bot Code : " + Number(data) + "]");
+		                 		break;
+		               }
+		           }
+		       });
+			
+			if(captcha != 0) {
+				return false;
+			}
+		*/
 		
 		
+		// 비밀번호 보이기
 		$('#eye').hover(function(){
 	    	$('#pw').toggleClass('active');
 	    	if($('#pw').hasClass('active')){
@@ -86,33 +136,6 @@
 	});
 </script>
 </head>
-
-<!-- 
-	var captcha = 1;
-	$.ajax({
-           url:'/verifyRecaptcha'
-           , type:'post'
-           , data:{recaptcha: $(".g-recaptcha-response").val()}
-           , success: function(data) {
-               switch (data) {
-                  case 0:
-                      console.log("자동 가입 방지 봇 통과");
-                      captcha = 0;
-              		break;
-                  case 1:
-                      alert("자동 가입 방지 봇을 확인 한뒤 진행 해 주세요.");
-                      break;
-                  default:
-                      alert("자동 가입 방지 봇을 실행 하던 중 오류가 발생 했습니다. [Error bot Code : " + Number(data) + "]");
-                 		break;
-               }
-           }
-       });
-	
-	if(captcha != 0) {
-		return false;
-	}
- -->
 <body class="fixed-nav sticky-footer" id="page-top">
 	<!-- Navigation-->
 	<jsp:include page="/WEB-INF/view/inc/navBeforeLogin.jsp"></jsp:include>

@@ -34,10 +34,50 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/admin_section/js/editor/summernote-bs4.css">
 <!-- Your custom styles -->
 <link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
-
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<style>
+	.td-position{
+		position: relative;
+		left: 27.5%;
+	}
+	.size1{
+		width:280px;
+	}
+	.size2{
+		width:130px;
+	}
+	.form-control {
+		display: inline;
+	}
+</style>
 <script>
 	$(document).ready(function(){
+		
+		// 비밀번호 보이기 1
+		$('#eye1').hover(function(){
+	    	$('#newPw').toggleClass('active');
+	    	if($('#newPw').hasClass('active')){
+		        $('#eye1').attr('class',"fa fa-eye-slash fa-lg");
+		        $('#newPw').attr('type',"text");
+	    	} else {
+	    		$('#eye1').attr('class',"fa fa-eye fa-lg");
+		        $('#pw').attr('type',"password");
+	    	}
+	    });
+		
+		// 비밀번호 보이기 2
+		$('#eye2').hover(function(){
+	    	$('#pwCk').toggleClass('active');
+	    	if($('#pwCk').hasClass('active')){
+		        $('#eye2').attr('class',"fa fa-eye-slash fa-lg");
+		        $('#pwCk').attr('type',"text");
+	    	} else {
+	    		$('#eye2').attr('class',"fa fa-eye fa-lg");
+		        $('#pwCk').attr('type',"password");
+	    	}
+	    });
+		
+		// 유효성 확인
 		$('#modiBtn').click(function(){
 			if($('#newPw').val() == ''){
 				$('#newPwMsg').text('새 비밀번호를 입력하세요.');
@@ -69,34 +109,49 @@
 	
 	<div class="content-wrapper w-75 mx-auto" style="margin-left:0px">
 		<div class="container-fluid">
-		
+			
+			<!-- Breadcrumbs-->
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="${pageContext.request.contextPath}/index">Home</a>
+				</li>
+				<li class="breadcrumb-item active">비밀번호 변경</li>
+			</ol>
+			
 			<!-- 본문 입력 -->
 			<div class="box_general">
-			
-				<h2>비밀번호 변경</h2>
 				<form action="${pageContext.request.contextPath}/beforeLogin/modifyCompanyPw" method="post" id="modiForm">
 					<input type="hidden" name="companyId" value="${id}">
 					<input type="hidden" name="companyEmail" value="${email}">
-					<table>
+					<table class="mx-auto table table-borderless w-50">
 						<tr>
-							<td><div id="msg" style="color:red;"></div></td>
+							<td class="text-center"><h3>비밀번호 변경</h3></td>
 						</tr>
 						<tr>
-							<th>새 비밀번호</th>
-							<td>
-								<input type="password" name="companyPw" id="newPw">
-								<div id="newPwMsg" style="color:red;"></div>
+							<td class="text-center"><div id="msg" style="color:#fc5b62;"></div></td>
+						</tr>
+						<tr>
+							<td class="td-position">
+								<div>새 비밀번호</div>
+								<input type="password" name="companyPw" id="newPw" class="form-control size1">
+								<i id="eye1" class="fa fa-eye fa-lg" style="position: absolute; left: 39%; top: 47px;"></i>
+								<div id="newPwMsg" style="color:#fc5b62;"></div>
 							</td>
 						</tr>
 						<tr>
-							<th>새 비밀번호 확인</th>
-							<td>
-								<input type="password" id="pwCk">
-								<div id="pwCkMsg" style="color:red;"></div>
+							<td class="td-position">
+								<div>새 비밀번호 확인</div>
+								<input type="password" id="pwCk" class="form-control size1">
+								<i id="eye2" class="fa fa-eye fa-lg" style="position: absolute; left: 39%; top: 47px;"></i>
+								<div id="pwCkMsg" style="color:#fc5b62;"></div>
+							</td>
+						</tr>
+						<tr>
+							<td class="text-center">
+								<button type="button" id="modiBtn" class="btn_1 mb-3">변경 완료</button>
 							</td>
 						</tr>
 					</table>
-					<button type="button" id="modiBtn">변경</button>
 				</form>
 			</div><!-- 본문 끝 -->
 		</div>

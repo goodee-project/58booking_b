@@ -82,7 +82,7 @@
 			<!-- Breadcrumbs-->
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="${pageContext.request.contextPath}/index">Dashboard</a>
+					<a href="${pageContext.request.contextPath}/index">Home</a>
 				</li>
 				<li class="breadcrumb-item active">업체가입</li>
 			</ol>
@@ -133,7 +133,10 @@
 						<tr>
 							<th class="align-middle">PW</th>
 							<td colspan="3">
-								<input type="password" id="pw" name="companyPw" class="form-control form-size">
+								<div style="position: relative;">
+									<input type="password" id="pw" name="companyPw" class="form-control form-size">
+									<i id="eye" class="fa fa-eye fa-lg" style="position: absolute; left: 21.5%; top: 15px;"></i>
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -485,6 +488,18 @@
 				alert('이메일 인증에 실패하였습니다.\n인증번호를 확인해주세요.');
 			}
 		});
+		
+		// 비밀번호 보이기
+		$('#eye').hover(function(){
+	    	$('#pw').toggleClass('active');
+	    	if($('#pw').hasClass('active')){
+		        $('#eye').attr('class',"fa fa-eye-slash fa-lg");
+		        $('#pw').attr('type',"text");
+	    	} else {
+	    		$('#eye').attr('class',"fa fa-eye fa-lg");
+		        $('#pw').attr('type',"password");
+	    	}
+	    });
 		
 		// 유효성 확인 후 폼 제출
 		var allChecked = false; // 함수 결과값

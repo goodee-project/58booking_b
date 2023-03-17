@@ -34,8 +34,22 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/admin_section/js/editor/summernote-bs4.css">
 <!-- Your custom styles -->
 <link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
-
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<style>
+	.td-position{
+		position: relative;
+		left: 27.5%;
+	}
+	.size1{
+		width:280px;
+	}
+	.size2{
+		width:130px;
+	}
+	.form-control {
+		display: inline;
+	}
+</style>
 </head>
 <body class="fixed-nav sticky-footer" id="page-top">
 	<!-- Navigation-->
@@ -43,61 +57,80 @@
 	<!-- /Navigation-->
 	
 	<div class="content-wrapper w-75 mx-auto" style="margin-left:0px">
-		<div class="container-fluid">
-		
+		<div class="container-fluid">	
+			
+			<!-- Breadcrumbs-->
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="${pageContext.request.contextPath}/index">Home</a>
+				</li>
+				<li class="breadcrumb-item active">비밀번호 찾기</li>
+			</ol>
+			
 			<!-- 본문 입력 -->
 			<div class="box_general">
-				<h2>업체 비밀번호 찾기</h2>
 				<!-- 정보입력 폼 -->
-				<table>
+				<table class="mx-auto table table-borderless w-50">
 					<tr>
-						<th>아이디</th>
-						<td>
-							<input type="text" id="id" name="companyId">
-							<div id="idMsg" style="color: red;"></div>
+						<td class="text-center"><h3><strong>비밀번호 찾기</strong></h3></td>
+					</tr>
+					<tr>
+						<td class="td-position">
+							<div>이름(사업자명)</div>
+							<input type="text" id="id" name="companyId" class="form-control size1">
+							<div id="idMsg" style="color: #fc5b62;"></div>
 						</td>
 					</tr>
 					<tr>
-						<th>이메일</th>
-						<td>
-							<input type="text" id="email1" name="companyEmail1">
+						<td class="td-position">
+							<div>이메일</div>
+							<input type="text" id="email1" name="companyEmail1" class="form-control size2">
 							<span>@</span>
-							<select id="email2" name="companyEmail2">
+							<select id="email2" name="companyEmail2" class="form-control size2">
 								<option value="gmail.com">gmail.com</option>
 								<option value="naver.com">naver.com</option>
 								<option value="daum.net">daum.net</option>
 								<option value="hanmail.net">hanmail.net</option>
 								<option value="nate.com">nate.com</option>
 							</select>
-							<button type="button" id="emailCkBtn">인증번호 발송</button>
-							<div id="emailMsg" style="color: red;"></div>
-							<div id="emailSendMsg" style="color: blue;"></div>
+							<button type="button" id="emailCkBtn" class="btn_1">인증번호 발송</button>
+							<div id="emailMsg" style="color: #fc5b62;"></div>
+							<div id="emailSendMsg" style="color: #0054a6;"></div>
 						</td>
 					</tr>
 					<tr>
-						<th>인증번호</th>
-						<td>
-							<input type="text" id="codeCk" disabled>
-							<button type="button" id="codeCkBtn" disabled>인증번호 확인</button>
-							<div id="codeMsg" style="color: red;"></div>
+						<td class="td-position">
+							<div>인증번호</div>
+							<input type="text" id="codeCk" disabled class="form-control size1">
+							<button type="button" id="codeCkBtn" disabled class="btn_1">인증번호 확인</button>
+							<div id="codeMsg" style="color: #fc5b62;"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="text-center">
+							<!-- 인증 후 비밀번호 설정 링크 -->
+							<div id="a"></div>
+						</td>
+					</tr>
+					<tr>
+						<td class="text-center">
+							<!-- 아이디찾기/비밀번호 찾기 링크 -->
+							<div>
+								<a href="${pageContext.request.contextPath}/beforeLogin/loginCompany">로그인</a>
+								<span> | </span>
+								<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디 찾기</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="text-center">
+							<!-- 자주묻는 질문 링크 -->
+							<div class="mt-3">
+								<a href="#">자주묻는 질문</a>
+							</div>
 						</td>
 					</tr>
 				</table>
-			
-				<!-- 인증 후 비밀번호 설정 링크 -->
-				<div id="a"></div>
-				
-				<!-- 아이디찾기/비밀번호 찾기 링크 -->
-				<div>
-					<a href="${pageContext.request.contextPath}/beforeLogin/loginCompany">로그인</a>
-					<span> | </span>
-					<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디 찾기</a>
-				</div>
-				
-				<!-- 자주묻는 질문 링크 -->
-				<div>
-					<a href="#">자주묻는 질문</a>
-				</div>
 			</div><!-- 본문 끝 -->
 		</div>
 	</div>
@@ -193,7 +226,7 @@
 					
 					// 이메일 인증 성공 시 비밀번호 변경 링크 생성
 					var email = email1+'@'+email2;
-					var html = "<a href='${pageContext.request.contextPath}/beforeLogin/modifyCompanyPw?email="+email+"&id="+id+"'>비밀번호 변경</a>"
+					var html = "<a class='btn_1 mb-4 mt-1' href='${pageContext.request.contextPath}/beforeLogin/modifyCompanyPw?email="+email+"&id="+id+"'>비밀번호 변경하기</a>"
 					$('#a').append(html);
 				} else { // 인증번호 실패 시
 					alert('이메일 인증에 실패하였습니다.\n인증번호를 확인해주세요.');
