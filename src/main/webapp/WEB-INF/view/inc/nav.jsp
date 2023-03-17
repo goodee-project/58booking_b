@@ -8,72 +8,77 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        
+        <!-- 인덱스 -->
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
           <a class="nav-link" href="${pageContext.request.contextPath}/index">
-            <i class="fa fa-fw fa-dashboard"></i>
-            <span class="nav-link-text">Dashboard</span>
+            <i class="fa fa-fw fa-home"></i>
+            <span class="nav-link-text">Home</span>
           </a>
         </li>
         
+        <!-- 내 업체관리 -->
 		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="My listings">
           <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMylistings">
-            <i class="fa fa-fw fa-list"></i>
-            <span class="nav-link-text">김민송</span>
+            <i class="fa fa-fw fa-gear"></i>
+            <span class="nav-link-text">내 업체관리</span>
           </a>
           <ul class="sidenav-second-level collapse show" id="collapseMylistings">
             <li>
-              <a href="${pageContext.request.contextPath}/company/modifyCompanyDetail">업체관리</a>
+              <a href="${pageContext.request.contextPath}/company/companyBasicInfo/companyMain">기본정보</a>
             </li>
             <li>
-              <a href="${pageContext.request.contextPath}/company/customerList">고객관리</a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/company/reviewList">리뷰관리</a>
+              <a href="${pageContext.request.contextPath}/company/modifyCompanyDetail">상세정보</a>
             </li>
           </ul>
         </li>
-		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="My listings">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMylistings">
-            <i class="fa fa-fw fa-list"></i>
-            <span class="nav-link-text">민태희</span>
+        
+        <!-- 상품관리 -->
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="${pageContext.request.contextPath}/company/productList">
+            <i class="fa fa-fw fa-tags" aria-hidden="true"></i>
+            <span class="nav-link-text">상품관리</span>
           </a>
-          <ul class="sidenav-second-level collapse show" id="collapseMylistings">
-            <li>
-              <a href="${pageContext.request.contextPath}/company/bookingList">예약관리</a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/company/productList">상품관리</a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/company/questionList">문의사항</a>
-            </li>
-          </ul>
         </li>
-		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="My listings">
-          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMylistings">
-            <i class="fa fa-fw fa-list"></i>
-            <span class="nav-link-text">이가을</span>
+        
+        <!-- 고객관리 -->
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="${pageContext.request.contextPath}/company/customerList">
+            <i class="fa fa-fw fa-user"></i>
+            <span class="nav-link-text">고객관리</span>
           </a>
-          <ul class="sidenav-second-level collapse show" id="collapseMylistings">
-            <li>
-              <a href="${pageContext.request.contextPath}/beforeLogin/loginCompany">로그인</a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/beforeLogin/addCompany">기업가입</a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디찾기</a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호찾기</a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/company/companyBasicInfo/companyMain">업체 메인</a>
-            </li>
-            <li>
-              <a href="${pageContext.request.contextPath}/company/companyBasicInfo/modifyCompany">업체 기본정보 수정</a>
-            </li>
-          </ul>
+        </li>
+        
+        <!-- 예약관리 -->
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="${pageContext.request.contextPath}/company/bookingList">
+            <i class="fa fa-fw fa-calendar-check-o"></i>
+            <span class="nav-link-text">예약관리</span>
+          </a>
+        </li>
+        
+        <!-- 리뷰관리 -->
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="${pageContext.request.contextPath}/company/reviewList">
+            <i class="fa fa-fw fa-star"></i>
+            <span class="nav-link-text">리뷰관리</span>
+          </a>
+        </li>
+        
+        <!-- 통계 -->
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="${pageContext.request.contextPath}/index">
+            <i class="fa fa-fw fa-bar-chart"></i>
+            <span class="nav-link-text">통계</span>
+          </a>
+        </li>
+        
+        <!-- 문의사항 -->
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="${pageContext.request.contextPath}/company/questionList">
+            <i class="fa fa-fw fa-question-circle"></i>
+            <span class="nav-link-text">문의사항</span>
+          </a>
         </li>
       </ul>
       <ul class="navbar-nav sidenav-toggler">

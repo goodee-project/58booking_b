@@ -9,7 +9,7 @@
 	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	  <meta name="description" content="">
 	  <meta name="author" content="Ansonika">
-	  <title>예약 | 기업-메인</title>
+	  <title>예약 | 기업 Index</title>
 		
 	  <!-- Favicons-->
 	  <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/admin_section/img/favicon.ico" type="image/x-icon">
@@ -44,9 +44,9 @@
 	      <!-- Breadcrumbs-->
 	      <ol class="breadcrumb">
 	        <li class="breadcrumb-item">
-	          <a href="${pageContext.request.contextPath}/index">Dashboard</a>
+	          <a href="${pageContext.request.contextPath}/index">Home</a>
 	        </li>
-	        <li class="breadcrumb-item active">Main</li>
+	        <li class="breadcrumb-item active">Index</li>
 	      </ol>
 	      
 			<div class="box_general padding_bottom">
@@ -72,7 +72,11 @@
 				<ul>
 					<li>
 						<h2>김민송</h2>
-						<p>담당 기능 : 업체관리, 고객관리, 리뷰관리</p>
+						<p>담당 기능 : 
+							<a href="${pageContext.request.contextPath}/company/modifyCompanyDetail">업체관리</a>,
+							<a href="${pageContext.request.contextPath}/company/customerList">고객관리</a>,
+							<a href="${pageContext.request.contextPath}/company/reviewList">리뷰관리</a>
+						</p>
 						<h6>1. 고객 관리</h6>
 						<p>
 							1) SQL 동적 쿼리를 활용한 검색 기능<br>
@@ -97,7 +101,11 @@
 					</li>
 					<li>
 						<h2>민태희</h2>
-						<p>담당 기능 : 상품관리, 예약관리, 문의사항</p>
+						<p>담당 기능 : 
+							<a href="${pageContext.request.contextPath}/company/productList">상품관리</a>,
+							<a href="${pageContext.request.contextPath}/company/bookingList">예약관리</a>,
+							<a href="${pageContext.request.contextPath}/company/questionList">문의사항</a>
+						</p>
 						<h6>1. 예약관리</h6> 
 						<p>
 							1) Ajax 활용 예약상태 변경<br>
@@ -127,7 +135,14 @@
 					</li>
 					<li>
 						<h2>이가을</h2>
-						<p>담당 기능 : 업체 로그인, 업체 가입, 아이디/비밀번호 찾기, 업체:고객 채팅, 통계</p>
+						<p>담당 기능 : 
+							<a href="${pageContext.request.contextPath}/beforeLogin/loginCompany">로그인</a>,
+							<a href="${pageContext.request.contextPath}/beforeLogin/addCompany">업체가입</a>,
+							<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디찾기</a>,
+							<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호찾기</a>,
+							<a href="${pageContext.request.contextPath}/company/companyBasicInfo/companyMain">업체 기본정보 관리</a>,
+							<a href="">통계</a>
+						</p>
 
 						<h6>1. 업체 로그인</h6>
 						<P>

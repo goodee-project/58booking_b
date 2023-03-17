@@ -155,10 +155,10 @@
 		        , processData: false // false 로 선언 시 content-type 헤더가 multipart/form-data로 전송되게 함
 		        , contentType: false // false로 선언 시 formData를 string으로 변환하지 않음
 		        , success: function (model) {
-		        	if(model == true){
-		        		alert("complete");	
+		        	if(model){
+		        		alert('사진 변경 완료.');	
 		        	} else {
-		        		alert("fail");
+		        		alert('사진 변경 실패.');
 		        	}
 		        }
 			});

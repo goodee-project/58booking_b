@@ -1,6 +1,5 @@
 package goodee.gdj58.booking_c.restcontroller.gaeul;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +16,6 @@ import goodee.gdj58.booking_c.service.gaeul.CompanyService2;
 import goodee.gdj58.booking_c.service.gaeul.MailSendService;
 import goodee.gdj58.booking_c.util.FontColor;
 import goodee.gdj58.booking_c.vo.Company;
-import goodee.gdj58.booking_c.vo.CompanyImg;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -43,12 +41,7 @@ public class CompanyRestController {
 		log.debug(FontColor.BLUE+"파일저장경로 : "+path);
 		boolean result = companyImgService.modifyCompanyImg(companyId, comImgs, choose, path);
 		
-		
-		
-		// 이미지 리스트 조회 서비스
-		// List<CompanyImg> newImgs = new ArrayList<CompanyImg>();
-		
-		return result;
+		return result; // true : 성공, false : 실패
 	}
 	
 	// 업체 비밀번호 변경
