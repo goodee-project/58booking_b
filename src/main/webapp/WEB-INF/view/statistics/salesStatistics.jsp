@@ -4,17 +4,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
-
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="Ansonika">
-
-
-<title>예약 | 업체가입</title>
-
-
+<title>예약 | 신고통계</title>
 <!-- Favicons-->
 <link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath}/resources/admin_section/image/x-icon">
 <link rel="apple-touch-icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/admin_section/img/apple-touch-icon-57x57-precomposed.png">
@@ -40,7 +34,6 @@
 <!-- Your custom styles -->
 <link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
 </head>
 <body class="fixed-nav sticky-footer" id="page-top">
 
@@ -54,12 +47,14 @@
 			<!-- Breadcrumbs-->
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="${pageContext.request.contextPath}/index">Dashboard</a>
+					<a href="${pageContext.request.contextPath}/index">Home</a>
 				</li>
-				<li class="breadcrumb-item active">Add listing</li>
+				<li class="breadcrumb-item active">신고 통계</li>
 			</ol>
 			
 			<!-- 본문 입력 -->
+			<div class="box_general">
+			</div>
 			
 			
 		</div>
@@ -82,3 +77,5 @@
 <script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
 <!-- Custom scripts for this page-->
 <script src="${pageContext.request.contextPath}/resources/admin_section/vendor/dropzone.min.js"></script>
+</body>
+</html>

@@ -66,11 +66,22 @@
         </li>
         
         <!-- 통계 -->
-        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-          <a class="nav-link" href="${pageContext.request.contextPath}/index">
+		<li class="nav-item" data-toggle="tooltip" data-placement="right" title="My listings">
+          <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMylisting">
             <i class="fa fa-fw fa-bar-chart"></i>
             <span class="nav-link-text">통계</span>
           </a>
+          <ul class="sidenav-second-level collapse show" id="collapseMylisting">
+            <li>
+              <a href="${pageContext.request.contextPath}/company/statistics/totalStatistics">전체통계</a>
+            </li>
+            <li>
+              <a href="${pageContext.request.contextPath}/company/statistics/salesStatistics">매출통계</a>
+            </li>
+            <li>
+              <a href="${pageContext.request.contextPath}/company/statistics/reportStatistics">신고통계</a>
+            </li>
+          </ul>
         </li>
         
         <!-- 문의사항 -->

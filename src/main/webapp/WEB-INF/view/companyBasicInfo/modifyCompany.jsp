@@ -258,7 +258,7 @@
 			<!-- Breadcrumbs-->
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="${pageContext.request.contextPath}/index">Dashboard</a>
+					<a href="${pageContext.request.contextPath}/index">Home</a>
 				</li>
 				<li class="breadcrumb-item active">업체 기본정보 수정</li>
 			</ol>
