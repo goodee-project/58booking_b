@@ -9,9 +9,13 @@ import org.apache.ibatis.annotations.Mapper;
 import goodee.gdj58.booking_c.vo.CompanyDetail;
 import goodee.gdj58.booking_c.vo.CompanyOffday;
 import goodee.gdj58.booking_c.vo.CompanyType;
+import goodee.gdj58.booking_c.vo.ReviewComment;
 
 @Mapper
 public interface CompanyMapper {
+	int insertReviewComment(ReviewComment reviewComment);
+	List<ReviewComment> selectReviewCommentList(String companyId);
+	List<Map<String, Object>> selectReviewList(Map<String, Object> paramMap);
 	List<Map<String, Object>> selectDayOfOffday(String companyId);
 	int deleteOffday(Map<String, Object> paramMap);
 	int countOffday(Map<String, Object> paramMap);

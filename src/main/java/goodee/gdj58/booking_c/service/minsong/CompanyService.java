@@ -13,12 +13,34 @@ import goodee.gdj58.booking_c.mapper.minsong.CompanyMapper;
 import goodee.gdj58.booking_c.vo.CompanyDetail;
 import goodee.gdj58.booking_c.vo.CompanyOffday;
 import goodee.gdj58.booking_c.vo.CompanyType;
+import goodee.gdj58.booking_c.vo.ReviewComment;
 
 @Service
 @Transactional
 public class CompanyService {
 	@Autowired 
 	private CompanyMapper companyMapper;
+	
+	// 리뷰 답글
+	public int addReviewComment(ReviewComment reviewComment) {
+		return companyMapper.insertReviewComment(reviewComment);
+	}
+	
+	// 리뷰 답글 목록
+	public List<ReviewComment> getReviewCommentList(String companyId){
+		return companyMapper.selectReviewCommentList(companyId);
+	}
+	
+	// 리뷰 목록
+	public List<Map<String, Object>> getReviewList(String companyId, int currentPage, int rowPerPage){
+		int beginRow = (currentPage-1)*rowPerPage;
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("companyId", companyId);
+		paramMap.put("beginRow", beginRow);
+		paramMap.put("rowPerPage", rowPerPage);
+		return companyMapper.selectReviewList(paramMap);
+	}
 	
 	// 정기휴무 요일
 	public List<Map<String, Object>> getDayOfOffday(String companyId){

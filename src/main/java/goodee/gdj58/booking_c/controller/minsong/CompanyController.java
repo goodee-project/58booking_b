@@ -21,6 +21,7 @@ import goodee.gdj58.booking_c.vo.Company;
 import goodee.gdj58.booking_c.vo.CompanyDetail;
 import goodee.gdj58.booking_c.vo.CompanyOffday;
 import goodee.gdj58.booking_c.vo.CompanyType;
+import goodee.gdj58.booking_c.vo.ReviewComment;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,6 +31,38 @@ public class CompanyController {
 	private CompanyService companyService;
 	private String[] timetable = {"00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"};
 	private String[] addtionalService = {"주차 가능", "제로페이", "배달", "포장"};
+	
+	// 리뷰 목록
+	@GetMapping("/company/reviewList")
+	public String getReviewList(HttpSession session, Model model
+								, @RequestParam(value="currentPage", defaultValue="1") int currentPage
+								, @RequestParam(value="rowPerPage", defaultValue="10") int rowPerPage) {
+		Company loginCompany = (Company)session.getAttribute("loginCompany");
+		String companyId = loginCompany.getCompanyId();
+		
+		List<Map<String, Object>> reviewList = companyService.getReviewList(companyId, currentPage, rowPerPage);
+		List<ReviewComment> reviewCommentList = companyService.getReviewCommentList(companyId);
+		int startPage = ((currentPage-1)/rowPerPage)*rowPerPage+1;
+		int endPage = startPage + rowPerPage - 1;
+		int lastPage = (int)Math.ceil(Integer.parseInt(String.valueOf(reviewList.get(0).get("count")))/(double)rowPerPage);
+		if(endPage > lastPage) {
+			endPage = lastPage;
+		}
+
+		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("reviewCommentList", reviewCommentList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute("lastPage", lastPage);
+		return "review/reviewList";
+	}
+	// 리뷰 답글 등록
+	@GetMapping("/company/addReviewComment")
+	public String addReviewComment(ReviewComment reviewComment) {
+		// 성공
+		return "redirect:/company/reviewList";
+	}
 	
 	// 업체 등록
 	@GetMapping("/company/addCompanyDetail")
