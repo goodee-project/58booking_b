@@ -8,6 +8,12 @@
 				, CURDATE())
 	</insert>
 	
+	<select id="selectReviewCommentBookingNoList" parameterType="String" resultType="Integer">
+		SELECT rc.booking_no bookingNo
+		FROM review_comment rc INNER JOIN booking b ON rc.booking_no = b.booking_no
+		WHERE b.booking_company_id = #{companyId}
+	</select>
+	
 	<select id="selectReviewCommentList" parameterType="String" resultType="goodee.gdj58.booking_c.vo.ReviewComment">
 		SELECT rc.booking_no bookingNo
 				, rc.review_comment_memo reviewCommentMemo
@@ -15,19 +21,25 @@
 		FROM review_comment rc INNER JOIN booking b ON rc.booking_no = b.booking_no
 		WHERE b.booking_company_id = #{companyId}
 	</select>
+	
+	<select id="countReviewList" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM review r INNER JOIN booking b ON r.booking_no = b.booking_no
+		WHERE b.booking_company_id = #{companyId}
+	</select>
 
 	<select id="selectReviewList" parameterType="java.util.Map" resultType="java.util.Map">
-		SELECT r.booking_no bookingNo
-				, ci.customer_img_save_name customerImgSaveName
+		SELECT ROW_NUMBER() OVER (ORDER BY r.createdate DESC) rowNum
+				, r.booking_no bookingNo
+				, ci.customer_img_save_name customerImgSaveName	<![CDATA[# 리뷰 사진 없이 등록할 수 있으면 빼기]]>
 				, c.customer_nickname customerNickname
 				, CONCAT(SUBSTR(c.customer_id, 1, 3), '***') customerId
 				, SUBSTR(b.booking_date, 1, 10) bookingDate
 				, <![CDATA[(SELECT COUNT(booking_date) FROM booking WHERE booking_state = '방문완료' AND booking_date <= b.booking_date AND booking_company_id = #{companyId})]]> visitCount
 				, r.createdate createdate
 				, ri.review_img_save_name reviewImgSaveName
-				, r.star_rating starRaing
+				, r.star_rating starRating
 				, r.review_memo reviewMemo
-				, COUNT(*) count
 		FROM review r 
 			INNER JOIN booking b ON r.booking_no = b.booking_no
 			INNER JOIN review_img ri ON r.booking_no = ri.booking_no

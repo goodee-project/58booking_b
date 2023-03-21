@@ -36,6 +36,20 @@
 		<link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+		
+		<script>
+			$(document).ready(function(){
+				let bookingNo = 0;
+				
+				// 모달에 예약번호 넣기
+				$(".btn_1").click(function(){
+					bookingNo = $(this).data('id');
+					$("#bookingNo").val(bookingNo);
+				});
+				
+				
+			});
+		</script>
 	</head>
 	
 <body class="fixed-nav sticky-footer" id="page-top">
@@ -53,106 +67,208 @@
         <li class="breadcrumb-item active">리뷰 관리</li>
       </ol>
     	<!--  -->
-    	<table>
-    		<c:forEach var="m" items="${reviewList}">
-    			<tr>
-    				<td>
-    					<img src="${pageContext.request.contextPath}/upload/${m.customerImgSaveName}">
-    				</td>
-    				<td>
-    					${m.customerNickname}(${m.customerId})
-    					<br>
-    					${m.bookingDate} ${m.visitCount}번째 방문| ${m.createdate} 작성
-    				</td>
-    			</tr>
-    			<tr>
-    				<td colspan="2">
-    					<img src="${pageContext.request.contextPath}/upload/${m.reviewImgSaveName}">
-    				</td>
-    			</tr>
-    			<tr>
-    				<td colspan="2">
-    					${m.starRaing}
-    				</td>
-    			</tr>
-    			<tr>
-    				<td colspan="2">
-    					${m.reviewMemo}
-    				</td>
-    			</tr>
-    			<tr>
-    				<td colspan="2">
-    					<c:if test="">
-	    					<a class="btn_1" id="modalBtn" data-toggle="modal" data-target="#modal">답글 달기</a>
-    					</c:if>
-    					<c:if test="">
-	    					
-    					</c:if>
-    				</td>
-    			</tr>
-    		</c:forEach>
-    	</table>
-    	<!-- 페이징 -->
-	 	<ul class="pagination pagination-sm add_bottom_30 justify-content-center">
-			<!-- 이전 -->
-			<c:if test="${currentPage <= 10}">
-				<li class="page-item disabled">
-					<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${startPage-10}" class="page-link">&laquo;</a>
-				</li>
-			</c:if>
-			<c:if test="${currentPage > 10}">
-				<li class="page-item">
-					<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${startPage-10}" class="page-link">&laquo;</a>
-				</li>
-			</c:if>
-			<!-- 1~10 -->
-			<c:forEach var="i" begin="${startPage}" end="${endPage}">
-				<c:if test="${i == currentPage}">
-					<li class="page-item active">
-						<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${i}" class="page-link">${i}</a>
+    	<div class="box_general">
+    		<!--
+	    	<table>
+	    		<c:forEach var="m" items="${reviewList}">
+	    			<tr>
+	    				<td>
+	    					<img src="${pageContext.request.contextPath}/upload/${m.customerImgSaveName}">
+	    				</td>
+	    				<td>
+	    					${m.customerNickname}(${m.customerId})
+	    					<br>
+	    					${m.bookingDate} ${m.visitCount}번째 방문| ${m.createdate} 작성
+	    				</td>
+	    			</tr>
+	    			<tr>
+	    				<td colspan="2">
+	    					<img src="${pageContext.request.contextPath}/upload/${m.reviewImgSaveName}">
+	    				</td>
+	    			</tr>
+	    			<tr>
+	    				<td colspan="2">
+	    					<c:if test="${m.starRating == 1}">
+	    						<span class="rating">
+	    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i>
+	    						</span>
+	    					</c:if>
+	    					<c:if test="${m.starRating == 2}">
+	    						<span class="rating">
+	    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i>
+	    						</span>
+	    					</c:if>
+	    					<c:if test="${m.starRating == 3}">
+	    						<span class="rating">
+	    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i>
+	    						</span>
+	    					</c:if>
+	    					<c:if test="${m.starRating == 4}">
+	    						<span class="rating">
+	    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star"></i>
+	    						</span>
+	    					</c:if>
+	    					<c:if test="${m.starRating == 5}">
+	    						<span class="rating">
+	    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i>
+	    						</span>
+	    					</c:if>
+	    				</td>
+	    			</tr>
+	    			<tr>
+	    				<td colspan="2">
+	    					${m.reviewMemo}
+	    				</td>
+	    			</tr>
+	    			<tr>
+	    				<td colspan="2">
+	    					<c:if test="${!reviewCommentBookingNoList.contains(m.bookingNo)}">
+		    					<a class="btn_1" id="modalBtn" data-toggle="modal" data-target="#modal" data-id="${m.bookingNo}">답글 달기</a>
+	    					</c:if>
+	    					<c:if test="${reviewCommentBookingNoList.contains(m.bookingNo)}">
+	    						<c:forEach var="rc" items="${reviewCommentList}">
+	    							<c:if test="${m.bookingNo eq rc.bookingNo}">
+	    								${rc.createdate}
+	    								<br>
+	    								${rc.reviewCommentMemo}
+	    							</c:if>
+		    					</c:forEach>
+	    					</c:if>
+	    				</td>
+	    			</tr>
+	    		</c:forEach>
+	    	</table>
+	    	 -->
+	    	 
+			<div class="row my-5">
+		    		<c:forEach var="m" items="${reviewList}">
+		    			<div class="col-md-6">
+		    					<img src="${pageContext.request.contextPath}/upload/${m.customerImgSaveName}">
+
+		    					${m.customerNickname}(${m.customerId})
+		    					<br>
+		    					${m.bookingDate} ${m.visitCount}번째 방문| ${m.createdate} 작성
+
+	
+								<br>
+		    					<img src="${pageContext.request.contextPath}/upload/${m.reviewImgSaveName}">
+
+	
+								<br>
+		    					<c:if test="${m.starRating == 1}">
+		    						<span class="rating">
+		    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i>
+		    						</span>
+		    					</c:if>
+		    					<c:if test="${m.starRating == 2}">
+		    						<span class="rating">
+		    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i>
+		    						</span>
+		    					</c:if>
+		    					<c:if test="${m.starRating == 3}">
+		    						<span class="rating">
+		    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i>
+		    						</span>
+		    					</c:if>
+		    					<c:if test="${m.starRating == 4}">
+		    						<span class="rating">
+		    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star"></i>
+		    						</span>
+		    					</c:if>
+		    					<c:if test="${m.starRating == 5}">
+		    						<span class="rating">
+		    							<i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i><i class="fa fa-fw fa-star yellow"></i>
+		    						</span>
+		    					</c:if>
+
+	
+								<br>
+		    					${m.reviewMemo}
+
+								<br>
+		    					<c:if test="${!reviewCommentBookingNoList.contains(m.bookingNo)}">
+			    					<a class="btn_1" id="modalBtn" data-toggle="modal" data-target="#modal" data-id="${m.bookingNo}">답글 달기</a>
+		    					</c:if>
+		    					<c:if test="${reviewCommentBookingNoList.contains(m.bookingNo)}">
+		    						<c:forEach var="rc" items="${reviewCommentList}">
+		    							<c:if test="${m.bookingNo eq rc.bookingNo}">
+		    								${rc.createdate}
+		    								<br>
+		    								${rc.reviewCommentMemo}
+		    							</c:if>
+			    					</c:forEach>
+		    					</c:if>
+						</div>
+						<c:if test="${m.rowNum % 2 == 0}">
+							</div><div class="row">
+						</c:if>
+		    		</c:forEach>
+					</div>	<!-- 마지막 row 닫기 위함 -->
+	    	
+	    	<!-- 페이징 -->
+		 	<ul class="pagination pagination-sm add_bottom_30 justify-content-center my-5">
+				<!-- 이전 -->
+				<c:if test="${currentPage <= 10}">
+					<li class="page-item disabled">
+						<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${startPage-10}" class="page-link">&laquo;</a>
 					</li>
 				</c:if>
-				<c:if test="${i != currentPage}">
+				<c:if test="${currentPage > 10}">
 					<li class="page-item">
-						<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${i}" class="page-link">${i}</a>
+						<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${startPage-10}" class="page-link">&laquo;</a>
 					</li>
 				</c:if>
-			</c:forEach>
-		    <!-- 다음 -->
-			<c:if test="${currentPage+10 < lastPage}">
-				<li class="page-item">
-					<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${startPage+10}"  class="page-link">&raquo;</a>
-				</li>
-			</c:if>
-			<c:if test="${currentPage+10 >= lastPage}">
-				<li class="page-item disabled">
-					<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${startPage+10}"  class="page-link">
-						<span>&raquo;</span>
-					</a>
-				</li>
-			</c:if>
-		</ul>
-		
-		
-		<!-- 모달 -->
-		<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="client_detail_modalLabel" aria-hidden="true">
-	        <div class="modal-dialog" role="document">
-	            <div class="modal-content">
-	                <div class="modal-header">
-	                    <h5 class="modal-title" id="client_detail_modalLabel">리뷰 답글 달기</h5>
-	                </div>
-	                <form id="form" method="post" action="${pageContext.request.contextPath}/company/addReviewComment">
-		                <div class="modal-body">
-							
+				<!-- 1~10 -->
+				<c:forEach var="i" begin="${startPage}" end="${endPage}">
+					<c:if test="${i == currentPage}">
+						<li class="page-item active">
+							<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${i}" class="page-link">${i}</a>
+						</li>
+					</c:if>
+					<c:if test="${i != currentPage}">
+						<li class="page-item">
+							<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${i}" class="page-link">${i}</a>
+						</li>
+					</c:if>
+				</c:forEach>
+			    <!-- 다음 -->
+				<c:if test="${currentPage+10 < lastPage}">
+					<li class="page-item">
+						<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${startPage+10}"  class="page-link">&raquo;</a>
+					</li>
+				</c:if>
+				<c:if test="${currentPage+10 >= lastPage}">
+					<li class="page-item disabled">
+						<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${startPage+10}"  class="page-link">
+							<span>&raquo;</span>
+						</a>
+					</li>
+				</c:if>
+			</ul>
+			
+			
+			<!-- 모달 -->
+			<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="client_detail_modalLabel" aria-hidden="true">
+		        <div class="modal-dialog" role="document">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		                    <h5 class="modal-title" id="client_detail_modalLabel">리뷰 답글 달기</h5>
 		                </div>
-		                <div class="modal-footer">
-		                    <a class="btn btn-primary" id="cancelBtn">등록</a>
-		                </div>
-	                </form>
-	            </div>
-	        </div>
-	    </div>
+		                <form id="form" method="post" action="${pageContext.request.contextPath}/company/addReviewComment">
+			                <div class="modal-body">
+								<label>답글</label>
+								<input type="hidden" name="bookingNo" id="bookingNo">
+								<textarea name="reviewCommentMemo" class="form-control"></textarea>
+			                </div>
+			                <div class="modal-footer">
+			                    <button type="submit" class="btn btn-primary" id="btn">등록</button>
+			                </div>
+		                </form>
+		            </div>
+		        </div>
+		    </div>
 	    
+	    </div>
     	<!--  -->
     </div>
   </div>

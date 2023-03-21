@@ -26,9 +26,19 @@ public class CompanyService {
 		return companyMapper.insertReviewComment(reviewComment);
 	}
 	
+	// 리뷰 답글 예약 번호 목록
+	public List<Integer> getReviewCommentBookingNoList(String companyId){
+		return companyMapper.selectReviewCommentBookingNoList(companyId);
+	}
+	
 	// 리뷰 답글 목록
 	public List<ReviewComment> getReviewCommentList(String companyId){
 		return companyMapper.selectReviewCommentList(companyId);
+	}
+	
+	// 리뷰 개수
+	public int countReviewList(String companyId) {
+		return companyMapper.countReviewList(companyId);
 	}
 	
 	// 리뷰 목록

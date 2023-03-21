@@ -42,15 +42,17 @@ public class CompanyController {
 		
 		List<Map<String, Object>> reviewList = companyService.getReviewList(companyId, currentPage, rowPerPage);
 		List<ReviewComment> reviewCommentList = companyService.getReviewCommentList(companyId);
+		List<Integer> reviewCommentBookingNoList = companyService.getReviewCommentBookingNoList(companyId);
 		int startPage = ((currentPage-1)/rowPerPage)*rowPerPage+1;
 		int endPage = startPage + rowPerPage - 1;
-		int lastPage = (int)Math.ceil(Integer.parseInt(String.valueOf(reviewList.get(0).get("count")))/(double)rowPerPage);
+		int lastPage = (int)Math.ceil(companyService.countReviewList(companyId)/(double)rowPerPage);
 		if(endPage > lastPage) {
 			endPage = lastPage;
 		}
 
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("reviewCommentList", reviewCommentList);
+		model.addAttribute("reviewCommentBookingNoList", reviewCommentBookingNoList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
@@ -58,8 +60,15 @@ public class CompanyController {
 		return "review/reviewList";
 	}
 	// 리뷰 답글 등록
-	@GetMapping("/company/addReviewComment")
+	@PostMapping("/company/addReviewComment")
 	public String addReviewComment(ReviewComment reviewComment) {
+		log.debug(FontColor.PURPLE+reviewComment+"<======리뷰 답변 입력 정보");
+		
+		int row = companyService.addReviewComment(reviewComment);
+		if(row == 0) {
+			log.debug(FontColor.PURPLE+"답변 등록 실패");
+			return "review/reviewList";
+		}
 		// 성공
 		return "redirect:/company/reviewList";
 	}

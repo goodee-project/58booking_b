@@ -14,7 +14,9 @@ import goodee.gdj58.booking_c.vo.ReviewComment;
 @Mapper
 public interface CompanyMapper {
 	int insertReviewComment(ReviewComment reviewComment);
+	List<Integer> selectReviewCommentBookingNoList(String companyId);
 	List<ReviewComment> selectReviewCommentList(String companyId);
+	int countReviewList(String companyId);
 	List<Map<String, Object>> selectReviewList(Map<String, Object> paramMap);
 	List<Map<String, Object>> selectDayOfOffday(String companyId);
 	int deleteOffday(Map<String, Object> paramMap);
