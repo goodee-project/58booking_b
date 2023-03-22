@@ -139,7 +139,7 @@
 					</li>
 				</c:if>
 				<!-- 1~10 -->
-				<c:forEach var="i" begin="${startPage}" end="${endPage}">
+				<c:forEach var="i" begin="${startPage}" end="${endPage-1}">
 					<c:if test="${i == currentPage}">
 						<li class="page-item active">
 							<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${i}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}" class="page-link">${i}</a>

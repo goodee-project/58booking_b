@@ -47,7 +47,24 @@
 					$("#bookingNo").val(bookingNo);
 				});
 				
-				
+				// 답글 유효성 검사
+				$("#btn").click(function(){
+					let check = false;
+					
+					if($("#bookingNo").val() == 0){
+						alert('알 수 없는 오류가 발생했습니다.');
+						return;
+					}else if($('#reviewCommentMemo').val().length < 1 || $('#reviewCommentMemo').val().trim() == ''){
+						alert('리뷰 답글 내용을 입력해 주세요.');
+						return;
+					}else{
+						check = true;
+					}
+					
+					if(check){
+						$('#form').submit();
+					}
+				});
 			});
 		</script>
 	</head>
@@ -227,7 +244,7 @@
 					</li>
 				</c:if>
 				<!-- 1~10 -->
-				<c:forEach var="i" begin="${startPage}" end="${endPage}">
+				<c:forEach var="i" begin="${startPage}" end="${endPage-1}">
 					<c:if test="${i == currentPage}">
 						<li class="page-item active">
 							<a href="${pageContext.request.contextPath}/company/reviewList?currentPage=${i}" class="page-link">${i}</a>
@@ -262,14 +279,14 @@
 		                <div class="modal-header">
 		                    <h5 class="modal-title" id="client_detail_modalLabel">리뷰 답글 달기</h5>
 		                </div>
-		                <form id="form" method="post" action="${pageContext.request.contextPath}/company/addReviewComment">
+		                <form id="form" method="post" action="${pageContext.request.contextPath}/company/addReviewComment" id="form">
 			                <div class="modal-body">
 								<label>답글</label>
 								<input type="hidden" name="bookingNo" id="bookingNo">
-								<textarea name="reviewCommentMemo" class="form-control" placeholder="답글을 입력하세요"></textarea>
+								<textarea name="reviewCommentMemo" id="reviewCommentMemo" class="form-control" placeholder="답글을 입력하세요"></textarea>
 			                </div>
 			                <div class="modal-footer">
-			                    <button type="submit" class="btn btn-primary" id="btn">등록</button>
+			                    <button type="button" class="btn btn-primary" id="btn">등록</button>
 			                </div>
 		                </form>
 		            </div>
