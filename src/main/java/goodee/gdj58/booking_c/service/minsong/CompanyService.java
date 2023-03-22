@@ -14,6 +14,7 @@ import goodee.gdj58.booking_c.vo.CompanyDetail;
 import goodee.gdj58.booking_c.vo.CompanyOffday;
 import goodee.gdj58.booking_c.vo.CompanyType;
 import goodee.gdj58.booking_c.vo.ReviewComment;
+import goodee.gdj58.booking_c.vo.ReviewImg;
 
 @Service
 @Transactional
@@ -39,6 +40,11 @@ public class CompanyService {
 	// 리뷰 개수
 	public int countReviewList(String companyId) {
 		return companyMapper.countReviewList(companyId);
+	}
+	
+	// 리뷰 사진 목록
+	public List<ReviewImg> getReviewImgList(String companyId){
+		return companyMapper.selectReviewImgList(companyId);
 	}
 	
 	// 리뷰 목록

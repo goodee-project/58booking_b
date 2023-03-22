@@ -22,6 +22,7 @@ import goodee.gdj58.booking_c.vo.CompanyDetail;
 import goodee.gdj58.booking_c.vo.CompanyOffday;
 import goodee.gdj58.booking_c.vo.CompanyType;
 import goodee.gdj58.booking_c.vo.ReviewComment;
+import goodee.gdj58.booking_c.vo.ReviewImg;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -41,6 +42,7 @@ public class CompanyController {
 		String companyId = loginCompany.getCompanyId();
 		
 		List<Map<String, Object>> reviewList = companyService.getReviewList(companyId, currentPage, rowPerPage);
+		List<ReviewImg> reviewImgList = companyService.getReviewImgList(companyId);
 		List<ReviewComment> reviewCommentList = companyService.getReviewCommentList(companyId);
 		List<Integer> reviewCommentBookingNoList = companyService.getReviewCommentBookingNoList(companyId);
 		int startPage = ((currentPage-1)/rowPerPage)*rowPerPage+1;
@@ -51,6 +53,7 @@ public class CompanyController {
 		}
 
 		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("reviewImgList", reviewImgList);
 		model.addAttribute("reviewCommentList", reviewCommentList);
 		model.addAttribute("reviewCommentBookingNoList", reviewCommentBookingNoList);
 		model.addAttribute("currentPage", currentPage);

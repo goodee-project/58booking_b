@@ -151,8 +151,11 @@
 
 	
 								<br>
-		    					<img src="${pageContext.request.contextPath}/upload/${m.reviewImgSaveName}">
-
+								<c:forEach var="ri" items="${reviewImgList}">
+									<c:if test="${m.bookingNo == ri.bookingNo}">
+		    							<img src="${pageContext.request.contextPath}/upload/${ri.reviewImgSaveName}">
+									</c:if>
+								</c:forEach>
 	
 								<br>
 		    					<c:if test="${m.starRating == 1}">
@@ -186,6 +189,7 @@
 		    					${m.reviewMemo}
 
 								<br>
+								<hr>
 		    					<c:if test="${!reviewCommentBookingNoList.contains(m.bookingNo)}">
 			    					<a class="btn_1" id="modalBtn" data-toggle="modal" data-target="#modal" data-id="${m.bookingNo}">답글 달기</a>
 		    					</c:if>

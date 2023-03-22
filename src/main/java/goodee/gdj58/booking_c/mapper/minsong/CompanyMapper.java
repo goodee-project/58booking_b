@@ -10,6 +10,7 @@ import goodee.gdj58.booking_c.vo.CompanyDetail;
 import goodee.gdj58.booking_c.vo.CompanyOffday;
 import goodee.gdj58.booking_c.vo.CompanyType;
 import goodee.gdj58.booking_c.vo.ReviewComment;
+import goodee.gdj58.booking_c.vo.ReviewImg;
 
 @Mapper
 public interface CompanyMapper {
@@ -17,6 +18,7 @@ public interface CompanyMapper {
 	List<Integer> selectReviewCommentBookingNoList(String companyId);
 	List<ReviewComment> selectReviewCommentList(String companyId);
 	int countReviewList(String companyId);
+	List<ReviewImg> selectReviewImgList(String companyId);
 	List<Map<String, Object>> selectReviewList(Map<String, Object> paramMap);
 	List<Map<String, Object>> selectDayOfOffday(String companyId);
 	int deleteOffday(Map<String, Object> paramMap);
