@@ -39,103 +39,68 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 		<script>
 			$(document).ready(function(){
-				$('#btn').click(function() {
-					// 유효성 검사
-					if($('#questionTitle').val() == '') {
-						$('#msg').text('제목을 입력 해주세요');
-						$('#questionTitle').focus();
-						return;
-					} else {
-						$('#msg').text('');
-					}
-					if($('#questionMemo').val() == '') {
-						$('#msg').text('내용을 입력 해주세요');
-						$('#questionMemo').focus();
-						return;
-					} else {
-						$('#msg').text('');
-					}
-					$('#questionForm').submit();
-					alert('문의사항등록 완료');
-				});
 			});
 		</script>
 	</head>
 	
-	<!-- Navigation-->
+	<body class="fixed-nav sticky-footer" id="page-top">
+	 	<!-- Navigation-->
 		<jsp:include page="/WEB-INF/view/inc/nav.jsp"></jsp:include>
 		<!-- /Navigation-->
 		
 	  <div class="content-wrapper">
 	    <div class="container-fluid">
-    	  <!-- Breadcrumbs-->
+	      <!-- Breadcrumbs-->
 	      <ol class="breadcrumb">
 	        <li class="breadcrumb-item">
 	          <a href="${pageContext.request.contextPath}/index">Dashboard</a>
 	        </li>
-	        <li class="breadcrumb-item active">Add listing</li>
+	        <li class="breadcrumb-item active">Q&A</li>
 	      </ol>
-	      	<h3>문의사항 등록</h3>
-			<form id="questionForm" method="post" action="${pageContext.request.contextPath}/company/addQuestion">
-				<div>
-	 				<p id="msg" style="color: red;"></p>
-				</div>
-				<table border="1">
-					<tr>
-						<th>제목</th>
-						<td>
-							<input type="text" name="questionTitle" id="questionTitle">
-						</td>
-					</tr>
-					<tr>
-						<th>내용</th>
-						<td>
-							<textarea rows="10" cols="50" name="questionMemo" id="questionMemo"></textarea>
-						</td>
-					</tr>
-				</table>
-				<button type="button"id="btn">등록</button>
-			</form>
-			
-			<hr>
-		
-			<h3>문의사항 목록</h3>
+	      
+	      <div class="box_general">
+			<h2 class="d-inline-block">Q&A</h2>
+			<div class="list_general">
 			<table border="1">
-				<thead>
+				<c:forEach var="q" items="${list}">
 					<tr>
 						<th>제목</th>
-						<th>날짜</th>
-						<th>답변</th>
+						<td>${q.questionTitle}</td>
 					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="q" items="${list}">
-	              		<tr>
-	                		<td>
-	                			<a href="${pageContext.request.contextPath}/company/questionOne?questionNo=${q.questionNo}">${q.questionTitle}</a>
-	                		</td>
-	                		<td>${fn:substring(q.createdate,0,10) }</td>
-	                		<td>
-			               		<c:choose> 
-									<c:when test="${empty q.questionComment}">
-										<a href="${pageContext.request.contextPath}/company/removeQuestion?questionNo=${q.questionNo}">삭제</a>
-									</c:when> 
-									<c:otherwise>
-										<p>답변완료</p>
-									</c:otherwise> 
-								</c:choose> 
-							</td>
-	              		</tr>
-	             	</c:forEach>
-				</tbody>
+					<tr>
+						<th>답변</th>
+						<td>${q.questionMemo}</td>
+					</tr>
+					<tr>
+						<th>날짜</th>
+						<td>${q.questionCreatedate}</td>
+					</tr>
+	           	</c:forEach>
 			</table>
 			
-	        <a href="${pageContext.request.contextPath}/company/questionList?currentPage=${currentPage-1}"> < </a>
-	        <c:forEach var="i" begin="${beginPage}" end="${endPage}" step="1">
-				<a href="${pageContext.request.contextPath}/company/questionList?currentPage=${i}">${i}</a>
-			</c:forEach>
-	        <a href="${pageContext.request.contextPath}/company/questionList?currentPage=${currentPage+1}"> > </a>
-		    	
+			<h3>답변보기</h3>
+			<c:forEach var="q" items="${list}">
+				<c:choose> 
+					<c:when test="${q.answer == null}">
+						<h3>문의사항 확인 중입니다.</h3>
+						<a href="${pageContext.request.contextPath}/company/removeQuestion?questionNo=${q.questionNo}">삭제</a>
+					</c:when> 
+					<c:otherwise>
+						<table border="1">
+							<tr>
+								<th>답변</th>
+			               		<td>${q.answer}</td>
+							</tr>
+							<tr>
+								<th>날짜</th>
+			               		<td>${q.answerCreatedate}</td>
+							</tr>
+						</table>
+					</c:otherwise> 
+				</c:choose> 
+	       	</c:forEach>
+	       		</div>
+		</div>
 	    </div>
 	  </div>
 

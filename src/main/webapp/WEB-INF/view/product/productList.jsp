@@ -104,9 +104,10 @@
 	        </li>
 	        <li class="breadcrumb-item active">상품목록</li>
 	      </ol>
-	    	<div class="box_general">
-				<div class="header_box">
-					<h2 class="d-inline-block">상품목록</h2>
+	      
+	      <div class="box_general padding_bottom">
+				<div class="header_box version_2">
+					<h2><i class="fa fa-map-marker"></i>상품목록</h2>
 					<a class="btn_1 gray approve" href="${pageContext.request.contextPath}/company/addProduct">상품 등록</a>
 					<div class="filter">
 			          <div class="styled-select short">
@@ -118,30 +119,37 @@
 			          </div>
 					</div>
 				</div>
-			<div class="list_general">
-				<ul>
+					
+				
+				<div class="row">
 					<c:forEach var="p" items="${list}">
-						<li>
-							<small>Hotel</small>
-							<h4><a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">${p.name}</a></h4>
-							<p>${p.price}원 </p>
-							<p>최소 ${p.min}명 ~ 최대 ${p.max}명</p>
-							<ul class="buttons">
-								<c:choose> 
-									<c:when test="${p.open eq '공개'}">
-										<li><a class="btn_1 gray approve approveBtn" data-id="${p.productNo}" data-open="비공개"><i class="fa fa-fw fa-times-circle-o"></i>공개중</a></li>								
-									</c:when> 
-									<c:when test="${p.open eq '비공개'}">
-										<li><a class="btn_1 gray delete deleteBtn" data-id="${p.productNo}" data-open="공개"><i class="fa fa-fw fa-times-circle-o"></i>비공개중</a></li>								
-									</c:when>
-								</c:choose>
-							</ul>
-						</li>
+						<div class="col-md-6">
+							<div class="box_general padding_bottom">
+								<div class="header_box version_2">
+									<h2>
+										<c:choose> 
+											<c:when test="${p.open eq '공개'}">
+												<a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">${p.name}</a>
+												<a class="btn_1 gray approve approveBtn" data-id="${p.productNo}" data-open="비공개"><i class="fa fa-fw fa-times-circle-o"></i>공개중</a>						
+											</c:when> 
+											<c:when test="${p.open eq '비공개'}">
+												<a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">${p.name}</a>
+												<a class="btn_1 gray delete deleteBtn" data-id="${p.productNo}" data-open="공개"><i class="fa fa-fw fa-times-circle-o"></i>비공개중</a>								
+											</c:when>
+										</c:choose>
+									</h2>
+								</div>
+								<p>${p.price}원 </p>
+								<p>최소 ${p.min}명 ~ 최대 ${p.max}명</p>
+								<img>
+							</div>
+						</div>
 					</c:forEach>
-				</ul>
+				</div>
 			</div>
-		</div>
 		<!-- /box_general-->
+		
+		
 		<nav aria-label="...">
 			<ul class="pagination pagination-sm add_bottom_30">
 				<li class="page-item disabled">

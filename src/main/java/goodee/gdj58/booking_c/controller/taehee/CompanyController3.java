@@ -188,7 +188,7 @@ public class CompanyController3 {
 		log.debug(FontColor.GREEN +questionNo+"	<=questionNo");
 		List<Map<String, Object>> list = companyService.getQuestionOne(questionNo);
 		model.addAttribute("list", list);
-		return "questionOne";
+		return "question/questionOne";
 	}
 	
 	// 3) 삭제
@@ -240,6 +240,6 @@ public class CompanyController3 {
 		log.debug(FontColor.GREEN + beginPage + "  <=  beginPage");
 		log.debug(FontColor.GREEN + endPage + "  <=  endPage");
 		log.debug(FontColor.GREEN + lastPage + "  <=  lastPage");
-		return "questionList";
+		return "question/questionList";
 	}
 }

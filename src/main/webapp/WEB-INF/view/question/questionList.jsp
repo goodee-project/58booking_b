@@ -39,82 +39,141 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 		<script>
 			$(document).ready(function(){
+				$('#btn').click(function() {
+					// 유효성 검사
+					if($('#questionTitle').val() == '') {
+						$('#msg').text('제목을 입력 해주세요');
+						$('#questionTitle').focus();
+						return;
+					} else {
+						$('#msg').text('');
+					}
+					if($('#questionMemo').val() == '') {
+						$('#msg').text('내용을 입력 해주세요');
+						$('#questionMemo').focus();
+						return;
+					} else {
+						$('#msg').text('');
+					}
+					$('#questionForm').submit();
+					alert('문의사항등록 완료');
+				});
 			});
 		</script>
 	</head>
 	
-	<!-- Navigation-->
+	<body class="fixed-nav sticky-footer" id="page-top">
+	 	<!-- Navigation-->
 		<jsp:include page="/WEB-INF/view/inc/nav.jsp"></jsp:include>
 		<!-- /Navigation-->
 		
 	  <div class="content-wrapper">
 	    <div class="container-fluid">
-    	  <!-- Breadcrumbs-->
+	      <!-- Breadcrumbs-->
 	      <ol class="breadcrumb">
 	        <li class="breadcrumb-item">
 	          <a href="${pageContext.request.contextPath}/index">Dashboard</a>
 	        </li>
-	        <li class="breadcrumb-item active">Add listing</li>
+	        <li class="breadcrumb-item active">Q&A</li>
 	      </ol>
-	      	<h3>문의사항 상세보기</h3>
-			<table border="1">
-				<c:forEach var="q" items="${list}">
-					<tr>
-						<th>제목</th>
-						<td>${q.questionTitle}</td>
-					</tr>
-					<tr>
-						<th>답변</th>
-						<td>${q.questionMemo}</td>
-					</tr>
-					<tr>
-						<th>날짜</th>
-						<td>${q.questionCreatedate}</td>
-					</tr>
-	           	</c:forEach>
-			</table>
-			
-			<h3>답변보기</h3>
-			<c:forEach var="q" items="${list}">
-				<c:choose> 
-					<c:when test="${q.answer == null}">
-						<h3>문의사항 확인 중입니다.</h3>
-						<a href="${pageContext.request.contextPath}/company/removeQuestion?questionNo=${q.questionNo}">삭제</a>
-					</c:when> 
-					<c:otherwise>
-						<table border="1">
-							<tr>
-								<th>답변</th>
-			               		<td>${q.answer}</td>
-							</tr>
-							<tr>
-								<th>날짜</th>
-			               		<td>${q.answerCreatedate}</td>
-							</tr>
-						</table>
-					</c:otherwise> 
-				</c:choose> 
-	       	</c:forEach>
-	    </div>
-	  </div>
-
-	    <!-- Logout Modal-->
-	    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	      <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	          <div class="modal-header">
-	            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-	            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-	              <span aria-hidden="true">×</span>
-	            </button>
-	          </div>
-	          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-	          <div class="modal-footer">
-	            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-	            <a class="btn btn-primary" href="#0">Logout</a>
-	          </div>
+		      <div class="box_general">
+				<h2 class="d-inline-block">Q&A</h2>
+				<a class="btn_1 gray delete" data-toggle="modal" data-target="#modal">문의하기</a>
+				<div class="list_general">
+					<ul>
+						<c:forEach var="q" items="${list}">
+							<li>
+								<ul class="buttons">
+									<c:if test="${empty q.questionComment}"> 
+										<a class="btn_1 gray delete" href="${pageContext.request.contextPath}/company/removeQuestion?questionNo=${q.questionNo}">
+											<i class="fa fa-fw fa-times-circle-o"></i> 삭제
+										</a>
+									</c:if> 
+								</ul>
+								<h4>
+									<a href="${pageContext.request.contextPath}/company/questionOne?questionNo=${q.questionNo}">${q.questionTitle}</a> 
+									<c:choose> 
+										<c:when test="${empty q.questionComment}">
+											<i class="unread">확인중</i>
+										</c:when> 
+										<c:otherwise>
+											<i class="read">답변완료</i>
+										</c:otherwise> 
+									</c:choose> 
+								</h4>
+								<p>${q.questionMemo}</p>
+							</li>
+						</c:forEach>
+					</ul>
+				</div>
+			</div>
+			<!-- /box_general-->
+			<nav aria-label="...">
+				<ul class="pagination pagination-sm add_bottom_30">
+					<li class="page-item disabled">
+						<a class="page-link" href="" tabindex="-1">Previous</a>
+					</li>
+					<c:forEach var="i" begin="${beginPage}" end="${endPage}" step="1">
+						<li class="page-item">
+							<a class="page-link" href="${pageContext.request.contextPath}/company/questionList?currentPage=${i}">${i}</a>
+						</li>
+					</c:forEach>
+					<li class="page-item">
+					</li>
+					<li class="page-item">
+						<a class="page-link" href="#">Next</a>
+					</li>
+				</ul>
+				
+			</nav>
+			<!-- /pagination-->
+		  </div>
+		  <!-- /container-fluid-->
+	   	</div>
+	    <!-- /container-wrapper-->
+	    <footer class="sticky-footer">
+	      <div class="container">
+	        <div class="text-center">
+	          <small>Copyright © PANAGEA 2021</small>
 	        </div>
 	      </div>
+	    </footer>
+	    <!-- Scroll to Top Button-->
+	    <a class="scroll-to-top rounded" href="#page-top">
+	      <i class="fa fa-angle-up"></i>
+	    </a>
+	    
+	    <!-- modal -->
+	    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="client_detail_modalLabel" aria-hidden="true">
+	        <div class="modal-dialog" role="document">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <h5 class="modal-title" id="client_detail_modalLabel">예약 취소</h5>
+	                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">×</span>
+	                    </button>
+	                </div>
+	                <form id="questionForm" method="post" action="${pageContext.request.contextPath}/company/addQuestion">
+		                <div class="modal-body">
+		                    <div class="row">
+		                        <div class="col-md-6">
+		                            <div class="form-group">
+		                                <p id="msg" style="color: red;"></p>
+		                                <label>제목</label>
+		                                <input class="form-control" type="text" name="questionTitle" id="questionTitle">
+		                                <label>내용</label>
+		                                <textarea class="form-control" rows="10" cols="100" name="questionMemo" id="questionMemo"></textarea>
+		                            </div>
+		                        </div>
+		                    </div>
+		                    <!-- /Row -->
+		                </div>
+		                <div class="modal-footer">
+		                    <a class="btn btn-primary" id="btn">Save</a>
+		                </div>
+	                </form>
+	            </div>
+	        </div>
 	    </div>
 
 	    <!-- Custom scripts for all pages-->
