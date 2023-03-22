@@ -19,4 +19,20 @@
 		FROM booking b
 		GROUP BY booking_state;
 	 -->
+	 
+	 <!-- 예약 건수 리스트(인기상품순위) -->
+	 <select id="selectProductLsitByBooking"
+	 		 parameterType="java.lang.String"
+	 		 resultType="java.util.HashMap">
+	 	SELECT
+			bp.booking_product_name productName
+			, COUNT(bp.booking_product_name) cnt
+		FROM booking b
+			INNER JOIN booking_product bp
+			ON b.product_no = bp.booking_product_no
+		WHERE b.booking_company_id = #{companyId}
+		GROUP BY bp.booking_product_name
+		ORDER BY cnt DESC
+		LIMIT 0, 5
+	 </select>
 </mapper>

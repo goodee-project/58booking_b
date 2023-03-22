@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -55,15 +56,14 @@
 			<!-- 본문 입력 -->
 			
 			<!-- 상위 항목 : 목록별 건수 -->
-			<div class="row">
+			<div class="row mb-3">
 				<!-- 신규건수(대기) -->
 				<div class="col-xl-3 col-sm-6 mb-3">
-					<div class="card dashboard o-hidden bg-success h-100">
+					<div class="card dashboard o-hidden bg-info h-100">
 						<div class="card-body">
 							<div class="text-center">
-								<h5>신규예약</h5>
-								<br>
-								<h2 class="text-white">${bookingMap.newBooking} 건</h2>
+								<br><h4 class="text-white">신규예약</h4><br><br>
+								<h2 class="text-white">${bookingMap.newBooking} 건</h2><br><br>
 							</div>
 						</div>
 					</div>
@@ -74,9 +74,8 @@
 					<div class="card dashboard o-hidden bg-success h-100">
 						<div class="card-body">
 							<div class="text-center">
-								<h5>예약확정</h5>
-								<br>
-								<h2 class="text-white">${bookingMap.confirmedBooking} 건</h2>
+								<br><h4 class="text-white">확정예약</h4><br><br>
+								<h2 class="text-white">${bookingMap.confirmedBooking} 건</h2><br><br>
 							</div>
 						</div>
 					</div>
@@ -84,12 +83,11 @@
 				
 				<!-- 방문완료건수(완료) -->
 				<div class="col-xl-3 col-sm-6 mb-3">
-					<div class="card dashboard o-hidden bg-success h-100">
+					<div class="card dashboard o-hidden bg-secondary h-100">
 						<div class="card-body">
 							<div class="text-center">
-								<h5>방문완료</h5>
-								<br>
-								<h2 class="text-white">${bookingMap.finishedBooking} 건</h2>
+								<br><h4 class="text-white">방문완료</h4><br><br>
+								<h2 class="text-white">${bookingMap.finishedBooking} 건</h2><br><br>
 							</div>
 						</div>
 					</div>
@@ -97,12 +95,11 @@
 				
 				<!-- 취소 및 환불건수 -->
 				<div class="col-xl-3 col-sm-6 mb-3">
-					<div class="card dashboard o-hidden bg-success h-100">
+					<div class="card dashboard o-hidden bg-danger h-100">
 						<div class="card-body">
 							<div class="text-center">
-								<h5>취소</h5>
-								<br>
-								<h2 class="text-white">${bookingMap.canceledBooking} 건</h2>
+								<br><h4 class="text-white">취소예약</h4><br><br>
+								<h2 class="text-white">${bookingMap.canceledBooking} 건</h2><br><br>
 							</div>
 						</div>
 					</div>
@@ -117,7 +114,13 @@
 						<table class="table table-borderless text-center">
 							<tr>
 								<td colspan="2" class="pt-4 pb-4">
-									<h2>총 ${starRatingMap.totalAvg} 점</h2>
+									<c:if test="${starRatingMap.totalAvg == null}">
+										<h2>총 0 점</h2>
+									</c:if>
+									<c:if test="${starRatingMap.totalAvg != null}">
+										<h2>총 ${fn:substring(starRatingMap.totalAvg, 0, 3)} 점</h2>
+										
+									</c:if>
 								</td>
 							</tr>
 							<tr>
@@ -187,26 +190,19 @@
 									<h2>인기상품</h2><!-- 구매 건수 많은 순 -->
 								</td>
 							</tr>
-							<tr>
-								<td>1위</td>
-								<td>40건</td>
-							</tr>
-							<tr>
-								<td>2위</td>
-								<td>40건</td>
-							</tr>
-							<tr>
-								<td>3위</td>
-								<td>40건</td>
-							</tr>
-							<tr>
-								<td>4위</td>
-								<td>40건</td>
-							</tr>
-							<tr>
-								<td>5위</td>
-								<td>40건</td>
-							</tr>
+							<c:if test="${fn:length(popularPDList) == 0}">
+								<tr>
+									<td>표시할 상품이 없습니다.</td>
+								</tr>
+							</c:if>
+							<c:if test="${fn:length(popularPDList) > 0}">
+								<c:forEach items="${popularPDList}" var="pdList" varStatus="i">
+									<tr>
+										<td style="width:40%;">${i.count}위</td>
+										<td class="text-left">(${pdList.cnt}건) ${pdList.productName}</td>
+									</tr>
+								</c:forEach>
+							</c:if>
 						</table>
 					</div>
 				</div>
@@ -217,38 +213,26 @@
 						<table class="table table-borderless text-center">
 							<tr>
 								<td colspan="2" class="pt-4 pb-4">
-									<h2>평점 순</h2><!-- 평점 높은 순 -->
+									<h2>평점순 상품</h2><!-- 평점 높은 순 -->
 								</td>
 							</tr>
-							<tr>
-								<td>1위</td>
-								<td>40건</td>
-							</tr>
-							<tr>
-								<td>2위</td>
-								<td>40건</td>
-							</tr>
-							<tr>
-								<td>3위</td>
-								<td>40건</td>
-							</tr>
-							<tr>
-								<td>4위</td>
-								<td>40건</td>
-							</tr>
-							<tr>
-								<td>5위</td>
-								<td>40건</td>
-							</tr>
+							<c:if test="${fn:length(productList) == 0}">
+								<tr>
+									<td>표시할 상품이 없습니다.</td>
+								</tr>
+							</c:if>
+							<c:if test="${fn:length(productList) > 0}">
+								<c:forEach items="${productList}" var="pList" varStatus="i">
+									<tr>
+										<td style="width:40%;">${i.count}위</td>
+										<td class="text-left">(${fn:substring(pList.star, 0, 3)}점) ${pList.productName}</td>
+									</tr>
+								</c:forEach>
+							</c:if>
 						</table>
 					</div>
 				</div>
 			</div><!-- 중간 항목 끝 -->
-			
-			<!-- 전체크기 박스 -->
-			<div class="box_general">
-			</div><!-- 전체크기 박스 끝 -->
-			
 		</div><!-- 본문 끝 -->
 	</div>
 

@@ -34,13 +34,17 @@ public class StatisticsController {
 		// 전체평건수, 전체평점평균
 		HashMap<String, Object> starRatingMap = statisticsService.getTotalStarRating(companyId);
 		
-		// 인기상품
+		// 인기상품순
+		List<HashMap<String, Object>> popularPDList = statisticsService.getProductListByBooking(companyId);
 		
 		// 평점순
+		List<HashMap<String, Object>> productList = statisticsService.getProductListByStar(companyId);
 		
 		model.addAttribute("bookingMap", bookingMap);
 		model.addAttribute("starRatingList", starRatingList);
 		model.addAttribute("starRatingMap", starRatingMap);
+		model.addAttribute("productList", productList);
+		model.addAttribute("popularPDList", popularPDList);
 		
 		return "statistics/totalStatistics";
 	}

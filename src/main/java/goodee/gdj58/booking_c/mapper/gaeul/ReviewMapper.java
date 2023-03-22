@@ -8,6 +8,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ReviewMapper {
 
+	// 평점 순 상품
+	List<HashMap<String, Object>> selectProductListByStar(String companyId);
+	
 	// 평점 별 건수
 	List<HashMap<String, Object>> selectStarRatingList(String companyId);
 	

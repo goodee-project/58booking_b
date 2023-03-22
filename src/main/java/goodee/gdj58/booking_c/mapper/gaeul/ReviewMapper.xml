@@ -30,4 +30,22 @@
 		where b.booking_company_id = #{companyId}
 	</select>
 	
+	<select id="selectProductListByStar"
+			parameterType="java.lang.String"
+			resultType="java.util.HashMap">
+		SELECT
+			AVG(r.star_rating) star
+		    , COUNT(r.star_rating) cnt
+			, bp.booking_product_name productName
+		FROM booking b
+			INNER JOIN booking_product bp
+			ON b.product_no = bp.booking_product_no
+				INNER JOIN review r
+				ON r.booking_no = b.booking_no
+		WHERE b.booking_company_id = #{companyId}
+		GROUP BY bp.booking_product_name
+		ORDER BY star DESC, cnt DESC
+		LIMIT 0, 5
+	</select>
+	
 </mapper>

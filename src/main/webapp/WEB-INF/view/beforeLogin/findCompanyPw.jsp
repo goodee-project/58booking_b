@@ -76,7 +76,7 @@
 					</tr>
 					<tr>
 						<td class="td-position">
-							<div>이름(사업자명)</div>
+							<div>아이디</div>
 							<input type="text" id="id" name="companyId" class="form-control size1">
 							<div id="idMsg" style="color: #fc5b62;"></div>
 						</td>

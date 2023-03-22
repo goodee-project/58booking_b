@@ -65,4 +65,20 @@ public class StatisticsService {
 		map = reviewMapper.selectTotalStarRating(companyId);
 		return map;
 	}
+	
+	// 평점 순 상품
+	public List<HashMap<String, Object>> getProductListByStar(String companyId){
+		
+		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		list = reviewMapper.selectProductListByStar(companyId);
+		return list;
+	}
+	
+	// 인기상품순
+	public List<HashMap<String, Object>> getProductListByBooking(String companyId){
+		
+		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		list = bookingMapper.selectProductLsitByBooking(companyId);
+		return list;
+	}
 }
