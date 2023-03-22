@@ -107,7 +107,7 @@
 	    	<div class="box_general">
 				<div class="header_box">
 					<h2 class="d-inline-block">상품목록</h2>
-					<a class="btn_1 gray approve approveBtn" href="${pageContext.request.contextPath}/company/addProduct">상품 등록</a>
+					<a class="btn_1 gray approve" href="${pageContext.request.contextPath}/company/addProduct">상품 등록</a>
 					<div class="filter">
 			          <div class="styled-select short">
 							<select name="orderby">
@@ -122,8 +122,6 @@
 				<ul>
 					<c:forEach var="p" items="${list}">
 						<li>
-							
-							<figure><img src="${pageContext.request.contextPath}/resources/admin_section/img/item_1.jpg" alt=""></figure>
 							<small>Hotel</small>
 							<h4><a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">${p.name}</a></h4>
 							<p>${p.price}원 </p>

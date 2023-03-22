@@ -9,7 +9,7 @@
 			, booking_product_price productPrice
 			, booking_product_open productOpen
 			, booking_product_min_people productMin
-			, booking_product_min_people productMax
+			, booking_product_max_people productMax
 		FROM booking_product
 		WHERE booking_product_no = #{productNo}
 	</select>
@@ -21,10 +21,20 @@
 		WHERE booking_product_no = #{productNo}
 	</select>
 	<select id="selectProductOffday" resultType="java.util.Map">
-		SELECT booking_product_offday_date offday
-			, booking_product_offday_memo memo
-		FROM booking_product_offday
-		WHERE booking_product_no = 120
+		SELECT p.booking_product_offday_date offday
+			, p.booking_product_offday_memo memo
+		FROM booking_product_offday p
+		WHERE p.booking_product_no = #{productNo}
+		UNION ALL
+		SELECT c.booking_company_offday_date offday
+			, c.booking_company_offday_memo memo
+		FROM booking_company_offday c
+		WHERE c.booking_company_id = #{comId}
+	</select>
+	<select id="selectProductImg" resultType="java.util.Map">
+		SELECT booking_product_img_save_name productImg
+		FROM booking_product_img 
+		WHERE booking_product_no = #{productNo}
 	</select>
 	
 	<!-- 3) 수정 -->
@@ -47,7 +57,6 @@
 				, #{productImgKind}
 				, #{productImgSize}
 		)
-	
 	</insert>
 	<insert id="insertOffday" parameterType="goodee.gdj58.booking_c.vo.ProductOffday">
 		INSERT booking_product_offday(

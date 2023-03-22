@@ -16,12 +16,18 @@ import goodee.gdj58.booking_c.vo.Question;
 @Mapper
 public interface CompanyMapper3 {
 	// 상퓸관리
+	// 5) 상품수정
+	int updateProducOne();
+	
 	// 4) 상세보기
 	List<Map<String, Object>> selectProductOne(int productNo);
 	List<Map<String, Object>> selectProductOption(int productNo);
-	List<Map<String, Object>> selectProductOffday(int productNo);
+	List<Map<String, Object>> selectProductOffday(int productNo, String comId);
+	List<Map<String, Object>> selectProductImg(int productNo);
+	
 	// 3) 수정
 	int updateProduct(Product product);
+	
 	// 2) 등록
 	int insertProduct(Product product);
 	int insertOption(ProductOption option);

@@ -41,29 +41,125 @@
 		<script>
 			  document.addEventListener('DOMContentLoaded', function() {
 				let arr = []; //업체 휴무일 확인용
+				let productArr = [];
+			  	
 			    var calendarEl = document.getElementById('calendar');
+			    new Promise( (succ, fail)=>{
+			        $.ajax({
+			        url: "/58booking_b/productOffday?productNo=${productNo}",  
+			        type: "get",
+		        	success: function(result){
+				        		 $.each(result, function(index, item) {
+				        			 productArr.push(item.start);
+				        			 let comOffday = item.title +" "+ item.start+"<br>"
+				 		  		    $('#productOff').append(comOffday);
+							  		});
+						        }
+			    	});
+			    }).then((arg) =>{  
+			        $.ajax({
+			            url: '/58booking_b/companyOffday',
+			            type: "get",
+			        	success: function(result){
+			        		 $.each(result, function(index, item) {
+			        			 productArr.push(item.start);
+			        			 let comOffday = item.title +" "+ item.start+"<br>"
+			 		  		    $('#productOff').append(comOffday);
+						  		});
+					        }
+			        });
+
+			    });
+			    
 			 	// 기업 휴무일 가져오기 
 			    var request = $.ajax({   			
 					 method: 'get',
-					 url: "/58booking_b/companyOffday"
-				});
-			 	
+					 url: "/58booking_b/productOffday?productNo=${productNo}"
+			    });
 			    request.done(function(data){
 			    	// 원래 휴무를 배열에 넣고 시작
 			  	  $.each(data, function(index, item) {
 			  		  arr.push(item.start);
-			  			let comOffday = item.title +" "+ item.start+"<br>"
-			  		    $('#comOff').append(comOffday);
+			  		  let comOffday = item.title +" "+ item.start+"<br>"
+ 		  		      $('#productOff').append(comOffday);
 			  		});
 			    	
 				    var calendar = new FullCalendar.Calendar(calendarEl, {
 				      initialView: 'dayGridMonth'
 				      , selectable: true
 				      , events: data // 휴무일 넣어주기
+				      , eventClick: function(info) {
+					    	  $("#calendarModal").modal("show"); // modal 나타내기
+				    	  }
+				    
+				      , dateClick: function(info){ // 버튼 클릭 시 이벤트 추가 모달
+				    	  if(!arr.includes(info.dateStr)){ // 휴무일 배열에 없으면 실행
+				    		  $("#calendarModal").modal("show"); // modal 나타내기
+				    		  $("#calendar_start_date").attr("value", info.dateStr); // 모달에 클릭 날짜값
+	                             //console.log(info.dateStr);
+	                            $("#addCalendar").on("click",function(){  // modal 추가 버튼 클릭 시
+	                                // 유효성검사
+	                                var start_date = $("#calendar_start_date").val();
+	                                var content = $("#calendar_content").val();
+	                            	console.log(content);
+	                                if(content != null && content != ""){
+	                                	var obj = {
+	                                        "title" : content,
+	                                        "start" : start_date
+	                                    }
+	                                    // console.log(obj);
+	                                	let productOffday = content +" "+ start_date+"<input type='hidden' name='productOffdayDate' value='"+start_date+"'> <input type='hidden' name='productOffdayMemo' value='"+content+"''>"+"<br>"
+	                                    console.log(productOffday);
+	                                    $('#productOff').append(productOffday);
+	    		    		  			$("#calendar_content").val(""); // 모달에 클릭 날짜값
+	                                    arr.push(info.dateStr);
+		                                calendar.addEvent(obj);
+	                                }
+	                            });
+				    	  }else{
+				    		  alert('이미 휴무일로 지정된 날입니다.');
+				    	  }
+                        }
+				    
 				    });
 					calendar.render();
 			    });
 			});
+			  $(document).ready(function(){
+					$('#btn').click(function() {
+						// 유효성 검사
+						if($('#productName').val() == '') {
+							alert('상품명을 입력해주세요');
+							$('#productName').focus();
+							return;
+						} else if($('#productOptionName').val() == '') {
+							alert('옵션명을 입력해주세요');
+							$('#productOptionName').focus();
+							return;
+						} else if($('#productOptionMemo').val() == '') {
+							alert('옵션 설명을 입력해주세요');
+							$('#productOptionMemo').focus();
+							return;
+						} else if($('#productOptionPrice').val() == '') {
+							alert('옵션가격을 입력해주세요');
+							$('#productOptionPrice').focus();
+							return;
+						} else if($('#productPrice').val() == '') {
+							alert('가격을 입력해주세요');
+							$('#productPrice').focus();
+							return;
+						} else if($('#productMinPeople').val() == '') {
+							alert('최소인원을 입력해주세요');
+							$('#productMinPeople').focus();
+							return;
+						} else if($('#productMaxPeople').val() == '') {
+							alert('최대인원을 입력해주세요');
+							$('#productMaxPeople').focus();
+							return;
+						} 
+						$('#addForm').submit();
+					});
+				});
 		</script>
 	</head>
 	
@@ -81,39 +177,41 @@
 	        </li>
 	        <li class="breadcrumb-item active">Product One</li>
 	      </ol>
+	      <form id="addForm" method="post" action="${pageContext.request.contextPath}/company/productModify">
 			<div class="box_general padding_bottom">
 				<div class="header_box version_2">
 					<h2><i class="fa fa-file"></i>상품상세보기</h2>
 				</div>
 				<!-- /row-->
 				<c:forEach var="p" items="${list}">
-				<div class="row">
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>상품명</label>
-							${p.productName}
-							<input type="text" class="form-control" name="productName" id="productName">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>상품명</label>
+								<input type="text" class="form-control" name="productName" id="productName" value="${p.productName}">
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>가격</label>
+								<input type="text" class="form-control" placeholder="상품가격" name="productPrice" id="productPrice" value="${p.productPrice}">
+							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>가격</label>
-							${p.productPrice}
-							<input type="text" class="form-control" placeholder="상품가격" name="productPrice" id="productPrice">
-						</div>
-					</div>
-				</div>
+				</c:forEach>
 				<div class="row">
 					<div class="col-md-8">
 						<div class="form-group">
-						    <input type='file' id='product_detail_image' name="productImg" accept="image/jpg,image/png,image/jpeg,image/gif" onchange="setDetailImage(event);"/>
-						    <input type='file' id='product_detail_image' name="productImg" accept="image/jpg,image/png,image/jpeg,image/gif" onchange="setDetailImage(event);"/>
-						    <input type='file' id='product_detail_image' name="productImg" accept="image/jpg,image/png,image/jpeg,image/gif" onchange="setDetailImage(event);"/>
+							<c:if test="${img != null}">
+								<c:forEach var="i" items="${img}">
+									<img src="${pageContext.request.contextPath}/upload/product/${i.productImg}">
+								</c:forEach>
+							</c:if>
+						
 						</div>
-					    <div id="images_container"></div>
 					</div>
 				</div>
-				</c:forEach>
+				
 			</div>
 			<!-- /box_general-->
 			
@@ -121,22 +219,22 @@
 				<div class="header_box version_2">
 					<h2><i class="fa fa-map-marker"></i>세부사항</h2>
 				</div>
-				<div class="row">
 				<c:forEach var="p" items="${list}">
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>최소 인원</label>
-							<div>${p.productMin}</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>최소 인원</label>
+								<input type="text" class="form-control" name="productMinPeople" id="productMinPeople" value="${p.productMin}">
+							</div>
 						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>최대 인원</label>
-							<div>${p.productMax}</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>최대 인원</label>
+								<input type="text" class="form-control"  name="productMaxPeople" id=productMaxPeople value="${p.productMax}">
+							</div>
 						</div>
 					</div>
 				</c:forEach>
-				</div>
 				<!-- /row-->
 			</div>
 			<!-- /box_general-->
@@ -151,13 +249,9 @@
 							
 					</div>
 					<div class="col-md-6">
-						<h4><i class="fa fa-clock-o"></i>휴무일</h4>
-						<div id="comOff" class="mb-4">
-						
-						</div>
 						<h4><i class="fa fa-clock-o"></i>상품휴무일</h4>
 						<div id="productOff">
-						
+							
 						</div>
 					</div>
 				</div>
@@ -174,28 +268,30 @@
 						<table id="pricing-list-container" style="width:100%;">
 							<tr class="pricing-list-item">
 								<td>
-									<div class="row">
-										<div class="col-md-4">
-											<div class="form-group">
-												<input type="text" class="form-control" placeholder="옵션명" name="productOptionName" id="productOptionName">
+									<c:forEach var="o" items="${option}">
+										<div class="row">
+											<div class="col-md-4">
+												<div class="form-group">
+													<input type="text" class="form-control" placeholder="옵션명" name="productOptionName" id="productOptionName" value="${o.optionName}">
+												</div>
+											</div>
+											<div class="col-md-4">
+												<div class="form-group">
+													<input type="text" class="form-control" placeholder="설명" name="productOptionMemo" id="productOptionMemo" value="${o.optionMemo}">
+												</div>
+											</div>
+											<div class="col-md-2">
+												<div class="form-group">
+													<input type="text" class="form-control"  placeholder="가격" name="productOptionPrice" id="productOptionPrice" value="${o.optionPrice}">
+												</div>
+											</div>
+											<div class="col-md-2 d-flex align-items-center">
+												<div class="form-group">
+													<a class="delete" href="#"><i class="fa fa-fw fa-remove"></i></a>
+												</div>
 											</div>
 										</div>
-										<div class="col-md-4">
-											<div class="form-group">
-												<input type="text" class="form-control" placeholder="설명" name="productOptionMemo" id="productOptionMemo">
-											</div>
-										</div>
-										<div class="col-md-2">
-											<div class="form-group">
-												<input type="text" class="form-control"  placeholder="가격" name="productOptionPrice" id="productOptionPrice">
-											</div>
-										</div>
-										<div class="col-md-2 d-flex align-items-center">
-											<div class="form-group">
-												<a class="delete" href="#"><i class="fa fa-fw fa-remove"></i></a>
-											</div>
-										</div>
-									</div>
+									</c:forEach>
 								</td>
 							</tr>
 						</table>
@@ -205,7 +301,8 @@
 				<!-- /row-->
 			</div>
 			<!-- /box_general-->
-			
+			</form>
+			<p><a class="btn_1 medium" id="btn" >Save</a></p>
 		  </div>
 		  <!-- /.container-fluid-->
 	   	</div>

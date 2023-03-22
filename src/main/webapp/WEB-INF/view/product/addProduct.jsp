@@ -209,12 +209,12 @@
 							
 					</div>
 					<div class="col-md-6">
-						<h4><i class="fa fa-clock-o"></i>휴무일</h4>
-						<div id="comOff" class="mb-4">
-						
-						</div>
 						<h4><i class="fa fa-clock-o"></i>상품휴무일</h4>
 						<div id="productOff">
+						
+						</div>
+						<h4><i class="fa fa-clock-o"></i>휴무일</h4>
+						<div id="comOff" class="mb-4">
 						
 						</div>
 					</div>

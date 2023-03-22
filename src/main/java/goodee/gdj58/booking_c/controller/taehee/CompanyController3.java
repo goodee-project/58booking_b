@@ -31,10 +31,29 @@ public class CompanyController3 {
 	@Autowired CompanyService3 companyService;
 	
 	// 상품관리
+	// 5) 상품 수정
+	@PostMapping("/company/productModify")
+	public String modifyProduct(HttpSession session, HttpServletRequest request, Product product
+			,@RequestParam(value = "productOptionName") String[] productOptionName
+			,@RequestParam(value = "productOptionMemo") String[] productOptionMemo
+			,@RequestParam(value = "productOptionPrice") int[] productOptionPrice) {
+		
+		return "/product/productOne";
+	}
+	
+	// 4) 상품 상세보기
 	@GetMapping("/company/productOne")
-	public String getProductOne(Model model, @RequestParam(value = "productNo") int productNo) {
+	public String getProductOne(HttpSession session, Model model, @RequestParam(value = "productNo") int productNo) {
 		List<Map<String, Object>> list = companyService.getProductOne(productNo);
+		List<Map<String, Object>> img = companyService.getProductImg(productNo);
+		List<Map<String, Object>> option = companyService.getProductOption(productNo);
+		log.debug(FontColor.GREEN + img);
+		Company loginCom = (Company)session.getAttribute("loginCompany");
+		model.addAttribute("loginCom", loginCom);
+		model.addAttribute("productNo", productNo);
 		model.addAttribute("list", list);
+		model.addAttribute("img", img);
+		model.addAttribute("option", option);
 		return "/product/productOne";
 	}
 	

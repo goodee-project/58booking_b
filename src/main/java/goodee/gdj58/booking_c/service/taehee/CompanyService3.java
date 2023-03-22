@@ -29,6 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
 	// 상품관리
+	// 5) 상품수정
+	public int modifyProductOne() {
+		 return 1;
+	}
+	
 	// 4) 상세보기
 	public List<Map<String, Object>> getProductOne(int productNo) {
 		return companyMapper.selectProductOne(productNo);
@@ -36,8 +41,11 @@ public class CompanyService3 {
 	public List<Map<String, Object>> getProductOption(int productNo) {
 		return companyMapper.selectProductOption(productNo);
 	}
-	public List<Map<String, Object>> getProductOffday(int productNo) {
-		return companyMapper.selectProductOffday(productNo);
+	public List<Map<String, Object>> getProductOffday(int productNo, String comId) {
+		return companyMapper.selectProductOffday(productNo, comId);
+	}
+	public List<Map<String, Object>> getProductImg(int productNo) {
+		return companyMapper.selectProductImg(productNo);
 	}
 	
 	// 3) 상태변경
