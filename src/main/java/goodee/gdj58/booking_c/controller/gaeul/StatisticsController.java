@@ -1,14 +1,47 @@
 package goodee.gdj58.booking_c.controller.gaeul;
 
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import goodee.gdj58.booking_c.service.gaeul.StatisticsService;
+import goodee.gdj58.booking_c.vo.Company;
 
 @Controller
 public class StatisticsController {
-
+	@Autowired StatisticsService statisticsService;
+	
 	// 전체 통계
 	@GetMapping("/company/statistics/totalStatistics")
-	public String totalStatistics() {
+	public String totalStatistics(HttpSession session, Model model) {
+		
+		Company loginCompany = (Company)session.getAttribute("loginCompany");
+		String companyId = loginCompany.getCompanyId();
+		
+		// 예약 상태별 건수
+		HashMap<String, Object> bookingMap = statisticsService.getBookingCnt(companyId);
+		model.addAttribute("bookingMap", bookingMap);
+		
+		// 평점 별 건수
+		List<HashMap<String, Object>> starRatingList = statisticsService.getStarRatingList(companyId);
+		
+		// 전체평건수, 전체평점평균
+		HashMap<String, Object> starRatingMap = statisticsService.getTotalStarRating(companyId);
+		
+		// 인기상품
+		
+		// 평점순
+		
+		model.addAttribute("bookingMap", bookingMap);
+		model.addAttribute("starRatingList", starRatingList);
+		model.addAttribute("starRatingMap", starRatingMap);
+		
 		return "statistics/totalStatistics";
 	}
 	

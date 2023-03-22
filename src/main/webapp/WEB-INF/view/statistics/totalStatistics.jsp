@@ -53,11 +53,203 @@
 			</ol>
 			
 			<!-- 본문 입력 -->
+			
+			<!-- 상위 항목 : 목록별 건수 -->
+			<div class="row">
+				<!-- 신규건수(대기) -->
+				<div class="col-xl-3 col-sm-6 mb-3">
+					<div class="card dashboard o-hidden bg-success h-100">
+						<div class="card-body">
+							<div class="text-center">
+								<h5>신규예약</h5>
+								<br>
+								<h2 class="text-white">${bookingMap.newBooking} 건</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 확정건수(확정) -->
+				<div class="col-xl-3 col-sm-6 mb-3">
+					<div class="card dashboard o-hidden bg-success h-100">
+						<div class="card-body">
+							<div class="text-center">
+								<h5>예약확정</h5>
+								<br>
+								<h2 class="text-white">${bookingMap.confirmedBooking} 건</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 방문완료건수(완료) -->
+				<div class="col-xl-3 col-sm-6 mb-3">
+					<div class="card dashboard o-hidden bg-success h-100">
+						<div class="card-body">
+							<div class="text-center">
+								<h5>방문완료</h5>
+								<br>
+								<h2 class="text-white">${bookingMap.finishedBooking} 건</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 취소 및 환불건수 -->
+				<div class="col-xl-3 col-sm-6 mb-3">
+					<div class="card dashboard o-hidden bg-success h-100">
+						<div class="card-body">
+							<div class="text-center">
+								<h5>취소</h5>
+								<br>
+								<h2 class="text-white">${bookingMap.canceledBooking} 건</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- 상위 항목 끝 -->
+			
+			<!-- 중간 항목 : 전체 별점(별점별 건수), 인기상품 순위, 별점 높은 상품 순위 -->
+			<div class="row">
+				<!-- 전체 별점(별점별 건수) -->
+				<div class="col-xl-4 col-sm-6 mb-3">
+					<div class="card o-hidden h-100">
+						<table class="table table-borderless text-center">
+							<tr>
+								<td colspan="2" class="pt-4 pb-4">
+									<h2>총 ${starRatingMap.totalAvg} 점</h2>
+								</td>
+							</tr>
+							<tr>
+								<th class="w-50">전체평가건수</th>
+								<th>${starRatingMap.totalCnt} 건</th>
+							</tr>
+							<c:forEach items="${starRatingList}" var="list">
+								<tr>
+									<c:if test="${list.starRating == 5}">
+										<td class="rating">
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+										</td>
+									</c:if>
+									<c:if test="${list.starRating == 4}">
+										<td class="rating">
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star"></i>
+										</td>
+									</c:if>
+									<c:if test="${list.starRating == 3}">
+										<td class="rating">
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star"></i>
+											<i class="fa fa-fw fa-star"></i>
+										</td>
+									</c:if>
+									<c:if test="${list.starRating == 2}">
+										<td class="rating">
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star"></i>
+											<i class="fa fa-fw fa-star"></i>
+											<i class="fa fa-fw fa-star"></i>
+										</td>
+									</c:if>
+									<c:if test="${list.starRating == 1}">
+										<td class="rating">
+											<i class="fa fa-fw fa-star yellow"></i>
+											<i class="fa fa-fw fa-star"></i>
+											<i class="fa fa-fw fa-star"></i>
+											<i class="fa fa-fw fa-star"></i>
+											<i class="fa fa-fw fa-star"></i>
+										</td>
+									</c:if>
+									<td>${list.cnt} 건</td>
+								</tr>
+							</c:forEach>
+						</table>
+					</div>
+				</div>
+				
+				<!-- 인기상품 -->
+				<div class="col-xl-4 col-sm-6 mb-3">
+					<div class="card o-hidden h-100">
+						<table class="table table-borderless text-center">
+							<tr>
+								<td colspan="2" class="pt-4 pb-4">
+									<h2>인기상품</h2><!-- 구매 건수 많은 순 -->
+								</td>
+							</tr>
+							<tr>
+								<td>1위</td>
+								<td>40건</td>
+							</tr>
+							<tr>
+								<td>2위</td>
+								<td>40건</td>
+							</tr>
+							<tr>
+								<td>3위</td>
+								<td>40건</td>
+							</tr>
+							<tr>
+								<td>4위</td>
+								<td>40건</td>
+							</tr>
+							<tr>
+								<td>5위</td>
+								<td>40건</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				
+				<!-- 평점순 -->
+				<div class="col-xl-4 col-sm-6 mb-3">
+					<div class="card o-hidden h-100">
+						<table class="table table-borderless text-center">
+							<tr>
+								<td colspan="2" class="pt-4 pb-4">
+									<h2>평점 순</h2><!-- 평점 높은 순 -->
+								</td>
+							</tr>
+							<tr>
+								<td>1위</td>
+								<td>40건</td>
+							</tr>
+							<tr>
+								<td>2위</td>
+								<td>40건</td>
+							</tr>
+							<tr>
+								<td>3위</td>
+								<td>40건</td>
+							</tr>
+							<tr>
+								<td>4위</td>
+								<td>40건</td>
+							</tr>
+							<tr>
+								<td>5위</td>
+								<td>40건</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div><!-- 중간 항목 끝 -->
+			
+			<!-- 전체크기 박스 -->
 			<div class="box_general">
-			</div>
+			</div><!-- 전체크기 박스 끝 -->
 			
-			
-		</div>
+		</div><!-- 본문 끝 -->
 	</div>
 
 <!-- Custom scripts for all pages-->

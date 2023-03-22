@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="Ansonika">
-<title>예약 | 매출통계</title>
+<title>예약 | 신고통계</title>
 <!-- Favicons-->
 <link rel="shortcut icon" href="img/favicon.ico" type="${pageContext.request.contextPath}/resources/admin_section/image/x-icon">
 <link rel="apple-touch-icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/admin_section/img/apple-touch-icon-57x57-precomposed.png">
@@ -49,7 +49,7 @@
 				<li class="breadcrumb-item">
 					<a href="${pageContext.request.contextPath}/index">Home</a>
 				</li>
-				<li class="breadcrumb-item active">매출 통계</li>
+				<li class="breadcrumb-item active">신고 통계</li>
 			</ol>
 			
 			<!-- 본문 입력 -->

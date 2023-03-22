@@ -1,6 +1,5 @@
 package goodee.gdj58.booking_c.mapper.gaeul;
 
-
 import org.apache.ibatis.annotations.Mapper;
 
 import goodee.gdj58.booking_c.vo.Company;

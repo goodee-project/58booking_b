@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="goodee.gdj58.booking_c.mapper.gaeul.ReviewMapper">
+
+	<!-- 평점 별 건수 -->
+	<select id="selectStarRatingList"
+			parameterType="java.lang.String"
+			resultType="java.util.HashMap">
+		SELECT
+			r.star_rating starRating
+			, (SELECT COUNT(*)
+					FROM booking bb
+						INNER JOIN review rr
+						ON bb.booking_no = rr.booking_no
+				where bb.booking_company_id = #{companyId} AND r.star_rating = rr.star_rating) cnt
+		FROM review r
+		GROUP BY r.star_rating DESC
+	</select>
+	
+	<!-- 전체 리뷰 건수, 평균 -->
+	<select id="selectTotalStarRating"
+			parameterType="java.lang.String"
+			resultType="java.util.HashMap">
+		SELECT
+			COUNT(*) totalCnt
+			, AVG(r.star_rating) totalAvg
+			FROM booking b
+				INNER JOIN review r
+				ON b.booking_no = r.booking_no
+		where b.booking_company_id = #{companyId}
+	</select>
+	
+</mapper>
