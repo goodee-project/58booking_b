@@ -83,7 +83,11 @@
 	    			</tr>
 	    			<tr>
 	    				<td colspan="2">
-	    					<img src="${pageContext.request.contextPath}/upload/${m.reviewImgSaveName}">
+	    					<c:forEach var="ri" items="${reviewImgList}">
+								<c:if test="${m.bookingNo == ri.bookingNo}">
+	    							<img src="${pageContext.request.contextPath}/upload/${ri.reviewImgSaveName}">
+								</c:if>
+							</c:forEach>
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -140,7 +144,7 @@
 	    	</table>
 	    	 -->
 	    	 
-			<div class="row my-5">
+			<div class="row p-5">
 		    		<c:forEach var="m" items="${reviewList}">
 		    			<div class="col-md-6">
 		    					<img src="${pageContext.request.contextPath}/upload/${m.customerImgSaveName}">
@@ -204,13 +208,13 @@
 		    					</c:if>
 						</div>
 						<c:if test="${m.rowNum % 2 == 0}">
-							</div><div class="row">
+							</div><div class="row p-5">
 						</c:if>
 		    		</c:forEach>
 					</div>	<!-- 마지막 row 닫기 위함 -->
 	    	
 	    	<!-- 페이징 -->
-		 	<ul class="pagination pagination-sm add_bottom_30 justify-content-center my-5">
+		 	<ul class="pagination pagination-sm add_bottom_30 justify-content-center p-5">
 				<!-- 이전 -->
 				<c:if test="${currentPage <= 10}">
 					<li class="page-item disabled">
@@ -262,7 +266,7 @@
 			                <div class="modal-body">
 								<label>답글</label>
 								<input type="hidden" name="bookingNo" id="bookingNo">
-								<textarea name="reviewCommentMemo" class="form-control"></textarea>
+								<textarea name="reviewCommentMemo" class="form-control" placeholder="답글을 입력하세요"></textarea>
 			                </div>
 			                <div class="modal-footer">
 			                    <button type="submit" class="btn btn-primary" id="btn">등록</button>

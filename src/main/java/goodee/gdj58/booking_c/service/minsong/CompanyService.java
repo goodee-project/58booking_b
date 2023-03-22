@@ -22,6 +22,11 @@ public class CompanyService {
 	@Autowired 
 	private CompanyMapper companyMapper;
 	
+	// 상세 정보 여부
+	public int checkCompanyDetail(String companyId) {
+		return companyMapper.checkCompanyDetail(companyId);
+	}
+	
 	// 리뷰 답글
 	public int addReviewComment(ReviewComment reviewComment) {
 		return companyMapper.insertReviewComment(reviewComment);

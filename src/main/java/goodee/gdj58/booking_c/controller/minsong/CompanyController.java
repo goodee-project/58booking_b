@@ -32,6 +32,7 @@ public class CompanyController {
 	private CompanyService companyService;
 	private String[] timetable = {"00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"};
 	private String[] addtionalService = {"주차 가능", "제로페이", "배달", "포장"};
+	private int addtionalServiceLength = addtionalService.length;
 	
 	// 리뷰 목록
 	@GetMapping("/company/reviewList")
@@ -78,13 +79,22 @@ public class CompanyController {
 	
 	// 업체 등록
 	@GetMapping("/company/addCompanyDetail")
-	public String addCompanyDetail(Model model) {
+	public String addCompanyDetail(HttpSession session, Model model) {
+		// 등록 여부 확인
+		Company loginCompany = (Company)session.getAttribute("loginCompany");
+		String companyId = loginCompany.getCompanyId();
+		// 상세정보 보기 및 수정으로
+		if(companyService.checkCompanyDetail(companyId) == 1) {
+			return "redirect:/company/modifyCompanyDetail";
+		}
+		
 		List<CompanyType> typeList = companyService.getCompanyTypeList();
 		log.debug(FontColor.PURPLE+"===============>"+typeList);
 		
 		model.addAttribute("typeList", typeList);
 		model.addAttribute("timetable", timetable);
 		model.addAttribute("addtionalService", addtionalService);
+		model.addAttribute("addtionalServiceLength", addtionalServiceLength);
 		model.getAttribute("msg");
 		return "companyDetail/addCompanyDetail";
 	}
@@ -163,8 +173,10 @@ public class CompanyController {
 				// 쿼리 돌리기
 				for(int j = 0; j < 365; j+=7) {
 					log.debug(FontColor.PURPLE+j+"요일 계산");
-					if(companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
-						companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);						
+					if(companyOffdayDate != null) {
+						if(companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
+							companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);						
+						}
 					}
 				}
 			}
@@ -179,6 +191,12 @@ public class CompanyController {
 		// 세션에서 아이디 불러오기
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
 		String companyId = loginCompany.getCompanyId();
+		
+		// 등록 여부 확인
+		// 업체 상세정보 등록 페이지로
+		if(companyService.checkCompanyDetail(companyId) != 1) {
+			return "redirect:/company/addCompanyDetail";
+		}
 		
 		// 기존 업체 정보
 		CompanyDetail companyDetail = companyService.getCompanyDetail(companyId);
@@ -220,6 +238,7 @@ public class CompanyController {
 		model.addAttribute("additionService", companyDetail.getAdditionService());
 		model.addAttribute("timetable", timetable);
 		model.addAttribute("addtionalService", addtionalService);
+		model.addAttribute("addtionalServiceLength", addtionalServiceLength);
 //		model.addAttribute("bookingDate", bookingDate);
 		model.addAttribute("days", days);
 		model.getAttribute("msg");

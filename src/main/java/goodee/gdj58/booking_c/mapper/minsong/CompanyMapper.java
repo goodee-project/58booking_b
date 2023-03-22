@@ -14,6 +14,7 @@ import goodee.gdj58.booking_c.vo.ReviewImg;
 
 @Mapper
 public interface CompanyMapper {
+	int checkCompanyDetail(String companyId);
 	int insertReviewComment(ReviewComment reviewComment);
 	List<Integer> selectReviewCommentBookingNoList(String companyId);
 	List<ReviewComment> selectReviewCommentList(String companyId);
