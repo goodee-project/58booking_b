@@ -54,8 +54,32 @@
 			
 			<!-- 본문 입력 -->
 			<div class="box_general">
-			</div>
-			
+				<div class="header_box version_2">
+					<h2><i class="fa fa-bar-chart"></i>${year}년 ${month}월 날짜별 통계</h2>
+				</div>
+				<!-- 일별, 월별, 년별 매출 통계 그래프 -->
+				<canvas id="yearChart" width="1563" height="468" class="pb-4"></canvas>
+				
+				<!-- 테이블 -->
+				<div class="pt-2 pb-3">
+					<table class="table text-center">
+						<tr>
+							<th>날짜</th>
+							<th>매출합계</th>
+							<th>매출평균</th>
+							<th>건수</th>
+						</tr>
+						<c:forEach items="${dateList}" var="d">
+							<tr>
+								<th class="w-25">${d.date}</th>
+								<th class="w-25">${d.totalPrice}원</th>
+								<th class="w-25">${d.avgPrice}원</th>
+								<th class="w-25">${d.totalCnt}건</th>
+							</tr>
+						</c:forEach>
+					</table>
+				</div>
+			</div><!-- 본문 끝 -->
 			
 		</div>
 	</div>
@@ -77,5 +101,86 @@
 <script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
 <!-- Custom scripts for this page-->
 <script src="${pageContext.request.contextPath}/resources/admin_section/vendor/dropzone.min.js"></script>
+
+<!-- 차트 스크립트 -->
+<script>
+	<!-- 차트 모델값을 가져오는 코드 -->
+	// 모델 데이터 가져온 후에 아래 차트가 그려져야 한다 -> 동기로 처리해야 한다
+	// async값을 false로 변경,  참고 https://api.jquery.com/jquery.ajax
+	
+	// 데이터를 받을 배열 생성
+	let dateArray = [];
+	let totalPriceArray = [];
+	let avgPriceArray = [];
+	let totalCntArray = [];
+	let year = '${year}';
+	let month = '${month}';
+	
+	$.ajax({
+		async : false // 동기처리
+		, url : 'date'
+		, type : 'post'
+		, data : {year : year, month : month}
+		, success : function(model) { // model : 백앤드에서 객체로 반환 -> 변환 필요
+			
+			dateArray = model.map(row=>row.date);
+			totalPriceArray = model.map(row=>row.totalPrice);
+			avgPriceArray = model.map(row=>row.avgPrice);
+			totalCntArray = model.map(row=>row.totalCnt);
+		}
+	});
+</script>
+
+<script>
+	<!-- 차트 그리는 코드 -->
+	new Chart("yearChart", {
+	  type: "bar",
+	  data: {
+	    labels: dateArray,
+	    datasets: [{
+	     	data: totalPriceArray,
+	     	backgroundColor: "rgba(30, 144, 255, 0.3)",
+	     	borderColor: "#1E90FF",
+	     	borderWidth: '1',
+	     	label: '합계'
+	    }, {
+	    	data: avgPriceArray,
+	    	backgroundColor: "rgba(252, 91, 98, 0.3)",
+	    	borderColor: "#fc5b62",
+	    	borderWidth: '1',
+	     	label: '평균'
+	    }, {
+	    	data: totalCntArray,
+	    	backgroundColor: "rgba(255, 193, 7, 0.3)",
+	    	borderColor: "#ffc107",
+	    	borderWidth: '1',
+	     	label: '건수'
+	    }]
+	  },
+	  options: {
+	    scales: {
+			xAxes: [{ // x축 설정
+				gridLines:{
+					color: 'rgb(255, 255, 255)',
+					lineWidth: 1
+				},
+				ticks:{
+					fontSize : 20
+				},
+			}],
+			yAxes: [{ // y축 설정
+				gridLines:{
+					color: 'rgba(0, 0, 0, 0.1)',
+					lineWidth: 1
+				},
+				ticks:{
+					beginAtZero: true,
+					fontSize : 15
+				},
+			}]
+		}
+	  }
+	});
+</script>
 </body>
 </html>

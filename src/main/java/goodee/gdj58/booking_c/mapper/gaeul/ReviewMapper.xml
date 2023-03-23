@@ -5,7 +5,7 @@
 	<!-- 평점 별 건수 -->
 	<select id="selectStarRatingList"
 			parameterType="java.lang.String"
-			resultType="java.util.HashMap">
+			resultType="java.util.Map">
 		SELECT
 			r.star_rating starRating
 			, (SELECT COUNT(*)
@@ -20,7 +20,7 @@
 	<!-- 전체 리뷰 건수, 평균 -->
 	<select id="selectTotalStarRating"
 			parameterType="java.lang.String"
-			resultType="java.util.HashMap">
+			resultType="java.util.Map">
 		SELECT
 			COUNT(*) totalCnt
 			, AVG(r.star_rating) totalAvg
@@ -32,7 +32,7 @@
 	
 	<select id="selectProductListByStar"
 			parameterType="java.lang.String"
-			resultType="java.util.HashMap">
+			resultType="java.util.Map">
 		SELECT
 			AVG(r.star_rating) star
 		    , COUNT(r.star_rating) cnt

@@ -3,6 +3,7 @@ package goodee.gdj58.booking_c.service.gaeul;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,36 @@ public class StatisticsService {
 	@Autowired BookingMapper2 bookingMapper;
 	@Autowired ReviewMapper reviewMapper;
 	
-	// 예약 상태별 건수
-	public HashMap<String, Object> getBookingCnt(String companyId) {
+	// 일별 통계
+	public List<Map<String, Object>> getDateList(String companyId, String year, String month){
 		
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("year", year);
+		paramMap.put("month", month);
+		paramMap.put("companyId", companyId);
+		
+		return bookingMapper.selectDateList(paramMap);
+	}
+	 
+	// 월별 통계
+	public List<Map<String, Object>> getMonthList(String companyId, String year){
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("year", year);
+		paramMap.put("companyId", companyId);
+		
+		return bookingMapper.selectMonthList(paramMap);
+	}
+	
+	// 년도별 통계
+	public List<Map<String, Object>> getYearList(String companyId){
+		return bookingMapper.selectYearList(companyId);
+	}
+	
+	// 예약 상태별 건수
+	public Map<String, Object> getBookingCnt(String companyId) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
 		Booking booking = new Booking();
 		booking.setCompanyId(companyId);
 		
@@ -51,33 +78,33 @@ public class StatisticsService {
 	}
 	
 	// 평점 별 건수
-	public List<HashMap<String, Object>> getStarRatingList(String companyId){
+	public List<Map<String, Object>> getStarRatingList(String companyId){
 		
-		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		list = reviewMapper.selectStarRatingList(companyId);
 		return list;
 	}
 	
 	// 전체 리뷰 건수, 평균
-	public HashMap<String, Object> getTotalStarRating(String companyId){
+	public Map<String, Object> getTotalStarRating(String companyId){
 		
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map = reviewMapper.selectTotalStarRating(companyId);
 		return map;
 	}
 	
 	// 평점 순 상품
-	public List<HashMap<String, Object>> getProductListByStar(String companyId){
+	public List<Map<String, Object>> getProductListByStar(String companyId){
 		
-		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		list = reviewMapper.selectProductListByStar(companyId);
 		return list;
 	}
 	
 	// 인기상품순
-	public List<HashMap<String, Object>> getProductListByBooking(String companyId){
+	public List<Map<String, Object>> getProductListByBooking(String companyId){
 		
-		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		list = bookingMapper.selectProductLsitByBooking(companyId);
 		return list;
 	}
