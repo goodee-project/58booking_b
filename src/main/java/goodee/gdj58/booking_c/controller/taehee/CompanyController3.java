@@ -31,6 +31,12 @@ public class CompanyController3 {
 	@Autowired CompanyService3 companyService;
 	
 	// 상품관리
+	// 11) 옵션 추가
+	@PostMapping("/company/optionAdd")
+	public String addOption(ProductOption productOption) {
+		companyService.addOption(productOption);
+		return "redirect:/company/productOne?productNo="+productOption.getProductNo();
+	}
 	// 10) 옵션 수정
 	@PostMapping("/company/optionModify")
 	public String modifyOption(ProductOption productOption) {
@@ -188,10 +194,9 @@ public class CompanyController3 {
 		model.addAttribute("loginCom", loginCom);
 		int count = companyService.getBookingCount(loginCom.getCompanyId());
 		List<Map<String, Object>> list = companyService.getBookingList(currentPage, rowPerPage, loginCom);
-		int page = 10; // 페이징 목록 개수
-		int beginPage = ((currentPage - 1)/page) * page + 1; // 시작 페이지
-		int endPage = beginPage + page - 1; // 페이징 목록 끝
-		int lastPage = (int)Math.ceil((double)count / (double)rowPerPage); // 마지막 페이지
+		int beginPage = ((currentPage - 1)/rowPerPage) * rowPerPage + 1; // 시작 페이지
+		int endPage = beginPage + rowPerPage - 1; // 페이징 목록 끝
+		int lastPage = (int)Math.ceil(count / (double)rowPerPage); // 마지막 페이지
 		if(endPage > lastPage) {
 			endPage = lastPage;
 		}
@@ -202,6 +207,7 @@ public class CompanyController3 {
 		model.addAttribute("beginPage", beginPage);
 		model.addAttribute("endPage", endPage);
 		model.addAttribute("lastPage", lastPage);
+		log.debug(FontColor.GREEN + currentPage + "  <=  currentPage");
 		log.debug(FontColor.GREEN + beginPage + "  <=  beginPage");
 		log.debug(FontColor.GREEN + endPage + "  <=  endPage");
 		log.debug(FontColor.GREEN + lastPage + "  <=  lastPage");

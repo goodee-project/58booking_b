@@ -202,6 +202,7 @@
 			ON b.customer_id = c.customer_id 
 		WHERE b.booking_company_id = #{loginCom.companyId}
 		ORDER BY b.booking_state ASC, b.booking_no DESC
+		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	<select id="bookingCount" resultType="int">
 		SELECT COUNT(*) 

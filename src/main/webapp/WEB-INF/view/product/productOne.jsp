@@ -44,21 +44,6 @@
 				let productArr = []; // 상품 휴무일 확인용
 			  	
 			    var calendarEl = document.getElementById('calendar');
-			    
-		      /* 
-		        $.ajax({
-		        url: "/58booking_b/productOffday?productNo=${productNo}",  
-		        type: "get",
-	        	success: function(result){
-			        		 $.each(result, function(index, item) {
-			        			 productArr.push(item.start);
-			        			 let productOffday = item.no+ item.start+ item.title
-			        			 +"<a class='btn_1' id='modifyBtn' data-toggle='modal' data-target='#offdayModify' data-id="+item.no+" data-date="+item.start+" data-title="+item.title+"><i class='fa fa-fw fa-pencil'></i></a>"+"<br>"
-			        			 $('#productOff').append(productOffday);
-						  		});
-				        }
-		    	});
-			   */
 			 	// 전체 휴무일 가져오기 
 			    var request = $.ajax({   			
 					 method: 'get',
@@ -93,68 +78,38 @@
 			    });
 			});
 			  
-			  $(document).ready(function(){
-				  	// 휴무일 수정
-				  	$(".btn_2").click(function(){
-						offdayNo = $(this).data('id');
-						date = $(this).data('date');
-						title = $(this).data('title');
-						$("#offdayNo").val(offdayNo);
-						$("#offdayTitle").val(title);
-						$("#offday").val(date);
-				 	});
-				  	$("#modifyCalendar").click(function(){
-				  		console.log('휴무일 수정 폼 클릭');
-						$('#offdayModifyForm').submit();
-				 	});
-				  	
-				  	// 옵션 수정
-				  	$(".btn_4").click(function(){
-						$("#productOptionNo").val($(this).data('id'));
-						$("#productOptionMemo").val($(this).data('memo'));
-						$("#productOptionPrice").val($(this).data('price'));
-						$("#productOptionName").val($(this).data('name'));
-	      		 		console.log($(this).data('id'));
-				 	});
-	      		 	$("#modifyOption").click(function(){
-	      		 		//console.log('옵션 수정 폼 클릭');
-						$('#optionModifyForm').submit();
-				 	});
-	      		 	
-					$('#btn').click(function() {
-						// 유효성 검사
-						if($('#productName').val() == '') {
-							alert('상품명을 입력해주세요');
-							$('#productName').focus();
-							return;
-						} else if($('#productOptionName').val() == '') {
-							alert('옵션명을 입력해주세요');
-							$('#productOptionName').focus();
-							return;
-						} else if($('#productOptionMemo').val() == '') {
-							alert('옵션 설명을 입력해주세요');
-							$('#productOptionMemo').focus();
-							return;
-						} else if($('#productOptionPrice').val() == '') {
-							alert('옵션가격을 입력해주세요');
-							$('#productOptionPrice').focus();
-							return;
-						} else if($('#productPrice').val() == '') {
-							alert('가격을 입력해주세요');
-							$('#productPrice').focus();
-							return;
-						} else if($('#productMinPeople').val() == '') {
-							alert('최소인원을 입력해주세요');
-							$('#productMinPeople').focus();
-							return;
-						} else if($('#productMaxPeople').val() == '') {
-							alert('최대인원을 입력해주세요');
-							$('#productMaxPeople').focus();
-							return;
-						} 
-						$('#addForm').submit();
-					});
-				});
+		  $(document).ready(function(){
+			  	// 휴무일 수정
+			  	$(".btn_2").click(function(){
+					offdayNo = $(this).data('id');
+					date = $(this).data('date');
+					title = $(this).data('title');
+					$("#offdayNo").val(offdayNo);
+					$("#offdayTitle").val(title);
+					$("#offday").val(date);
+			 	});
+			  	$("#modifyCalendar").click(function(){
+			  		console.log('휴무일 수정 폼 클릭');
+					$('#offdayModifyForm').submit();
+			 	});
+			  	
+			  	// 옵션 수정
+			  	$(".btn_4").click(function(){
+					$("#productOptionNo").val($(this).data('id'));
+					$("#productOptionMemo").val($(this).data('memo'));
+					$("#productOptionPrice").val($(this).data('price'));
+					$("#productOptionName").val($(this).data('name'));
+      		 		console.log($(this).data('id'));
+			 	});
+      		 	$("#modifyOption").click(function(){
+					$('#optionModifyForm').submit();
+			 	});
+      		 	
+				// 옵션추가
+      		 	$("#optionAddBtn").click(function(){
+					$('#optionAddForm').submit();
+			 	});
+			});
 		</script>
 	</head>
 	
@@ -238,7 +193,9 @@
 								</div>
 							</div>
 						</div>
-						<p><a class="btn_1 medium" id="btn">수정</a></p>
+						<div class="col-md-12 mb-3 text-center">
+							<a class="btn_1 medium" id="btn">수정</a>
+						</div>
 					</form>
 					<!-- /row-->
 					
@@ -247,7 +204,7 @@
 							<div class="box_general padding_bottom">
 								<div class="header_box version_2">
 									<h2>Option</h2>
-										<a class="btn_1 gray approve" href="${pageContext.request.contextPath}/company/addProduct">옵션추가</a>
+									<a class="btn_1" data-toggle='modal' data-target='#optionAdd'>옵션추가</a>
 								</div>
 								<table class="" id="pricing-list-container" style="width:100%;">
 									<c:forEach var="o" items="${option}">
@@ -369,7 +326,6 @@
 	        </div>
 	    </div>
 	    
-	    
 		<!-- 옵션 수정 modal -->
 	    <div class="modal fade" id="optionModify" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	        <div class="modal-dialog" role="document">
@@ -398,7 +354,37 @@
 	                    <button type="button" class="btn btn-warning" data-dismiss="modal" id="modifyOption">수정</button>
 	                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="sprintSettingModalClose">취소</button>
 	                </div>
+	            </div>
+	        </div>
+	    </div>
 	    
+		<!-- 옵션 추가 modal -->
+	    <div class="modal fade" id="optionAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog" role="document">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <h5 class="modal-title" id="exampleModalLabel">옵션추가</h5>
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">&times;</span>
+	                    </button>
+	                </div>
+	                <form id="optionAddForm" method="post" action="${pageContext.request.contextPath}/company/optionAdd">
+		                <div class="modal-body">
+		                    <div class="form-group">
+		                        <label for="taskId" class="col-form-label">이름</label>
+		                        <input type="text" class="form-control" id="productOptionName" name="productOptionName">
+		                        <label for="taskId" class="col-form-label">설명</label>
+		                        <input type="text" class="form-control" id="productOptionMemo" name="productOptionMemo">
+		                        <label for="taskId" class="col-form-label">가격</label>
+		                        <input type="text" class="form-control" id="productOptionPrice" name="productOptionPrice">
+		                        <input type="hidden" class="form-control" name="productNo" value="${productNo}">
+		                    </div>
+		                </div>
+	                </form>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn btn-warning" data-dismiss="modal" id="optionAddBtn">추가</button>
+	                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+	                </div>
 	            </div>
 	        </div>
 	    </div>

@@ -120,7 +120,6 @@
 					</div>
 				</div>
 					
-				
 				<div class="row">
 					<c:forEach var="p" items="${list}">
 						<div class="col-md-6">
