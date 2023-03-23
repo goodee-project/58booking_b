@@ -41,26 +41,33 @@ public class CompanyController {
 								, @RequestParam(value="rowPerPage", defaultValue="10") int rowPerPage) {
 		Company loginCompany = (Company)session.getAttribute("loginCompany");
 		String companyId = loginCompany.getCompanyId();
+		int checkReview = companyService.countReviewList(companyId);
 		
-		List<Map<String, Object>> reviewList = companyService.getReviewList(companyId, currentPage, rowPerPage);
-		List<ReviewImg> reviewImgList = companyService.getReviewImgList(companyId);
-		List<ReviewComment> reviewCommentList = companyService.getReviewCommentList(companyId);
-		List<Integer> reviewCommentBookingNoList = companyService.getReviewCommentBookingNoList(companyId);
-		int startPage = ((currentPage-1)/rowPerPage)*rowPerPage+1;
-		int endPage = startPage + rowPerPage - 1;
-		int lastPage = (int)Math.ceil(companyService.countReviewList(companyId)/(double)rowPerPage);
-		if(endPage > lastPage) {
-			endPage = lastPage;
+		if(checkReview == 0) {
+			log.debug(FontColor.PURPLE+"등록된 리뷰 없음");
+		}else {			
+			List<Map<String, Object>> reviewList = companyService.getReviewList(companyId, currentPage, rowPerPage);
+			List<ReviewImg> reviewImgList = companyService.getReviewImgList(companyId);
+			List<ReviewComment> reviewCommentList = companyService.getReviewCommentList(companyId);
+			List<Integer> reviewCommentBookingNoList = companyService.getReviewCommentBookingNoList(companyId);
+			int startPage = ((currentPage-1)/rowPerPage)*rowPerPage+1;
+			int endPage = startPage + rowPerPage - 1;
+			int lastPage = (int)Math.ceil(checkReview/(double)rowPerPage);
+			if(endPage > lastPage) {
+				endPage = lastPage;
+			}
+			
+			model.addAttribute("reviewList", reviewList);
+			model.addAttribute("reviewImgList", reviewImgList);
+			model.addAttribute("reviewCommentList", reviewCommentList);
+			model.addAttribute("reviewCommentBookingNoList", reviewCommentBookingNoList);
+			model.addAttribute("currentPage", currentPage);
+			model.addAttribute("startPage", startPage);
+			model.addAttribute("endPage", endPage);
+			model.addAttribute("lastPage", lastPage);
 		}
-
-		model.addAttribute("reviewList", reviewList);
-		model.addAttribute("reviewImgList", reviewImgList);
-		model.addAttribute("reviewCommentList", reviewCommentList);
-		model.addAttribute("reviewCommentBookingNoList", reviewCommentBookingNoList);
-		model.addAttribute("currentPage", currentPage);
-		model.addAttribute("startPage", startPage);
-		model.addAttribute("endPage", endPage);
-		model.addAttribute("lastPage", lastPage);
+		
+		model.addAttribute("checkReview", checkReview);
 		return "review/reviewList";
 	}
 	// 리뷰 답글 등록

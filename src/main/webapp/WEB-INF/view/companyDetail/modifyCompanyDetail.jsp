@@ -257,7 +257,7 @@
 							</div>
 						</div>
 					</div>
-				 	<div class="row py-5 pl-5 pr-5 parent">
+				 	<div class="row pl-5 pr-5 parent">
 						<!-- 운영 시간 -->
 						<div class="col-md-6">
 							<div class="form-group">

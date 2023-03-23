@@ -2,11 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.minsong.CustomerMapper">
 	<select id="selectCustomerCount" resultType="int" parameterType="String">
-		SELECT COUNT(*)
-		FROM customer c 
-				INNER JOIN booking b ON c.customer_id = b.customer_id
-				INNER JOIN total_id ti ON c.customer_id = ti.id 
-		WHERE b.booking_company_id = #{loginCompanyId} AND ti.total_id_deactive_memo IS NULL
+		SELECT COUNT(s.customer_id)
+		FROM (SELECT c.customer_id customer_id
+				FROM customer c 
+						INNER JOIN booking b ON c.customer_id = b.customer_id
+						INNER JOIN total_id ti ON c.customer_id = ti.id 
+				WHERE b.booking_company_id = 'com1' AND ti.total_id_deactive_memo IS NULL
+				GROUP BY c.customer_id) s
 	</select>
 	
 	<select id="selectCustomerList" resultType="java.util.Map" parameterType="java.util.Map">

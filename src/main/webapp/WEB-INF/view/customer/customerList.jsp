@@ -60,114 +60,121 @@
 	        </li>
 	        <li class="breadcrumb-item active">고객 관리</li>
 	      </ol>
+          	<c:if test="${checkBooking == 0}">
+	          		<div class="text-center align-middle">
+	          			<span>예약된 고객이 없습니다.</span>
+	          		</div>
+          	</c:if>
 		<!-- Example DataTables Card-->
+    <c:if test="${checkBooking != 0}">
       <div class="card mb-3">
         <div class="card-header">
           <i class="fa fa-table"></i>고객 목록</div>
         <div class="card-body">
           <div class="table-responsive">
-          	<!-- 검색창 -->
-          	<div class="add_top_30 add_bottom_30 d-flex justify-content-end">
-	          	<form class="form-inline my-2 my-lg-0" method="get" action="${pageContext.request.contextPath}/company/customerList" id="form">
-		            <div class="input-group">
-		             <span class="styled-select w-25">
-		              <select name="optionWord">
-		              	<option value="id">아이디</option>
-		              	<option value="name">이름</option>
-		              </select>
-		            </span>
-		              <input class="form-control search-top col-6" type="text" placeholder="검색" name="searchWord">
-		              <span class="input-group-btn">
-		                <button class="btn btn-primary" type="button" id="btn">
-		                  <i class="fa fa-search"></i>
-		                </button>
-		              </span>
-		            </div>
-	          	</form>
-          	</div>
-          	<!-- 테이블 -->
-		 	<table class="table table-bordered add_bottom_30" width="100%" cellspacing="0">
-		 		<thead>
-		 			<tr>
-		 				<th>고객아이디</th>
-		 				<th>고객이름</th>
-		 				<th>
-		 					<c:if test="${orderKind != 'bookingCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=bookingCountASC">예약건수</a></c:if>
-		 					<c:if test="${orderKind == 'bookingCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=bookingCountDESC">예약건수</a></c:if>
-		 				</th>
-		 				<th>
-		 					<c:if test="${orderKind != 'cancelCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=cancelCountASC">취소/환불건수</a></c:if>
-		 					<c:if test="${orderKind == 'cancelCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=cancelCountDESC">취소/환불건수</a></c:if> 				
-		 				</th>
-		 				<th>			
-		 					<c:if test="${orderKind != 'reviewCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=reviewCountASC">리뷰건수</a></c:if>
-		 					<c:if test="${orderKind == 'reviewCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=reviewCountDESC">리뷰건수</a></c:if>
-		 				</th>
-		 				<th>		
-		 					<c:if test="${orderKind != 'bookingTotalPriceASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=bookingTotalPriceASC">누적사용금액</a></c:if>
-		 					<c:if test="${orderKind == 'bookingTotalPriceASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=bookingTotalPriceDESC">누적사용금액</a></c:if>
-		 				</th>
-		 				<th>회원등급</th>
-		 			</tr>
-		 		</thead>
-		 		<tbody>
-		 			<c:forEach var="m" items="${list}">	
+	          	<!-- 검색창 -->
+	          	<div class="add_top_30 add_bottom_30 d-flex justify-content-end">
+		          	<form class="form-inline my-2 my-lg-0" method="get" action="${pageContext.request.contextPath}/company/customerList" id="form">
+			            <div class="input-group">
+			             <span class="styled-select w-25">
+			              <select name="optionWord">
+			              	<option value="id">아이디</option>
+			              	<option value="name">이름</option>
+			              </select>
+			            </span>
+			              <input class="form-control search-top col-6" type="text" placeholder="검색" name="searchWord">
+			              <span class="input-group-btn">
+			                <button class="btn btn-primary" type="button" id="btn">
+			                  <i class="fa fa-search"></i>
+			                </button>
+			              </span>
+			            </div>
+		          	</form>
+	          	</div>
+	          	<!-- 테이블 -->
+			 	<table class="table table-bordered add_bottom_30" width="100%" cellspacing="0">
+			 		<thead>
 			 			<tr>
-			 				<td>${m.customerId}</td>
-			 				<td>${m.customerName}</td>
-			 				<td>${m.bookingCount}</td>
-			 				<td>${m.cancelCount}</td>
-			 				<td>${m.reviewCount}</td>
-			 				<td>${m.bookingTotalPrice}</td>
-			 				<td>${m.customerRank}</td>
+			 				<th>고객아이디</th>
+			 				<th>고객이름</th>
+			 				<th>
+			 					<c:if test="${orderKind != 'bookingCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=bookingCountASC">예약건수</a></c:if>
+			 					<c:if test="${orderKind == 'bookingCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=bookingCountDESC">예약건수</a></c:if>
+			 				</th>
+			 				<th>
+			 					<c:if test="${orderKind != 'cancelCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=cancelCountASC">취소/환불건수</a></c:if>
+			 					<c:if test="${orderKind == 'cancelCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=cancelCountDESC">취소/환불건수</a></c:if> 				
+			 				</th>
+			 				<th>			
+			 					<c:if test="${orderKind != 'reviewCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=reviewCountASC">리뷰건수</a></c:if>
+			 					<c:if test="${orderKind == 'reviewCountASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=reviewCountDESC">리뷰건수</a></c:if>
+			 				</th>
+			 				<th>		
+			 					<c:if test="${orderKind != 'bookingTotalPriceASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=bookingTotalPriceASC">누적사용금액</a></c:if>
+			 					<c:if test="${orderKind == 'bookingTotalPriceASC'}"><a href="${pageContext.request.contextPath}/company/customerList?currentPage=${currentPage}&orderKind=bookingTotalPriceDESC">누적사용금액</a></c:if>
+			 				</th>
+			 				<th>회원등급</th>
 			 			</tr>
-		 			</c:forEach>
-		 		</tbody>
-		 	</table>
-		   </div>
-		 	<!-- 페이징 -->
-		 	<ul class="pagination pagination-sm add_bottom_30 justify-content-center">
-				<!-- 이전 -->
-				<c:if test="${currentPage <= 10}">
-					<li class="page-item disabled">
-						<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${startPage-10}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}" class="page-link">&laquo;</a>
-					</li>
-				</c:if>
-				<c:if test="${currentPage > 10}">
-					<li class="page-item">
-						<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${startPage-10}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}" class="page-link">&laquo;</a>
-					</li>
-				</c:if>
-				<!-- 1~10 -->
-				<c:forEach var="i" begin="${startPage}" end="${endPage-1}">
-					<c:if test="${i == currentPage}">
-						<li class="page-item active">
-							<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${i}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}" class="page-link">${i}</a>
+			 		</thead>
+			 		<tbody>
+			 			<c:forEach var="m" items="${list}">	
+				 			<tr>
+				 				<td>${m.customerId}</td>
+				 				<td>${m.customerName}</td>
+				 				<td>${m.bookingCount}</td>
+				 				<td>${m.cancelCount}</td>
+				 				<td>${m.reviewCount}</td>
+				 				<td>${m.bookingTotalPrice}</td>
+				 				<td>${m.customerRank}</td>
+				 			</tr>
+			 			</c:forEach>
+			 		</tbody>
+			 	</table>
+			   </div>
+			 	<!-- 페이징 -->
+			 	<ul class="pagination pagination-sm add_bottom_30 justify-content-center">
+					<!-- 이전 -->
+					<c:if test="${currentPage <= 10}">
+						<li class="page-item disabled">
+							<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${startPage-10}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}" class="page-link">&laquo;</a>
 						</li>
 					</c:if>
-					<c:if test="${i != currentPage}">
+					<c:if test="${currentPage > 10}">
 						<li class="page-item">
-							<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${i}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}" class="page-link">${i}</a>
+							<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${startPage-10}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}" class="page-link">&laquo;</a>
 						</li>
 					</c:if>
-				</c:forEach>
-			    <!-- 다음 -->
-				<c:if test="${currentPage+10 < lastPage}">
-					<li class="page-item">
-						<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${startPage+10}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}"  class="page-link">&raquo;</a>
-					</li>
-				</c:if>
-				<c:if test="${currentPage+10 >= lastPage}">
-					<li class="page-item disabled">
-						<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${startPage+10}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}"  class="page-link">
-							<span>&raquo;</span>
-						</a>
-					</li>
-				</c:if>
-			</ul>
+					<!-- 1~10 -->
+					<c:forEach var="i" begin="${startPage}" end="${endPage}">
+						<c:if test="${i == currentPage}">
+							<li class="page-item active">
+								<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${i}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}" class="page-link">${i}</a>
+							</li>
+						</c:if>
+						<c:if test="${i != currentPage}">
+							<li class="page-item">
+								<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${i}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}" class="page-link">${i}</a>
+							</li>
+						</c:if>
+					</c:forEach>
+				    <!-- 다음 -->
+					<c:if test="${currentPage+10 < lastPage}">
+						<li class="page-item">
+							<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${startPage+10}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}"  class="page-link">&raquo;</a>
+						</li>
+					</c:if>
+					<c:if test="${currentPage+10 >= lastPage}">
+						<li class="page-item disabled">
+							<a href="${pageContext.request.contextPath}/company/customerList?currentPage=${startPage+10}&orderKind=${orderKind}&optionWord=${optionWord}&searchWord=${searchWord}"  class="page-link">
+								<span>&raquo;</span>
+							</a>
+						</li>
+					</c:if>
+				</ul>
         </div>
        </div>
       </div>
+	</c:if>
      </div>
  	
 		

@@ -15,7 +15,7 @@ import goodee.gdj58.booking_c.mapper.minsong.CustomerMapper;
 public class CustomerService {
 	@Autowired
 	private CustomerMapper customerMapper;
-
+	
 	public int getCustomerCount(String companyId) {
 		return customerMapper.selectCustomerCount(companyId);
 	}
