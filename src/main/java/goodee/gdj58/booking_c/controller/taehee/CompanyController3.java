@@ -31,39 +31,68 @@ public class CompanyController3 {
 	@Autowired CompanyService3 companyService;
 	
 	// 상품관리
-	// 5) 상품 수정
-	@PostMapping("/company/productModify")
-	public String modifyProduct(HttpSession session, HttpServletRequest request, Product product
-			,@RequestParam(value = "productOptionName") String[] productOptionName
-			,@RequestParam(value = "productOptionMemo") String[] productOptionMemo
-			,@RequestParam(value = "productOptionPrice") int[] productOptionPrice) {
-		
-		return "/product/productOne";
+	// 10) 옵션 수정
+	@PostMapping("/company/optionModify")
+	public String modifyOption(ProductOption productOption) {
+		log.debug(FontColor.GREEN + productOption.toString());
+		companyService.modifyOption(productOption);
+		return "redirect:/company/productOne?productNo="+productOption.getProductNo();
 	}
 	
+	// 9) 옵션 삭제
+	@GetMapping("/company/optionRemove")
+	public String removeOption(@RequestParam(value = "productNo") int productNo, @RequestParam(value = "productOptionNo") int productOptionNo) {
+		companyService.removeOption(productOptionNo);
+		return "redirect:/company/productOne?productNo="+productNo;
+	}
+	// 8) 휴무일 삭제
+	@GetMapping("/company/produtOffdayRemove")
+	public String removeOffday(@RequestParam(value = "productNo") int productNo, @RequestParam(value = "productOffdayNo") int productOffdayNo) {
+		companyService.removeProductOffday(productOffdayNo);
+		return "redirect:/company/productOne?productNo="+productNo;
+	}
+	// 7) 휴무일 등록
+	@PostMapping("/company/produtOffdayAdd")
+	public String insertOffday(ProductOffday productOffday) {
+		companyService.addOff(productOffday);
+		return "redirect:/company/productOne?productNo="+productOffday.getProductNo();
+	}
+	// 6) 휴무일 수정
+	@PostMapping("/company/produtOffdayModify")
+	public String modifyProductOffday(ProductOffday productOffday, @RequestParam(value = "productNo") int productNo) {
+		companyService.modifyProductOffday(productOffday);
+		return "redirect:/company/productOne?productNo="+productNo;
+	}
+	// 5) 상품 수정
+	@PostMapping("/company/productModify")
+	public String modifyProduct(HttpSession session, Product product) {
+		companyService.modifyProductOne(product);
+		return "redirect:/company/productOne?productNo="+product.getProductNo();
+	}
 	// 4) 상품 상세보기
 	@GetMapping("/company/productOne")
 	public String getProductOne(HttpSession session, Model model, @RequestParam(value = "productNo") int productNo) {
 		List<Map<String, Object>> list = companyService.getProductOne(productNo);
 		List<Map<String, Object>> img = companyService.getProductImg(productNo);
 		List<Map<String, Object>> option = companyService.getProductOption(productNo);
+		List<Map<String, Object>> offday = companyService.getProductOffday(productNo);
+		
 		log.debug(FontColor.GREEN + img);
 		Company loginCom = (Company)session.getAttribute("loginCompany");
 		model.addAttribute("loginCom", loginCom);
 		model.addAttribute("productNo", productNo);
 		model.addAttribute("list", list);
 		model.addAttribute("img", img);
+		model.addAttribute("offday", offday);
 		model.addAttribute("option", option);
 		return "/product/productOne";
 	}
-	
 	// 3) 상태변경
 	@PostMapping("/company/modifyProduct")
 	public String modifyProduct(Product product) {		
 		companyService.modifyProduct(product);
 		return "redirect:/company/productList";
 	}
-	
 	// 2) 목록
 	@GetMapping("/company/productList")
 	public String getProduct(Model model, HttpSession session
@@ -93,13 +122,11 @@ public class CompanyController3 {
 		log.debug(FontColor.GREEN + lastPage + "  <=  lastPage");
 		return "/product/productList";
 	}
-	
 	// 1) 등록
 	@GetMapping("/company/addProduct")
 	public String addProduct(HttpSession session) {
 		return "/product/addProduct";
 	}
-	
 	@PostMapping("/company/addProduct")
 	public String addProduct(HttpSession session, HttpServletRequest request, Product product
 								,@RequestParam(value="productImg") List<MultipartFile> productImg

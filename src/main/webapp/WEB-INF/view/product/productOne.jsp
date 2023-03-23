@@ -40,58 +40,40 @@
 		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
 		<script>
 			  document.addEventListener('DOMContentLoaded', function() {
-				let arr = []; //업체 휴무일 확인용
-				let productArr = [];
+				let arr = []; //휴무일 확인용
+				let productArr = []; // 상품 휴무일 확인용
 			  	
 			    var calendarEl = document.getElementById('calendar');
-			    new Promise( (succ, fail)=>{
-			        $.ajax({
-			        url: "/58booking_b/productOffday?productNo=${productNo}",  
-			        type: "get",
-		        	success: function(result){
-				        		 $.each(result, function(index, item) {
-				        			 productArr.push(item.start);
-				        			 let comOffday = item.title +" "+ item.start+"<br>"
-				 		  		    $('#productOff').append(comOffday);
-							  		});
-						        }
-			    	});
-			    }).then((arg) =>{  
-			        $.ajax({
-			            url: '/58booking_b/companyOffday',
-			            type: "get",
-			        	success: function(result){
+			    
+		      /* 
+		        $.ajax({
+		        url: "/58booking_b/productOffday?productNo=${productNo}",  
+		        type: "get",
+	        	success: function(result){
 			        		 $.each(result, function(index, item) {
 			        			 productArr.push(item.start);
-			        			 let comOffday = item.title +" "+ item.start+"<br>"
-			 		  		    $('#productOff').append(comOffday);
+			        			 let productOffday = item.no+ item.start+ item.title
+			        			 +"<a class='btn_1' id='modifyBtn' data-toggle='modal' data-target='#offdayModify' data-id="+item.no+" data-date="+item.start+" data-title="+item.title+"><i class='fa fa-fw fa-pencil'></i></a>"+"<br>"
+			        			 $('#productOff').append(productOffday);
 						  		});
-					        }
-			        });
-
-			    });
-			    
-			 	// 기업 휴무일 가져오기 
+				        }
+		    	});
+			   */
+			 	// 전체 휴무일 가져오기 
 			    var request = $.ajax({   			
 					 method: 'get',
-					 url: "/58booking_b/productOffday?productNo=${productNo}"
+					 url: "/58booking_b/offdayT?productNo=${productNo}"
 			    });
 			    request.done(function(data){
 			    	// 원래 휴무를 배열에 넣고 시작
 			  	  $.each(data, function(index, item) {
 			  		  arr.push(item.start);
-			  		  let comOffday = item.title +" "+ item.start+"<br>"
- 		  		      $('#productOff').append(comOffday);
 			  		});
 			    	
 				    var calendar = new FullCalendar.Calendar(calendarEl, {
 				      initialView: 'dayGridMonth'
 				      , selectable: true
 				      , events: data // 휴무일 넣어주기
-				      , eventClick: function(info) {
-					    	  $("#calendarModal").modal("show"); // modal 나타내기
-				    	  }
-				    
 				      , dateClick: function(info){ // 버튼 클릭 시 이벤트 추가 모달
 				    	  if(!arr.includes(info.dateStr)){ // 휴무일 배열에 없으면 실행
 				    		  $("#calendarModal").modal("show"); // modal 나타내기
@@ -99,22 +81,7 @@
 	                             //console.log(info.dateStr);
 	                            $("#addCalendar").on("click",function(){  // modal 추가 버튼 클릭 시
 	                                // 유효성검사
-	                                var start_date = $("#calendar_start_date").val();
-	                                var content = $("#calendar_content").val();
-	                            	console.log(content);
-	                                if(content != null && content != ""){
-	                                	var obj = {
-	                                        "title" : content,
-	                                        "start" : start_date
-	                                    }
-	                                    // console.log(obj);
-	                                	let productOffday = content +" "+ start_date+"<input type='hidden' name='productOffdayDate' value='"+start_date+"'> <input type='hidden' name='productOffdayMemo' value='"+content+"''>"+"<br>"
-	                                    console.log(productOffday);
-	                                    $('#productOff').append(productOffday);
-	    		    		  			$("#calendar_content").val(""); // 모달에 클릭 날짜값
-	                                    arr.push(info.dateStr);
-		                                calendar.addEvent(obj);
-	                                }
+	                                $('#offdayAddForm').submit();
 	                            });
 				    	  }else{
 				    		  alert('이미 휴무일로 지정된 날입니다.');
@@ -125,7 +92,35 @@
 					calendar.render();
 			    });
 			});
+			  
 			  $(document).ready(function(){
+				  	// 휴무일 수정
+				  	$(".btn_2").click(function(){
+						offdayNo = $(this).data('id');
+						date = $(this).data('date');
+						title = $(this).data('title');
+						$("#offdayNo").val(offdayNo);
+						$("#offdayTitle").val(title);
+						$("#offday").val(date);
+				 	});
+				  	$("#modifyCalendar").click(function(){
+				  		console.log('휴무일 수정 폼 클릭');
+						$('#offdayModifyForm').submit();
+				 	});
+				  	
+				  	// 옵션 수정
+				  	$(".btn_4").click(function(){
+						$("#productOptionNo").val($(this).data('id'));
+						$("#productOptionMemo").val($(this).data('memo'));
+						$("#productOptionPrice").val($(this).data('price'));
+						$("#productOptionName").val($(this).data('name'));
+	      		 		console.log($(this).data('id'));
+				 	});
+	      		 	$("#modifyOption").click(function(){
+	      		 		//console.log('옵션 수정 폼 클릭');
+						$('#optionModifyForm').submit();
+				 	});
+	      		 	
 					$('#btn').click(function() {
 						// 유효성 검사
 						if($('#productName').val() == '') {
@@ -175,73 +170,109 @@
 	        <li class="breadcrumb-item">
 	          <a href="#">Dashboard</a>
 	        </li>
-	        <li class="breadcrumb-item active">Product One</li>
+	        <li class="breadcrumb-item active">Product details</li>
 	      </ol>
-	      <form id="addForm" method="post" action="${pageContext.request.contextPath}/company/productModify">
-			<div class="box_general padding_bottom">
-				<div class="header_box version_2">
-					<h2><i class="fa fa-file"></i>상품상세보기</h2>
-				</div>
-				<!-- /row-->
-				<c:forEach var="p" items="${list}">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>상품명</label>
-								<input type="text" class="form-control" name="productName" id="productName" value="${p.productName}">
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>가격</label>
-								<input type="text" class="form-control" placeholder="상품가격" name="productPrice" id="productPrice" value="${p.productPrice}">
-							</div>
-						</div>
-					</div>
-				</c:forEach>
-				<div class="row">
-					<div class="col-md-8">
-						<div class="form-group">
-							<c:if test="${img != null}">
+	      <div class="box_general padding_bottom">
+			<div class="header_box version_2">
+				<h2><i class="fa fa-user"></i>Product details</h2>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<c:if test="${img != null}">
+							<div>
 								<c:forEach var="i" items="${img}">
-									<img src="${pageContext.request.contextPath}/upload/product/${i.productImg}">
+									<img src="${pageContext.request.contextPath}/upload/product/${i.productImg}" width="200px">
 								</c:forEach>
-							</c:if>
-						
-						</div>
-					</div>
-				</div>
-				
-			</div>
-			<!-- /box_general-->
-			
-			<div class="box_general padding_bottom">
-				<div class="header_box version_2">
-					<h2><i class="fa fa-map-marker"></i>세부사항</h2>
+							</div>
+						</c:if>
+				    </div>
 				</div>
 				<c:forEach var="p" items="${list}">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>최소 인원</label>
-								<input type="text" class="form-control" name="productMinPeople" id="productMinPeople" value="${p.productMin}">
+				<div class="col-md-8 add_top_30">
+					<form id="addForm" method="post" action="${pageContext.request.contextPath}/company/productModify">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>상품명</label>
+									<input type="text" class="form-control" name="productName" id="productName" value="${p.productName}">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>상품가격</label>
+									<input type="text" class="form-control" name="productPrice" id="productPrice" value="${p.productPrice}">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>공개여부</label>
+									<select class="form-control" name="productOpen">
+										<c:choose> 
+											<c:when test="${p.open eq '공개'}">
+												<option selected="selected" value="공개">공개</option>
+												<option value="비공개">비공개</option>
+											</c:when> 
+											<c:when test="${p.open eq '비공개'}">
+												<option value="공개">공개</option>
+												<option selected="selected" value="비공개">비공개</option>
+											</c:when>
+										</c:choose> 
+									</select>
+								</div>
 							</div>
 						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>최대 인원</label>
-								<input type="text" class="form-control"  name="productMaxPeople" id=productMaxPeople value="${p.productMax}">
+						<!-- /row-->
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>최소인원</label>
+									<input type="text" class="form-control" name="productMinPeople" id="productMinPeople" value="${p.productMin}">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>최대인원</label>
+									<input type="text" class="form-control" name="productMaxPeople" id=productMaxPeople value="${p.productMax}">
+									<input type="hidden" class="form-control" name="productNo" value="${p.productNo}">
+								</div>
+							</div>
+						</div>
+						<p><a class="btn_1 medium" id="btn">수정</a></p>
+					</form>
+					<!-- /row-->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="box_general padding_bottom">
+								<div class="header_box version_2">
+									<h2>Option</h2>
+										<a class="btn_1 gray approve" href="${pageContext.request.contextPath}/company/addProduct">옵션추가</a>
+								</div>
+								<table class="" id="pricing-list-container" style="width:100%;">
+									<c:forEach var="o" items="${option}">
+										<tr>
+											<td>${o.optionName}</td>
+											<td>${o.optionMemo}</td>
+											<td>${o.optionPrice}</td>
+											<td>
+												<a class='btn_4' id='modifyBtn' data-toggle='modal' data-target='#optionModify' data-id="${o.optionNo}" data-name="${o.optionName}" data-memo="${o.optionMemo}" data-price="${o.optionPrice}"><i class='fa fa-fw fa-pencil'></i></a>
+											</td>
+										</tr>
+									</c:forEach>
+								</table>
 							</div>
 						</div>
 					</div>
+					<!-- /row-->
+				</div>
 				</c:forEach>
-				<!-- /row-->
 			</div>
-			<!-- /box_general-->
-			
+		</div>
+		
 			<div class="box_general padding_bottom">
 				<div class="header_box version_2">
-					<h2><i class="fa fa-clock-o"></i>상품 휴무</h2>
+					<h2><i class="fa fa-clock-o"></i>Product Offday</h2>
 				</div>
 				<div class="row">
 					<div class="col-md-6">
@@ -249,60 +280,18 @@
 							
 					</div>
 					<div class="col-md-6">
-						<h4><i class="fa fa-clock-o"></i>상품휴무일</h4>
-						<div id="productOff">
-							
-						</div>
+						<h5><i class="fa fa-clock-o"></i>상품휴무일 수정</h5>
+						<c:forEach var="off" items="${offday}">
+							<div class="tags">
+								${off.memo}	${off.offday}	 			
+								<a class='btn_2' id='modifyBtn' data-toggle='modal' data-target='#offdayModify' data-id="${off.offdayNo}" data-date="${off.offday}" data-title="${off.memo}"><i class='fa fa-fw fa-pencil'></i></a>
+								<a class="btn_3 delete" href="${pageContext.request.contextPath}/company/produtOffdayRemove?productNo=${productNo}&productOffdayNo=${off.offdayNo}"><i class="fa fa-fw fa-remove"></i></a>
+							</div>
+						</c:forEach>
 					</div>
 				</div>
 			</div>
 			<!-- /box_general-->
-			
-			<div class="box_general padding_bottom">
-				<div class="header_box version_2">
-					<h2><i class="fa fa-dollar"></i>옵션</h2>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<h6>option</h6>
-						<table id="pricing-list-container" style="width:100%;">
-							<tr class="pricing-list-item">
-								<td>
-									<c:forEach var="o" items="${option}">
-										<div class="row">
-											<div class="col-md-4">
-												<div class="form-group">
-													<input type="text" class="form-control" placeholder="옵션명" name="productOptionName" id="productOptionName" value="${o.optionName}">
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-													<input type="text" class="form-control" placeholder="설명" name="productOptionMemo" id="productOptionMemo" value="${o.optionMemo}">
-												</div>
-											</div>
-											<div class="col-md-2">
-												<div class="form-group">
-													<input type="text" class="form-control"  placeholder="가격" name="productOptionPrice" id="productOptionPrice" value="${o.optionPrice}">
-												</div>
-											</div>
-											<div class="col-md-2 d-flex align-items-center">
-												<div class="form-group">
-													<a class="delete" href="#"><i class="fa fa-fw fa-remove"></i></a>
-												</div>
-											</div>
-										</div>
-									</c:forEach>
-								</td>
-							</tr>
-						</table>
-						<a href="#0" class="btn_1 gray add-pricing-list-item"><i class="fa fa-fw fa-plus-circle"></i>옵션추가</a>
-						</div>
-				</div>
-				<!-- /row-->
-			</div>
-			<!-- /box_general-->
-			</form>
-			<p><a class="btn_1 medium" id="btn" >Save</a></p>
 		  </div>
 		  <!-- /.container-fluid-->
 	   	</div>
@@ -318,25 +307,8 @@
 	    <a class="scroll-to-top rounded" href="#page-top">
 	      <i class="fa fa-angle-up"></i>
 	    </a>
-	    <!-- Logout Modal-->
-	    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	      <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	          <div class="modal-header">
-	            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-	            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-	              <span aria-hidden="true">×</span>
-	            </button>
-	          </div>
-	          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-	          <div class="modal-footer">
-	            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-	            <a class="btn btn-primary" href="#0">Logout</a>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
-		<!-- modal 추가 -->
+	   
+		<!-- 휴무일 추가 modal -->
 	    <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 	        aria-hidden="true">
 	        <div class="modal-dialog" role="document">
@@ -347,22 +319,90 @@
 	                        <span aria-hidden="true">&times;</span>
 	                    </button>
 	                </div>
+	                <form id="offdayAddForm" method="post" action="${pageContext.request.contextPath}/company/produtOffdayAdd">
 	                <div class="modal-body">
 	                    <div class="form-group">
 	                        <label for="taskId" class="col-form-label">휴무사유</label>
-	                        <input type="text" class="form-control" id="calendar_content" name="calendar_content" value="">
-	                        <label for="taskId" class="col-form-label">시작 날짜</label>
-	                        <input type="date" class="form-control" id="calendar_start_date" name="calendar_start_date" value="" readonly="readonly">
+	                        <input type="text" class="form-control" id="calendar_content" name="productOffdayMemo">
+	                        <label for="taskId" class="col-form-label">날짜</label>
+	                        <input type="date" class="form-control" id="calendar_start_date" name="productOffdayDate" value="" readonly="readonly">
+	                        <input type="hidden" class="form-control" id="calendar_start_date" name="productNo" value="${productNo}">
 	                    </div>
 	                </div>
 	                <div class="modal-footer">
 	                    <button type="button" class="btn btn-warning" data-dismiss="modal" id="addCalendar">추가</button>
 	                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="sprintSettingModalClose">취소</button>
 	                </div>
+	    			</form>
+	            </div>
+	        </div>
+	    </div>
+	    
+		<!-- 휴무일 수정 modal -->
+	    <div class="modal fade" id="offdayModify" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog" role="document">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <h5 class="modal-title" id="exampleModalLabel">휴무일수정</h5>
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">&times;</span>
+	                    </button>
+	                </div>
+	                <form id="offdayModifyForm" method="post" action="${pageContext.request.contextPath}/company/produtOffdayModify">
+		                <div class="modal-body">
+		                    <div class="form-group">
+		                        <label for="taskId" class="col-form-label">휴무사유</label>
+		                        <input type="text" class="form-control" id="offdayTitle" name="productOffdayMemo" value="">
+		                        <label for="taskId" class="col-form-label">날짜</label>
+		                        <input type="date" class="form-control" id="offday" name="productOffdayDate" value="">
+		                        <input type="hidden" class="form-control" id="offdayNo" name="productOffdayNo" value="">
+		                        <input type="hidden" class="form-control" name="productNo" value="${productNo}">
+		                    </div>
+		                </div>
+	                </form>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn btn-warning" data-dismiss="modal" id="modifyCalendar">수정</button>
+	                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+	                </div>
 	    
 	            </div>
 	        </div>
 	    </div>
+	    
+	    
+		<!-- 옵션 수정 modal -->
+	    <div class="modal fade" id="optionModify" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog" role="document">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <h5 class="modal-title" id="exampleModalLabel">옵션수정</h5>
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                        <span aria-hidden="true">&times;</span>
+	                    </button>
+	                </div>
+	                <form id="optionModifyForm" method="post" action="${pageContext.request.contextPath}/company/optionModify">
+		                <div class="modal-body">
+		                    <div class="form-group">
+		                        <label for="taskId" class="col-form-label">이름</label>
+		                        <input type="text" class="form-control" id="productOptionName" name="productOptionName" value="">
+		                        <label for="taskId" class="col-form-label">설명</label>
+		                        <input type="text" class="form-control" id="productOptionMemo" name="productOptionMemo" value="">
+		                        <label for="taskId" class="col-form-label">가격</label>
+		                        <input type="text" class="form-control" id="productOptionPrice" name="productOptionPrice" value="">
+		                        <input type="hidden" class="form-control" id="productOptionNo" name="productOptionNo" value="">
+		                        <input type="hidden" class="form-control" name="productNo" value="${productNo}">
+		                    </div>
+		                </div>
+	                </form>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn btn-warning" data-dismiss="modal" id="modifyOption">수정</button>
+	                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="sprintSettingModalClose">취소</button>
+	                </div>
+	    
+	            </div>
+	        </div>
+	    </div>
+	    
 
 	    <!-- Custom scripts for all pages-->
 	    <script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>

@@ -7,6 +7,7 @@
 		SELECT booking_product_no productNo
 			, booking_product_name productName
 			, booking_product_price productPrice
+			, booking_product_open open
 			, booking_product_open productOpen
 			, booking_product_min_people productMin
 			, booking_product_max_people productMax
@@ -15,12 +16,13 @@
 	</select>
 	<select id="selectProductOption" resultType="java.util.Map">
 		SELECT booking_product_option_name optionName
+			, booking_product_option_no optionNo
 			, booking_product_option_memo optionMemo
 			, booking_product_option_price optionPrice
 		FROM booking_product_option 
 		WHERE booking_product_no = #{productNo}
 	</select>
-	<select id="selectProductOffday" resultType="java.util.Map">
+	<select id="selectOffday" resultType="java.util.Map">
 		SELECT p.booking_product_offday_date offday
 			, p.booking_product_offday_memo memo
 		FROM booking_product_offday p
@@ -36,10 +38,42 @@
 		FROM booking_product_img 
 		WHERE booking_product_no = #{productNo}
 	</select>
+	<select id="selectProductOffday" resultType="java.util.Map">
+		SELECT booking_product_offday_no offdayNo
+		, booking_product_offday_date offday
+		, booking_product_offday_memo memo
+		FROM booking_product_offday 
+		WHERE booking_product_no = #{productNo}
+	</select>
 	
 	<!-- 3) 수정 -->
 	<update id="updateProduct" parameterType="goodee.gdj58.booking_c.vo.Product">
 		UPDATE booking_product SET booking_product_open = #{productOpen} WHERE booking_product_no = #{productNo}
+	</update>
+	<update id="updateProductOffday" parameterType="goodee.gdj58.booking_c.vo.ProductOffday">
+		UPDATE booking_product_offday SET booking_product_offday_date = #{productOffdayDate} , booking_product_offday_memo = #{productOffdayMemo} WHERE booking_product_offday_no = #{productOffdayNo};
+	</update>
+	<delete id="deleteProductOffday">
+		DELETE FROM booking_product_offday WHERE booking_product_offday_no = #{productOffdayNo}
+	</delete>
+	<update id="updateProducOne" parameterType="goodee.gdj58.booking_c.vo.Product">
+		UPDATE booking_product 
+		SET booking_product_name = #{productName}
+			, booking_product_price = #{productPrice}
+			, booking_product_open = #{productOpen}
+			, booking_product_max_people = #{productMaxPeople}
+			, booking_product_min_people = #{productMinPeople}
+		WHERE booking_product_no = #{productNo}
+	</update>
+	<delete id="deleteOption">
+		DELETE FROM booking_product_option WHERE booking_product_option_no = #{productOptionNo}
+	</delete>
+	<update id="updateOption" parameterType="goodee.gdj58.booking_c.vo.ProductOption">
+		UPDATE booking_product_option 
+		SET booking_product_option_name = #{productOptionName}
+			, booking_product_option_memo = #{productOptionMemo}
+			, booking_product_option_price = #{productOptionPrice}
+		WHERE booking_product_option_no = #{productOptionNo}
 	</update>
 	
 	<!-- 2) 등록 -->
@@ -106,15 +140,19 @@
 	<!-- 1) 목록 -->
 	<select id="selectProduct" resultType="java.util.Map" parameterType="java.util.Map">
 		SELECT
-			booking_product_no productNo  
-			, booking_product_name name
-			, booking_product_price price
-			, booking_product_open open
-			, booking_product_max_people max
-			, booking_product_min_people min
-		FROM booking_product
+			p.booking_product_no productNo  
+			, p.booking_product_name name
+			, p.booking_product_price price
+			, p.booking_product_open open
+			, p.booking_product_max_people max
+			, p.booking_product_min_people MIN
+			, i.booking_product_img_save_name img
+		FROM booking_product p 
+		LEFT OUTER JOIN 
+		(SELECT DISTINCT booking_product_no, booking_product_img_save_name FROM booking_product_img GROUP BY booking_product_no) i
+		ON p.booking_product_no = i.booking_product_no
 		WHERE booking_company_id = #{loginCom.companyId}
-		ORDER BY booking_product_open ASC, booking_product_no DESC
+		ORDER BY p.booking_product_open ASC, p.booking_product_no DESC
 	</select>
 	<select id="productCount" resultType="int">
 		SELECT COUNT(*) 

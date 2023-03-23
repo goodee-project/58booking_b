@@ -21,14 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductRestController {
 	@Autowired CompanyService3 companyService;
-
-	// 상품 휴무일
-	@GetMapping("/productOffday")
-	public List<Map<String, Object>> getProductOffday(HttpSession session, @RequestParam(value = "productNo") int productNo) {
+	// 전체 휴무일
+	@GetMapping("/offdayT")
+	public List<Map<String, Object>> getoffday(HttpSession session, @RequestParam(value = "productNo") int productNo) {
 		Company loginCom = (Company)session.getAttribute("loginCompany");
-		List<Map<String, Object>> getOffday = companyService.getProductOffday(productNo, loginCom.getCompanyId());
+		List<Map<String, Object>> getOffdayT = companyService.getOffdayT(productNo, loginCom.getCompanyId());
 		List<Map<String, Object>> list = new ArrayList<>();
-		for(Map<String, Object> off : getOffday) {
+		for(Map<String, Object> off : getOffdayT) {
 			Map<String, Object> map = new HashMap<>();
 			map.put("title", off.get("memo"));
 			map.put("start", off.get("offday"));

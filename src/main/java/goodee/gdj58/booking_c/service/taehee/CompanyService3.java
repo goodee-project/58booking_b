@@ -30,8 +30,20 @@ public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
 	// 상품관리
 	// 5) 상품수정
-	public int modifyProductOne() {
-		 return 1;
+	public int modifyProductOne(Product product) {
+		 return companyMapper.updateProducOne(product);
+	}
+	public int modifyProductOffday(ProductOffday productOffday) {
+		return companyMapper.updateProductOffday(productOffday);
+	}
+	public int removeProductOffday(int productOffdayNo) {
+		return companyMapper.deleteProductOffday(productOffdayNo);
+	}
+	public int removeOption(int productOptionNo) {
+		return companyMapper.deleteOption(productOptionNo);
+	}
+	public int modifyOption(ProductOption productOption) {
+		return companyMapper.updateOption(productOption);
 	}
 	
 	// 4) 상세보기
@@ -41,11 +53,14 @@ public class CompanyService3 {
 	public List<Map<String, Object>> getProductOption(int productNo) {
 		return companyMapper.selectProductOption(productNo);
 	}
-	public List<Map<String, Object>> getProductOffday(int productNo, String comId) {
-		return companyMapper.selectProductOffday(productNo, comId);
+	public List<Map<String, Object>> getOffdayT(int productNo, String comId) {
+		return companyMapper.selectOffday(productNo, comId);
 	}
 	public List<Map<String, Object>> getProductImg(int productNo) {
 		return companyMapper.selectProductImg(productNo);
+	}
+	public List<Map<String, Object>> getProductOffday(int productNo) {
+		return companyMapper.selectProductOffday(productNo);
 	}
 	
 	// 3) 상태변경

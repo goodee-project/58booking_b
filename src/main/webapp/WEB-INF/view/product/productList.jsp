@@ -139,9 +139,13 @@
 										</c:choose>
 									</h2>
 								</div>
+								<img src="${pageContext.request.contextPath}/upload/product/${p.img}" width="100px">
 								<p>${p.price}원 </p>
 								<p>최소 ${p.min}명 ~ 최대 ${p.max}명</p>
-								<img>
+								<p>예약건수<p>
+								<p>리뷰수<p>
+								<p>별점?<p>
+								
 							</div>
 						</div>
 					</c:forEach>

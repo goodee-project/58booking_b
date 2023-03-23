@@ -17,13 +17,18 @@ import goodee.gdj58.booking_c.vo.Question;
 public interface CompanyMapper3 {
 	// 상퓸관리
 	// 5) 상품수정
-	int updateProducOne();
+	int updateProducOne(Product product);
+	int updateProductOffday(ProductOffday productOffday);
+	int deleteProductOffday(int productOffdayNo);
+	int deleteOption(int productOptionNo);
+	int updateOption(ProductOption productOption);
 	
 	// 4) 상세보기
 	List<Map<String, Object>> selectProductOne(int productNo);
 	List<Map<String, Object>> selectProductOption(int productNo);
-	List<Map<String, Object>> selectProductOffday(int productNo, String comId);
+	List<Map<String, Object>> selectOffday(int productNo, String comId);
 	List<Map<String, Object>> selectProductImg(int productNo);
+	List<Map<String, Object>> selectProductOffday(int productNo);
 	
 	// 3) 수정
 	int updateProduct(Product product);
