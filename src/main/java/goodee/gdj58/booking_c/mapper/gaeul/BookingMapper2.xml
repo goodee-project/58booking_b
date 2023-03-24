@@ -72,6 +72,7 @@
 	 		 resultType="java.util.Map">
 	 	SELECT
 			bp.booking_product_name productName
+			, bp.booking_product_no productNo
 			, COUNT(bp.booking_product_name) cnt
 		FROM booking b
 			INNER JOIN booking_product bp

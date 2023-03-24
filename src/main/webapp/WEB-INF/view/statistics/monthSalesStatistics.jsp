@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,16 +71,23 @@
 							<th>매출평균</th>
 							<th>건수</th>
 						</tr>
-						<c:forEach items="${monthList}" var="m">
+						<c:if test="${fn:length(monthList) == 0}">
 							<tr>
-								<th>
-									<a href="${pageContext.request.contextPath}/company/statistics/dateSalesStatistics?year=${year}&month=${m.month}">${m.month}월</a>
-								</th>
-								<th>${m.totalPrice}원</th>
-								<th>${m.avgPrice}원</th>
-								<th>${m.totalCnt}건</th>
+								<td colspan="4">표시할 데이터가 없습니다.</td>
 							</tr>
-						</c:forEach>
+						</c:if>
+						<c:if test="${fn:length(monthList) > 0}">
+							<c:forEach items="${monthList}" var="m">
+								<tr>
+									<th>
+										<a href="${pageContext.request.contextPath}/company/statistics/dateSalesStatistics?year=${year}&month=${m.month}">${m.month}월</a>
+									</th>
+									<th>${m.totalPrice}원</th>
+									<th>${m.avgPrice}원</th>
+									<th>${m.totalCnt}건</th>
+								</tr>
+							</c:forEach>
+						</c:if>
 					</table>
 				</div>
 			</div><!-- 본문 끝 -->

@@ -22,9 +22,7 @@ public class MailSendService {
 	
 	// 이메일 전송
 	public String makeEmail(String companyEmail){
-		
-		JavaMailSender mailSender = MailConfig.getMailSender();
-		
+
 		// 1. 인증번호에 사용할 6자리 난수 생성(111111 ~ 999999)
 		int randomNum = ThreadLocalRandom.current().nextInt(100000, 1000000);
 		log.debug(FontColor.BLUE+"인증번호 : "+randomNum);
@@ -44,6 +42,7 @@ public class MailSendService {
 			    "이 메일은 인증번호 전송용 이메일이므로 회신이 불가합니다."; //이메일 내용 삽입
 		
 		// 2. 이메일 전송
+		JavaMailSender mailSender = MailConfig.getMailSender();
 		MimeMessage message = mailSender.createMimeMessage();
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");

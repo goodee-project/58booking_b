@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -69,14 +70,21 @@
 							<th>매출평균</th>
 							<th>건수</th>
 						</tr>
-						<c:forEach items="${dateList}" var="d">
+						<c:if test="${fn:length(dateList) == 0}">
 							<tr>
-								<th class="w-25">${d.date}</th>
-								<th class="w-25">${d.totalPrice}원</th>
-								<th class="w-25">${d.avgPrice}원</th>
-								<th class="w-25">${d.totalCnt}건</th>
+								<td colspan="4">표시할 데이터가 없습니다.</td>
 							</tr>
-						</c:forEach>
+						</c:if>
+						<c:if test="${fn:length(dateList) > 0}">
+							<c:forEach items="${dateList}" var="d">
+								<tr>
+									<th class="w-25">${d.date}</th>
+									<th class="w-25">${d.totalPrice}원</th>
+									<th class="w-25">${d.avgPrice}원</th>
+									<th class="w-25">${d.totalCnt}건</th>
+								</tr>
+							</c:forEach>
+						</c:if>
 					</table>
 				</div>
 			</div><!-- 본문 끝 -->

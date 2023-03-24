@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="goodee.gdj58.booking_c.mapper.gaeul.ReportMapper">
+
+	<!-- 신고 건수 -->
+	<select id="selectReportCnt"
+			parameterType="java.lang.String"
+			resultType="Integer">
+		SELECT COUNT(r.report_memo) cnt
+		FROM booking b
+			INNER JOIN report r
+			ON b.booking_no = r.report_content
+		WHERE r.report_category = '예약' AND b.booking_company_id = #{companyId}
+	</select>
+	
+	<!-- 신고 내역 리스트 -->
+	<select id="selectReportList"
+			parameterType="java.util.Map"
+			resultType="java.util.Map">
+		SELECT
+			bp.booking_product_name productName
+			, bp.booking_product_no productNo
+			, br.report_memo reportMemo
+			, br.createdate createdate 
+		FROM booking_product bp
+			INNER JOIN (SELECT
+								b.product_no product_no
+								, r.report_memo report_memo
+								, r.createdate createdate
+							FROM booking b
+								INNER JOIN report r
+								ON b.booking_no = r.report_content
+							WHERE r.report_category = '예약' AND b.booking_company_id = #{companyId}) br
+			ON bp.booking_product_no = br.product_no
+		ORDER BY createdate DESC
+		LIMIT #{beginRow}, #{rowPerPage}
+	</select>
+	
+</mapper>

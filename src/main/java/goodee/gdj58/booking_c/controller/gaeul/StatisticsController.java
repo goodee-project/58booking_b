@@ -21,6 +21,50 @@ import lombok.extern.slf4j.Slf4j;
 public class StatisticsController {
 	@Autowired StatisticsService statisticsService;
 	
+	// 신고통계
+	@GetMapping("/company/statistics/reportStatistics")
+	public String reportStatistics(HttpSession session, Model model,
+					@RequestParam(value="currentPage", defaultValue="1") int currentPage) {
+		
+		log.debug(FontColor.BLUE+"currentPage : "+currentPage);
+		
+		Company loginCompany = (Company)session.getAttribute("loginCompany");
+		String companyId = loginCompany.getCompanyId();
+		
+		int rowPerPage = 10; // 페이지 당 보여줄 리스트 갯수
+		int cnt = statisticsService.getReportCnt(companyId); // 신고건수(전체목록수)
+		List<Map<String, Object>> reportList = statisticsService.getReportList(companyId, currentPage, rowPerPage); // 신고 내역 리스트
+		log.debug(FontColor.BLUE+"cnt : "+cnt);
+		
+		// 페이징
+		int lastPage = cnt/rowPerPage; // 마지막 페이지
+		if(cnt%rowPerPage != 0) { // 나누어 떨어지지 않으면 +1
+			lastPage++;
+		}
+		if(lastPage == 0) { // 보여줄 리스트 갯수(rowPerPage)보다 리스트의 갯수(cnt)가 적으면 0이 됨 -> 1로
+			lastPage = 1;
+		}
+		log.debug(FontColor.BLUE+"lastPage : "+lastPage);
+		
+		int listPerPage = 10; // 페이지 목록 갯수 (이전 '1,2,3,...,10' 다음)
+		int startPage = (currentPage-1)/listPerPage*listPerPage+1; // 페이지 목록 시작값
+		int endPage = startPage+listPerPage-1; // 페이지 목록 마지막값
+		if(lastPage < endPage) {
+			endPage = lastPage;
+		}
+		log.debug(FontColor.BLUE+"startPage : "+startPage);
+		log.debug(FontColor.BLUE+"endPage : "+endPage);
+		
+		model.addAttribute("cnt", cnt);
+		model.addAttribute("reportList", reportList);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		
+		return "statistics/reportStatistics";
+	}
+	
 	// 매출 통계(일)
 	@GetMapping("/company/statistics/dateSalesStatistics")
 	public String dateSalesStatistics(HttpSession session, Model model,
@@ -102,11 +146,5 @@ public class StatisticsController {
 		model.addAttribute("popularPDList", popularPDList);
 		
 		return "statistics/totalStatistics";
-	}
-	
-	// 신고 통계
-	@GetMapping("/company/statistics/reportStatistics")
-	public String reportStatistics() {
-		return "statistics/reportStatistics";
 	}
 }

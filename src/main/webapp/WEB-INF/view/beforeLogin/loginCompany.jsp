@@ -35,8 +35,6 @@
 <!-- Your custom styles -->
 <link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<!-- 리캡챠 -->
-<script src="https://www.google.com/recaptcha/api.js"></script>
 <!-- 쿠키 사용 -->
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 <c:if test="${msg != null}">
@@ -48,9 +46,6 @@
 	</script>
 </c:if>
 <script>
-	// 쿠키 설정 변경(리캡챠 사용위함)
-	document.cookie = "crossCookie=bar; SameSite=None; Secure";
-	
 	$(document).ready(function(){
 		
 		// 쿠키 사용한 아이디 저장 (https://gbsb.tistory.com/99 참고)
@@ -75,36 +70,6 @@
 		        Cookies.set('key', $("#id").val(), { expires: 7 }); // 7일 동안 쿠키 보관
 		    }
 		});
-		
-		// 사이트 키 값은 등록한 도메인에 매핑됨
-		// 구글 리캡챠
-		/*
-			var captcha = 1;
-			$.ajax({
-		           url:'/verifyRecaptcha'
-		           , type:'post'
-		           , data:{recaptcha: $(".g-recaptcha-response").val()}
-		           , success: function(data) {
-		               switch (data) {
-		                  case 0:
-		                      console.log("자동 가입 방지 봇 통과");
-		                      captcha = 0;
-		              		break;
-		                  case 1:
-		                      alert("자동 가입 방지 봇을 확인 한뒤 진행 해 주세요.");
-		                      break;
-		                  default:
-		                      alert("자동 가입 방지 봇을 실행 하던 중 오류가 발생 했습니다. [Error bot Code : " + Number(data) + "]");
-		                 		break;
-		               }
-		           }
-		       });
-			
-			if(captcha != 0) {
-				return false;
-			}
-		*/
-		
 		
 		// 비밀번호 보이기
 		$('#eye').hover(function(){
@@ -180,14 +145,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="text-center"><!-- 리캡챠 -->
-								<div class="g-recaptcha" data-sitekey="6LevqtkkAAAAALTd1rpqiYdFT1OHY14wxlqMG89a"></div>
-							</td>
-						</tr>
-						<tr>
 							<td><!-- 로그인 버튼 -->
 								<div class="text-center mb-5">
-									<button type="button" id="loginBtn" class="btn btn-lg btn-primary">login</button>
+									<button type="button" id="loginBtn" class="btn btn-lg btn-primary">LOGIN</button>
 								</div>
 							</td>
 						</tr>

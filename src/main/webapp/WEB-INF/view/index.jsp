@@ -136,55 +136,63 @@
 					<li>
 						<h2>이가을</h2>
 						<p>담당 기능 : 
-							<a href="${pageContext.request.contextPath}/beforeLogin/loginCompany">로그인</a>,
-							<a href="${pageContext.request.contextPath}/beforeLogin/addCompany">업체가입</a>,
-							<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디찾기</a>,
-							<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호찾기</a>,
-							<a href="${pageContext.request.contextPath}/company/companyBasicInfo/companyMain">업체 기본정보 관리</a>,
-							<a href="">통계</a>
+							<a href="${pageContext.request.contextPath}/beforeLogin/loginCompany">로그인</a>, 
+							<a href="${pageContext.request.contextPath}/beforeLogin/addCompany">업체가입</a>, 
+							<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyId">아이디찾기</a>, 
+							<a href="${pageContext.request.contextPath}/beforeLogin/findCompanyPw">비밀번호찾기</a>, 
+							<a href="${pageContext.request.contextPath}/company/companyBasicInfo/companyMain">업체 기본정보</a>, 
+							<a href="${pageContext.request.contextPath}/company/statistics/totalStatistics">전체통계</a>, 
+							<a href="${pageContext.request.contextPath}/company/statistics/salesStatistics">매출통계</a>, 
+							<a href="${pageContext.request.contextPath}/company/statistics/reportStatistics">신고통계</a>
 						</p>
 
-						<h6>1. 업체 로그인</h6>
+						<h6>1. 로그인</h6>
 						<P>
-						 1) 구현완료 <br>
-						  - 로그인 분기 : 플랫폼 미승인(로그인 불가), 플랫폼 승인 후 최초 로그인(업체 상세정보 등록), 일반 로그인(업체 메인) <br>
+						 1) 로그인 분기<br>
+						 - 계정 정보로 DB에 접근하여 로그인 분기를 나누었습니다.<br>
+						 &nbsp;&nbsp;&nbsp;&nbsp;첫번째 분기 : 플랫폼 미승인 - 계정 활성화 상태가 비활성화이면, 로그인 불가<br>
+						 &nbsp;&nbsp;&nbsp;&nbsp;두번째 분기 : 플랫폼 승인 완료, 최초 로그인 - DB에 입력된 업체 상세정보가 없으면, 업체 상세정보 등록 페이지로<br>
+						 &nbsp;&nbsp;&nbsp;&nbsp;세번째 분기 : 첫번째와 두번째 분기를 모두 지났으면, 일반 로그인 진행(업체 메인페이지로)<br>
 						 <br>
-						 2) 구현중 <br>
-						  - 구글 리캡챠v2 API를 이용하여 로그인 시도 횟수가 3회 넘어갈 시 실행
+						 2) 쿠키를 사용하여 사용자 아이디 정보 저장<br>
+						 - 자바스크립트로 체크박스 활성화 여부 확인 후, 활성화 시 7일 동안 input에 입력된 정보를 쿠키에 저장하였습니다. 
 						</P>
 						
-						<h6>2. 업체 기본정보 CRUD</h6>
+						<h6>2. 업체 기본정보</h6>
 						<P>
-						 1) 구현완료 <br>
-						   - 구글 SMTP서버와 javaMail API, ajax를 이용하여 이메일 인증 <br>
-						   - 이메일 인증과 jquery동적 태그를 이용하여 업체 가입 구현 <br>
+						 1) 동적버튼 생성하여 파일 업로드<br>
+						 - 업체 가입 시, 자바스크립트를 활용해 동적으로 사진 업로드 버튼이 생성되도록 구현했습니다.<br>
+						 - multipart형식의 form으로 File타입의 객체를 받아와서 DB와 로컬폴더에 파일이 저장되도록 구현했습니다.<br>
 						 <br>
-						 2) 구현중 <br>
-						   - 업체 기본정보 조회(업체 메인) <br>
-						   - 업체 기본정보 수정
-						 </P>
+						 2) 구글 SMTP 서버와 javaMail API 활용한 이메일 인증<br>
+						 - 랜덤으로 생성된 인증번호와 API를 사용해 생성된 이메일을 구글 SMTP 서버를 통해 전송하였습니다.<br>
+						 - 이메일의 전송과정은 비동기 방식으로 구현하였습니다.<br>
+						 <br>
+						 3) 다음 지도 API 활용<br>
+						 - 업체 가입 시, 사용자가 주소를 입력하면 주소 정보에서 위도, 경도를 가져와 DB에 저장하였습니다.<br>
+						 - 업체 정보 조회 시, 저장된 위도와 경도 값으로 해당 위치가 지도에 표시되도록 구현하였습니다.<br>
+						 <br>
 						 
 						<h6>3. 아이디 찾기/비밀번호 찾기</h6>
 						<P>
-						 1) 구현완료 <br>
-						   - 이메일 인증과 동적 쿼리를 이용하여 아이디/비밀번호 찾기 구현
+						1) 구글 SMTP 서버와 javaMail API 활용한 이메일 인증<br>
+						- 아이디와 비밀번호를 찾는 과정에서도 비동기 방식으로 이메일을 전송하였습니다.<br>
+						- 입력한 인증번호가 일치하면, 비동기 방식을 통해 아이디 정보/비밀번호 변경 페이지가 나오도록 동적으로 구현하였습니다.<br>
+						<br>
+						2) SQL 동적쿼리 사용<br>
+						- 인증을 위한 이메일 조회 시, 동적쿼리를 사용하여 하나의 이메일 전송 컨트롤러에서 세가지 방식의 이메일을 전송하도록 구현하였습니다.<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;첫번째 방식 : 업체가입 시 이메일 전송 - 이메일 조회 필요 없음<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;두번째 방식 : 아이디 찾기 시 이메일 전송 - 이메일 조회, 이름 정보만 필요<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;세번째 방식 : 비밀번호 찾기 시 이메일 전송 - 이메일 조회, 아이디 정보만 필요<br>
 						</P>
 						
-						<h6>4. 업체:고객 채팅</h6>
+						<h6>4. 통계</h6>
 						<P>
-						 1) 미구현 <br>
-						  - webSocket API 이용하여 구현
+						비동기 차트
+						 - 예약통계(신규예약, 취소예약, 확정예약, 방문예약) <br>
+						 - 매출통계(일별, 월별, 년도별) <br> 
+						 - 신고통계<br>
 						</P>
-						
-						<h6>5. 통계</h6>
-						<P>
-						 1) 미구현 <br>
-						  - 예약통계(신규예약, 취소예약, 확정예약, 방문예약, 환불) <br>
-						  - 매출통계(일별, 월별, 년도별) <br> 
-						  - 리뷰통계(점수별) <br>
-						  - 엑셀 내려받기 통계
-						</P>
-						
 					</li>
 				</ul>
 			</div>

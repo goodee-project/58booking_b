@@ -199,7 +199,10 @@
 								<c:forEach items="${popularPDList}" var="pdList" varStatus="i">
 									<tr>
 										<td style="width:40%;">${i.count}위</td>
-										<td class="text-left">(${pdList.cnt}건) ${pdList.productName}</td>
+										<td class="text-left">
+											(${pdList.cnt}건) 
+											<a href="${pageContext.request.contextPath}/company/productOne?productNo=${pdList.productNo}">${pdList.productName}</a>
+										</td>
 									</tr>
 								</c:forEach>
 							</c:if>
@@ -225,7 +228,10 @@
 								<c:forEach items="${productList}" var="pList" varStatus="i">
 									<tr>
 										<td style="width:40%;">${i.count}위</td>
-										<td class="text-left">(${fn:substring(pList.star, 0, 3)}점) ${pList.productName}</td>
+										<td class="text-left">
+											(${fn:substring(pList.star, 0, 3)}점) 
+											<a href="${pageContext.request.contextPath}/company/productOne?productNo=${pList.productNo}">${pList.productName}</a>
+										</td>
 									</tr>
 								</c:forEach>
 							</c:if>

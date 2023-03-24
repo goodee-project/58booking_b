@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goodee.gdj58.booking_c.mapper.gaeul.BookingMapper2;
+import goodee.gdj58.booking_c.mapper.gaeul.ReportMapper;
 import goodee.gdj58.booking_c.mapper.gaeul.ReviewMapper;
 import goodee.gdj58.booking_c.vo.Booking;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,25 @@ import lombok.extern.slf4j.Slf4j;
 public class StatisticsService {
 	@Autowired BookingMapper2 bookingMapper;
 	@Autowired ReviewMapper reviewMapper;
+	@Autowired ReportMapper reportMapper;
+	
+	// 신고 건수
+	public int getReportCnt(String companyId) {
+		return reportMapper.selectReportCnt(companyId);
+	}
+	
+	// 신고 내역 리스트
+	public List<Map<String, Object>> getReportList(String companyId, int currentPage, int rowPerPage) {
+		
+		int beginRow = (currentPage-1)*rowPerPage;
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("companyId", companyId);
+		paramMap.put("beginRow", beginRow);
+		paramMap.put("rowPerPage", rowPerPage);
+		
+		return reportMapper.selectReportList(paramMap);
+	}
+	
 	
 	// 일별 통계
 	public List<Map<String, Object>> getDateList(String companyId, String year, String month){

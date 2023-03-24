@@ -54,9 +54,77 @@
 			
 			<!-- 본문 입력 -->
 			<div class="box_general">
-			</div>
-			
-			
+				<!-- 신고건수 -->
+				<div class="mx-3 mb-3">
+					<h3>신고 <span style="color:red; font-size:2rem;">${cnt}</span>건</h3>
+				</div>
+
+				<!-- 테이블 -->
+				<table class="table text-center">
+					<tr>
+						<th class="w-25">예약상품명</th>
+						<th class="w-50">신고내용</th>
+						<th class="w-25">신고날짜</th>
+					</tr>
+					<c:forEach items="${reportList}" var="r">
+						<tr>
+							<td>
+								<a href="${pageContext.request.contextPath}/company/productOne?productNo=${r.productNo}">${r.productName}</a>
+							</td>
+							<td class="text-left">${r.reportMemo}</td>
+							<td>${r.createdate}</td>							
+						</tr>
+					</c:forEach>
+				</table>
+				
+				<!-- 페이징 -->
+				<div class="pb-2 pt-1">
+					<nav aria-label="...">
+						<ul class="pagination pagination-sm add_bottom_30">
+						
+							<!-- 이전 -->
+							<c:if test="${currentPage == 1}">
+								<li class="page-item disabled">
+									<a class="page-link">Previous</a>
+								</li>
+							</c:if>
+							<c:if test="${currentPage > 1}">
+								<li class="page-item">
+									<a class="page-link" href="${pageContext.request.contextPath}/company/statistics/reportStatistics?currentPage=${currentPage-1}">Previous</a>
+								</li>
+							</c:if>
+							
+							<c:forEach begin="${startPage}" end="${endPage}" step="1" var="i">
+								<c:if test="${currentPage == i}">
+									<li class="page-item disabled">
+										<a class="page-link">${i}</a>
+									</li>
+								</c:if>
+								<c:if test="${currentPage != i}">
+									<li class="page-item">
+										<a class="page-link" href="${pageContext.request.contextPath}/company/statistics/reportStatistics?currentPage=${i}">${i}</a>
+									</li>
+								</c:if>
+							</c:forEach>
+							
+							<!-- 다음 -->
+							<c:if test="${lastPage == currentPage}">
+								<li class="page-item disabled">
+									<a class="page-link">Next</a>
+								</li>
+							</c:if>
+							
+							<c:if test="${lastPage > currentPage}">
+								<li class="page-item">
+									<a class="page-link" href="${pageContext.request.contextPath}/company/statistics/reportStatistics?currentPage=${currentPage+1}">Next</a>
+								</li>
+							</c:if>
+							
+						</ul>
+					</nav>
+				</div>
+				
+			</div><!-- 본문 끝 -->
 		</div>
 	</div>
 

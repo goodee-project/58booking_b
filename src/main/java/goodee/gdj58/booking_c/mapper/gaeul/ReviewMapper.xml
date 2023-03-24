@@ -30,6 +30,7 @@
 		where b.booking_company_id = #{companyId}
 	</select>
 	
+	<!-- 평점순 상품 -->
 	<select id="selectProductListByStar"
 			parameterType="java.lang.String"
 			resultType="java.util.Map">
@@ -37,6 +38,7 @@
 			AVG(r.star_rating) star
 		    , COUNT(r.star_rating) cnt
 			, bp.booking_product_name productName
+			, bp.booking_product_no productNo
 		FROM booking b
 			INNER JOIN booking_product bp
 			ON b.product_no = bp.booking_product_no
