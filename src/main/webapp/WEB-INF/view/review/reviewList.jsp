@@ -168,7 +168,7 @@
 	    	 	<div class="box_general">
 					<div class="row p-5">
 				    		<c:forEach var="m" items="${reviewList}">
-				    			<div class="col-md-6">
+				    			<div class="col-md-6 my-5">
 				    				<div class="mb-2">
 				    					${checkReview}개 리뷰 중 ${m.rowNum}번째
 				    				</div>
@@ -186,7 +186,7 @@
 			
 									<c:forEach var="ri" items="${reviewImgList}">
 										<c:if test="${m.bookingNo == ri.bookingNo}">
-											<div class="m-5">
+											<div class="my-5">
 				    							<img src="${pageContext.request.contextPath}/upload/${ri.reviewImgSaveName}">
 											</div>
 										</c:if>

@@ -50,6 +50,14 @@ public class CompanyController {
 			List<ReviewImg> reviewImgList = companyService.getReviewImgList(companyId);
 			List<ReviewComment> reviewCommentList = companyService.getReviewCommentList(companyId);
 			List<Integer> reviewCommentBookingNoList = companyService.getReviewCommentBookingNoList(companyId);
+			
+//			// 줄바꿈 반영
+//			for(ReviewComment rc : reviewCommentList) {
+//				rc.setReviewCommentMemo(rc.getReviewCommentMemo().replace("<br>","\r\n"));
+//				log.debug(FontColor.PURPLE+rc.getReviewCommentMemo()+"<======get: 리뷰 답글 줄바꿈 반영");
+//			}
+			
+			// 페이징
 			int startPage = ((currentPage-1)/rowPerPage)*rowPerPage+1;
 			int endPage = startPage + rowPerPage - 1;
 			int lastPage = (int)Math.ceil(checkReview/(double)rowPerPage);
@@ -74,6 +82,10 @@ public class CompanyController {
 	@PostMapping("/company/addReviewComment")
 	public String addReviewComment(ReviewComment reviewComment) {
 		log.debug(FontColor.PURPLE+reviewComment+"<======리뷰 답변 입력 정보");
+		
+		// 줄바꿈 반영
+		reviewComment.setReviewCommentMemo(reviewComment.getReviewCommentMemo().replace("\r\n","<br>"));
+		log.debug(FontColor.PURPLE+reviewComment.getReviewCommentMemo()+"<======post: 리뷰 답글 줄바꿈 반영");
 		
 		int row = companyService.addReviewComment(reviewComment);
 		if(row == 0) {
@@ -180,10 +192,8 @@ public class CompanyController {
 				// 쿼리 돌리기
 				for(int j = 0; j < 365; j+=7) {
 					log.debug(FontColor.PURPLE+j+"요일 계산");
-					if(companyOffdayDate != null) {
-						if(companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
-							companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);						
-						}
+					if(companyService.countOffday(loginCompanyId, date) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
+						companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);						
 					}
 				}
 			}
@@ -345,9 +355,7 @@ public class CompanyController {
 //		if(dayOfOffday != null) {			
 			for(Map<String, Object> map : dayOfOffday) {
 				date = String.valueOf(map.get("companyOffdayDate"));
-				log.debug(FontColor.PURPLE+date+"??????????????");
 				row += companyService.removeOffday(loginCompanyId, date, (int)map.get("companyOffdayDay"));					
-				log.debug(FontColor.PURPLE+row+"???????????????");
 				
 				if(row == 0) {
 					log.debug(FontColor.PURPLE+"휴무일 요일 삭제 row : "+row);
@@ -405,7 +413,7 @@ public class CompanyController {
 			for(int j = 0; j < 365; j+=7) {
 //				log.debug(FontColor.PURPLE+j+"요일 계산");
 //				if(companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {
-				if(companyOffdayDate == null || companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
+				if(companyOffdayDate == null || companyService.countOffday(loginCompanyId, date) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
 					row += companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);
 					
 					if(row == 0) {
