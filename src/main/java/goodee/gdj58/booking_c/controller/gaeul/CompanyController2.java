@@ -31,6 +31,12 @@ public class CompanyController2 {
 	@Autowired CompanyDetailService2 companyDetailService;
 	@Autowired CompanyImgService2 companyImgService;
 	
+	// 임시인덱스
+	@GetMapping("/index")
+	public String index() {
+		return "index";
+	}
+	
 	// 업제 기본정보 수정
 	@GetMapping("/company/companyBasicInfo/modifyCompany")
 	public String modifyCompany(HttpSession session, Model model) {

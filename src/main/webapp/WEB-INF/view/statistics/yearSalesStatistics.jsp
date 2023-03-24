@@ -112,7 +112,6 @@
 <script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
 <!-- Custom scripts for this page-->
 <script src="${pageContext.request.contextPath}/resources/admin_section/vendor/dropzone.min.js"></script>
-
 <!-- 차트 스크립트 -->
 <script>
 	<!-- 차트 모델값을 가져오는 코드 -->
@@ -130,7 +129,6 @@
 		, url : 'year'
 		, type : 'get'
 		, success : function(model) { // model : 백앤드에서 객체로 반환 -> 변환 필요
-			
 			yearArray = model.map(row=>row.year);
 			totalPriceArray = model.map(row=>row.totalPrice);
 			avgPriceArray = model.map(row=>row.avgPrice);
@@ -145,7 +143,7 @@
 	  type: "bar",
 	  data: {
 	    labels: yearArray,// 년도(x축)
-	    datasets: [{ // 
+	    datasets: [{ 
 	     	data: totalPriceArray,
 	     	backgroundColor: "rgba(30, 144, 255, 0.3)",
 	     	borderColor: "#1E90FF",
@@ -158,16 +156,20 @@
 	    	borderWidth: '1',
 	     	label: '평균'
 	    }, {
+	    	type:'line', // 건수는 오른쪽으로 따로
+	    	fill : false,
+            lineTension : 0, 
+	    	yAxisID: 'right-y-axis',
 	    	data: totalCntArray,
 	    	backgroundColor: "rgba(255, 193, 7, 0.3)",
 	    	borderColor: "#ffc107",
-	    	borderWidth: '1',
+	    	borderWidth: '3',
 	     	label: '건수'
 	    }]
 	  },
 	  options: {
 	    scales: {
-			xAxes: [{ // x축 설정
+	    	xAxes: [{ // x축 설정
 				gridLines:{
 					color: 'rgb(255, 255, 255)',
 					lineWidth: 1
@@ -183,9 +185,28 @@
 				},
 				ticks:{
 					beginAtZero: true,
-					fontSize : 15
-				},
-			}]
+					fontSize : 15,
+   					callback: function(value, index, ticks) { // 축 단위 설정
+                        return value+'원';
+                    }
+				}
+			}, { // 건수만 따로
+                id: 'right-y-axis',
+                type: 'linear',
+                position: 'right',
+   				gridLines:{
+   					color: 'rgba(0, 0, 0, 0)',
+   					lineWidth: 1
+   				},
+   				ticks:{
+   					beginAtZero: true,
+   					fontSize : 15,
+   					stepSize : 10,
+   					callback: function(value, index, ticks) { // 축 단위 설정
+                        return value+'건';
+                    }
+   				}
+            }]
 		}
 	  }
 	});

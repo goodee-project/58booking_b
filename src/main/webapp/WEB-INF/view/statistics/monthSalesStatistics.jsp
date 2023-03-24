@@ -132,7 +132,6 @@
 		, type : 'post'
 		, data : {year : year}
 		, success : function(model) { // model : 백앤드에서 객체로 반환 -> 변환 필요
-			
 			monthArray = model.map(row=>row.month);
 			totalPriceArray = model.map(row=>row.totalPrice);
 			avgPriceArray = model.map(row=>row.avgPrice);
@@ -160,6 +159,10 @@
 	    	borderWidth: '1',
 	     	label: '평균'
 	    }, {
+	    	type:'line', // 건수는 오른쪽으로 따로
+	    	fill : false,
+            lineTension : 0, 
+	    	yAxisID: 'right-y-axis',
 	    	data: totalCntArray,
 	    	backgroundColor: "rgba(255, 193, 7, 0.3)",
 	    	borderColor: "#ffc107",
@@ -185,9 +188,28 @@
 				},
 				ticks:{
 					beginAtZero: true,
-					fontSize : 15
-				},
-			}]
+					fontSize : 15,
+   					callback: function(value, index, ticks) { // 축 단위 설정
+                        return value+'원';
+                    }
+				}
+			}, { // 건수만 따로
+                id: 'right-y-axis',
+                type: 'linear',
+                position: 'right',
+   				gridLines:{
+   					color: 'rgba(0, 0, 0, 0)',
+   					lineWidth: 1
+   				},
+   				ticks:{
+   					beginAtZero: true,
+   					fontSize : 15,
+   					stepSize : 10,
+   					callback: function(value, index, ticks) { // 축 단위 설정
+                        return value+'건';
+                    }
+   				}
+            }]
 		}
 	  }
 	});
