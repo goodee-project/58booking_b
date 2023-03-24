@@ -52,8 +52,6 @@
 			    	// 원래 휴무를 배열에 넣고 시작
 			  	  $.each(data, function(index, item) {
 			  		  arr.push(item.start);
-			  			let comOffday = item.title +" "+ item.start+"<br>"
-			  		    $('#comOff').append(comOffday);
 			  		});
 			    	
 				    var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -141,24 +139,31 @@
 	        <li class="breadcrumb-item">
 	          <a href="#">Dashboard</a>
 	        </li>
-	        <li class="breadcrumb-item active">Add Product</li>
+	        <li class="breadcrumb-item active">예약상품 등록하기</li>
 	      </ol>
 	      <form id="addForm" method="post" action="${pageContext.request.contextPath}/company/addProduct" enctype="multipart/form-data">
 			<div class="box_general padding_bottom">
 				<div class="header_box version_2">
-					<h2><i class="fa fa-file"></i>상품정보</h2>
+					<div class="row">
+						<div class="col-md-6">
+							<h2><i class="fa fa-file"></i>상품정보</h2>
+						</div>
+						<div class="col-md-6">
+							<span class="d-flex justify-content-end">* 필수 입력사항</span>
+						</div>
+					</div>
 				</div>
 				<!-- /row-->
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							<label>상품명</label>
+							<label>*상품명</label>
 							<input type="text" class="form-control" name="productName" id="productName">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-							<label>가격</label>
+							<label>*가격</label>
 							<input type="text" class="form-control" placeholder="상품가격" name="productPrice" id="productPrice">
 						</div>
 					</div>
@@ -184,13 +189,13 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							<label>최소 인원</label>
+							<label>*최소 인원</label>
 							<input type="text" class="form-control" value="1" name="productMinPeople" id="productMinPeople">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-							<label>최대 인원</label>
+							<label>*최대 인원</label>
 							<input type="text" class="form-control" name="productMaxPeople" id=productMaxPeople>
 						</div>
 					</div>
@@ -198,38 +203,12 @@
 				<!-- /row-->
 			</div>
 			<!-- /box_general-->
-			
 			<div class="box_general padding_bottom">
 				<div class="header_box version_2">
-					<h2><i class="fa fa-clock-o"></i>상품 휴무</h2>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<div id='calendar'></div>
-							
-					</div>
-					<div class="col-md-6">
-						<h4><i class="fa fa-clock-o"></i>상품휴무일</h4>
-						<div id="productOff">
-						
-						</div>
-						<h4><i class="fa fa-clock-o"></i>휴무일</h4>
-						<div id="comOff" class="mb-4">
-						
-						</div>
-					</div>
-				</div>
-				
-			</div>
-			<!-- /box_general-->
-			
-			<div class="box_general padding_bottom">
-				<div class="header_box version_2">
-					<h2><i class="fa fa-dollar"></i>옵션</h2>
+					<h2><i class="fa fa-dollar"></i>*옵션</h2>
 				</div>
 				<div class="row">
 					<div class="col-md-12">
-						<h6>option</h6>
 						<table id="pricing-list-container" style="width:100%;">
 							<tr class="pricing-list-item">
 								<td>
@@ -259,9 +238,27 @@
 							</tr>
 						</table>
 						<a href="#0" class="btn_1 gray add-pricing-list-item"><i class="fa fa-fw fa-plus-circle"></i>옵션추가</a>
-						</div>
+					</div>
 				</div>
 				<!-- /row-->
+			</div>
+			<!-- /box_general-->
+			
+			<div class="box_general padding_bottom">
+				<div class="header_box version_2">
+					<h2><i class="fa fa-clock-o"></i>상품 휴무</h2>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div id='calendar'></div>
+					</div>
+					<div class="col-md-6">
+						<h4><i class="fa fa-clock-o"></i>상품휴무일</h4>
+						<div id="productOff">
+						
+						</div>
+					</div>
+				</div>
 			</div>
 			<!-- /box_general-->
 			</form>

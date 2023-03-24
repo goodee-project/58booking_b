@@ -38,6 +38,11 @@
 		<!-- fullcalender -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
+		
+		<!-- swiper -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js"></script>
+		
 		<script>
 			  document.addEventListener('DOMContentLoaded', function() {
 				let arr = []; //휴무일 확인용
@@ -114,8 +119,29 @@
 					$('#modifyForm').submit();
 					alert("수정완료");
 				});
+				
+				new Swiper('.swiper-container', {
+
+					// ★동적로딩 설정
+					lazy : {
+						loadPrevNext : true // 이전, 다음 이미지는 미리 로딩
+					},
+
+					// 페이징 설정
+					pagination : {
+						el : '.swiper-pagination',
+						clickable : true, // 페이징을 클릭하면 해당 영역으로 이동, 필요시 지정해 줘야 기능 작동
+					},
+
+					// 네비게이션 설정
+					navigation : {
+						nextEl : '.swiper-button-next', // 다음 버튼 클래스명
+						prevEl : '.swiper-button-prev', // 이번 버튼 클래스명
+					},
+				});
 			});
 		</script>
+		
 	</head>
 	
 	<body class="fixed-nav sticky-footer" id="page-top">
@@ -136,14 +162,27 @@
 			<div class="header_box version_2">
 				<h2><i class="fa fa-user"></i>Product details</h2>
 			</div>
+			
 			<div class="row">
 				<div class="col-md-4">
 					<div class="form-group">
 						<c:if test="${img != null}">
 							<div>
-								<c:forEach var="i" items="${img}">
-									<img src="${pageContext.request.contextPath}/upload/product/${i.productImg}" width="200px">
-								</c:forEach>
+								<div class="swiper-container">
+								    <div class="swiper-wrapper">
+										<c:forEach var="i" items="${img}">
+								      		<div class="swiper-slide">
+								      			<img width = 100% src="${pageContext.request.contextPath}/upload/product/${i.productImg}">
+								      		</div>
+										</c:forEach>
+								   </div>
+									<!-- 네비게이션 버튼 -->
+									<div class="swiper-button-next"></div><!-- 다음 버튼 (오른쪽에 있는 버튼) -->
+									<div class="swiper-button-prev"></div><!-- 이전 버튼 -->
+								
+									<!-- 페이징 -->
+									<div class="swiper-pagination"></div>
+								</div>
 							</div>
 						</c:if>
 				    </div>

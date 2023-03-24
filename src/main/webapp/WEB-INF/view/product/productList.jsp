@@ -111,24 +111,84 @@
 			<div class="row">
 				<c:forEach var="p" items="${list}">
 					<div class="col-xl-3 col-lg-6 col-md-6" >
-						<div class="box_general padding_bottom" style="height: 600px;">
+						<div class="box_general padding_bottom">
 							<div class="box_grid">
 								<div class="wrapper">
-									<div class="text-center sm">
+									<div class="text-center">
 										<c:choose>
-									        <c:when test="${p.reviewRating > 3}">
+											<c:when test="${p.reviewRating == 5}">
 									            &#11088;&#11088;&#11088;&#11088;
 									        </c:when>
-									        <c:when test="${p.reviewRating > 2}">
-									            &#11088;&#11088;&#11088;
+									        <c:when test="${5 > p.reviewRating && p.reviewRating >= 4.5}">
+								            	<div class="rating">
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star"></i>
+									            </div>
 									        </c:when>
-									        <c:when test="${p.reviewRating > 1}">
-									            &#11088;&#11088;
+									        <c:when test="${4.5 > p.reviewRating && p.reviewRating > 4}">
+									           <div class="rating">
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+									            </div>
 									        </c:when>
-									        <c:when test="${p.reviewRating > 0}">
-									            &#11088;
+									        <c:when test="${4 > p.reviewRating && p.reviewRating >= 3.5}">
+									            <div class="rating">
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star"></i>
+									            </div>
+									        </c:when>
+									        <c:when test="${3.5 > p.reviewRating && p.reviewRating > 3}">
+									           <div class="rating">
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+									            </div>
+									        </c:when>
+									        <c:when test="${3 > p.reviewRating && p.reviewRating >= 2.5}">
+									            <div class="rating">
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star"></i>
+									            </div>
+									        </c:when>
+									        <c:when test="${2.5 > p.reviewRating && p.reviewRating > 2}">
+									           <div class="rating">
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star yellow"></i>
+									            </div>
+									        </c:when>
+									        <c:when test="${2 > p.reviewRating && p.reviewRating >= 1.5}">
+									            <div class="rating">
+										            <i class="fa fa-fw fa-star yellow"></i>
+										            <i class="fa fa-fw fa-star"></i>
+									            </div>
+									        </c:when>
+									        <c:when test="${1.5 > p.reviewRating && p.reviewRating > 1}">
+									           <div class="rating">
+										            <i class="fa fa-fw fa-star yellow"></i>
+									            </div>
+									        </c:when>
+									        <c:when test="${1 > p.reviewRating && p.reviewRating >= 0.5}">
+									            <div class="rating">
+										            <i class="fa fa-fw fa-star"></i>
+									            </div>
 									        </c:when>
 									        <c:when test="${p.reviewRating == null}">
+									        	<div class="rating">
+										            <i class="fa fa-fw fa-star"></i>
+										            <i class="fa fa-fw fa-star"></i>
+										            <i class="fa fa-fw fa-star"></i>
+										            <i class="fa fa-fw fa-star"></i>
+										            <i class="fa fa-fw fa-star"></i>
+									            </div>
 									        </c:when>
 									    </c:choose>
 										<div>
@@ -138,19 +198,18 @@
 											<strong>${p.reviewCount}</strong> Reviews
 											<br>
 											<strong>${p.bookingCount}</strong>건 예약
-											
 										</div>
 									</div>
 								</div>
 								<div class="text-center">
 									<hr>
 									<a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">
-										<img src="${pageContext.request.contextPath}/upload/product/${p.img}" class="img-fluid" alt="" >
+										<img src="${pageContext.request.contextPath}/upload/product/${p.img}" class="img-fluid" alt="">
 									</a>
 									<div class="mt-2">
 										<c:choose> 
 											<c:when test="${p.open eq '공개'}">
-												<a class="btn_1 gray approve approveBtn sm" data-id="${p.productNo}" data-open="비공개"><i class="fa fa-fw fa-times-circle-o"></i>공개중</a>
+												<a class="btn_1 gray approve approveBtn " data-id="${p.productNo}" data-open="비공개"><i class="fa fa-fw fa-times-circle-o"></i>공개중</a>
 											</c:when> 
 											<c:when test="${p.open eq '비공개'}">
 												<a class="btn_1 gray delete deleteBtn" data-id="${p.productNo}" data-open="공개"><i class="fa fa-fw fa-times-circle-o"></i>비공개중</a>								

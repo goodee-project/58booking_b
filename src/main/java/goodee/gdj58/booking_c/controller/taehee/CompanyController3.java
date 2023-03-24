@@ -139,16 +139,16 @@ public class CompanyController3 {
 								,@RequestParam(value = "productOptionName") String[] productOptionName
 								,@RequestParam(value = "productOptionMemo") String[] productOptionMemo
 								,@RequestParam(value = "productOptionPrice") int[] productOptionPrice
-								,@RequestParam(value = "productOffdayDate") String[] productOffdayDate
-								,@RequestParam(value = "productOffdayMemo") String[] productOffdayMemo) {
+								,@RequestParam(value = "productOffdayDate", required = false) String[] productOffdayDate
+								,@RequestParam(value = "productOffdayMemo", required = false) String[] productOffdayMemo) {
 		Company loginCom = (Company)session.getAttribute("loginCompany");
 		product.setCompanyId(loginCom.getCompanyId());
 		product.setProductOpen("비공개");
 		companyService.addProduct(product);
 		int productNo = product.getProductNo();
-		
 		String path = request.getServletContext().getRealPath("/upload/product/");
 		companyService.addImg(productImg, productNo, path);
+		
 		ProductOption productOption = new ProductOption();
 		for(int i = 0; i<productOptionName.length; i++) {
 			productOption.setProductNo(productNo);
@@ -157,12 +157,15 @@ public class CompanyController3 {
 			productOption.setProductOptionPrice(productOptionPrice[i]);
 			companyService.addOption(productOption);
 		}
-		ProductOffday productOffday = new ProductOffday();
-		for(int i = 0; i<productOffdayDate.length; i++) {
-			productOffday.setProductNo(productNo);
-			productOffday.setProductOffdayDate(productOffdayDate[i]);
-			productOffday.setProductOffdayMemo(productOffdayMemo[i]);
-			companyService.addOff(productOffday);
+		
+		if(productOffdayDate != null) {
+			ProductOffday productOffday = new ProductOffday();
+			for(int i = 0; i<productOffdayDate.length; i++) {
+				productOffday.setProductNo(productNo);
+				productOffday.setProductOffdayDate(productOffdayDate[i]);
+				productOffday.setProductOffdayMemo(productOffdayMemo[i]);
+				companyService.addOff(productOffday);
+			}
 		}
 		return "redirect:/company/productList";
 	}
