@@ -103,7 +103,7 @@ public class CompanyController3 {
 	@GetMapping("/company/productList")
 	public String getProduct(Model model, HttpSession session
 			, @RequestParam(value = "currentPage", defaultValue = "1") int currentPage
-			, @RequestParam(value = "rowPerPage", defaultValue = "10") int rowPerPage) {
+			, @RequestParam(value = "rowPerPage", defaultValue = "8") int rowPerPage) {
 		Company loginCom = (Company)session.getAttribute("loginCompany");
 		model.addAttribute("loginCom", loginCom);
 		int count = companyService.getProductCount(loginCom.getCompanyId());
@@ -200,7 +200,6 @@ public class CompanyController3 {
 		if(endPage > lastPage) {
 			endPage = lastPage;
 		}
-		
 		model.addAttribute("list", list);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("rowPerPage", rowPerPage);

@@ -145,14 +145,25 @@
 			, p.booking_product_price price
 			, p.booking_product_open open
 			, p.booking_product_max_people max
-			, p.booking_product_min_people MIN
+			, p.booking_product_min_people min
 			, i.booking_product_img_save_name img
+			, COUNT(b.booking_no) bookingCount
+			, COUNT(r.booking_no) reviewCount
+			, AVG(r.star_rating) reviewRating
 		FROM booking_product p 
-		LEFT OUTER JOIN 
-		(SELECT DISTINCT booking_product_no, booking_product_img_save_name FROM booking_product_img GROUP BY booking_product_no) i
+		LEFT OUTER JOIN (SELECT DISTINCT booking_product_no
+							, booking_product_img_save_name
+						FROM booking_product_img
+						GROUP BY booking_product_no) i
 		ON p.booking_product_no = i.booking_product_no
-		WHERE booking_company_id = #{loginCom.companyId}
+		LEFT OUTER JOIN booking b
+		ON p.booking_product_no = b.product_no
+		LEFT OUTER JOIN review r
+		ON b.booking_no = r.booking_no
+		WHERE p.booking_company_id = #{loginCom.companyId}
+		GROUP BY p.booking_product_no
 		ORDER BY p.booking_product_open ASC, p.booking_product_no DESC
+		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	<select id="productCount" resultType="int">
 		SELECT COUNT(*) 
@@ -166,7 +177,6 @@
 		FROM booking_company_offday
 		WHERE booking_company_id = #{companyId}
 	</select>
-	
 	
 	<!-- 예약관리 -->
 	<!-- 3) 취소 -->

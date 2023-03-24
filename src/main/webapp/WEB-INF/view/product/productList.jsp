@@ -104,95 +104,91 @@
 	        </li>
 	        <li class="breadcrumb-item active">상품목록</li>
 	      </ol>
-	      
-	      <div class="box_general padding_bottom">
-				<div class="header_box version_2">
-					<h2><i class="fa fa-map-marker"></i>상품목록</h2>
-					<a class="btn_1 gray approve" href="${pageContext.request.contextPath}/company/addProduct">상품 등록</a>
-					<div class="filter">
-			          <div class="styled-select short">
-							<select name="orderby">
-								<option value="Any time">Any time</option>
-								<option value="Latest">Latest</option>
-								<option value="Oldest">Oldest</option>
-							</select>
-			          </div>
-					</div>
-				</div>
-					
-				<div class="row">
-					<c:forEach var="p" items="${list}">
-						<div class="col-md-6">
-							<div class="box_general padding_bottom">
-								<div class="header_box version_2">
-									<h2>
+	      <div class="wrapper-grid">
+	      	<div class="d-flex justify-content-end">
+				<a class="btn_1 mb-3" href="${pageContext.request.contextPath}/company/addProduct">+ 예약상품 등록하기</a>
+			</div>
+			<div class="row">
+				<c:forEach var="p" items="${list}">
+					<div class="col-xl-3 col-lg-6 col-md-6" >
+						<div class="box_general padding_bottom" style="height: 600px;">
+							<div class="box_grid">
+								<div class="wrapper">
+									<div class="text-center sm">
+										<c:choose>
+									        <c:when test="${p.reviewRating > 3}">
+									            &#11088;&#11088;&#11088;&#11088;
+									        </c:when>
+									        <c:when test="${p.reviewRating > 2}">
+									            &#11088;&#11088;&#11088;
+									        </c:when>
+									        <c:when test="${p.reviewRating > 1}">
+									            &#11088;&#11088;
+									        </c:when>
+									        <c:when test="${p.reviewRating > 0}">
+									            &#11088;
+									        </c:when>
+									        <c:when test="${p.reviewRating == null}">
+									        </c:when>
+									    </c:choose>
+										<div>
+											<h5 class="text-center">
+												<a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">${p.name}</a>
+											</h5>
+											<strong>${p.reviewCount}</strong> Reviews
+											<br>
+											<strong>${p.bookingCount}</strong>건 예약
+											
+										</div>
+									</div>
+								</div>
+								<div class="text-center">
+									<hr>
+									<a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">
+										<img src="${pageContext.request.contextPath}/upload/product/${p.img}" class="img-fluid" alt="" >
+									</a>
+									<div class="mt-2">
 										<c:choose> 
 											<c:when test="${p.open eq '공개'}">
-												<a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">${p.name}</a>
-												<a class="btn_1 gray approve approveBtn" data-id="${p.productNo}" data-open="비공개"><i class="fa fa-fw fa-times-circle-o"></i>공개중</a>						
+												<a class="btn_1 gray approve approveBtn sm" data-id="${p.productNo}" data-open="비공개"><i class="fa fa-fw fa-times-circle-o"></i>공개중</a>
 											</c:when> 
 											<c:when test="${p.open eq '비공개'}">
-												<a href="${pageContext.request.contextPath}/company/productOne?productNo=${p.productNo}">${p.name}</a>
 												<a class="btn_1 gray delete deleteBtn" data-id="${p.productNo}" data-open="공개"><i class="fa fa-fw fa-times-circle-o"></i>비공개중</a>								
 											</c:when>
 										</c:choose>
-									</h2>
+									</div>
 								</div>
-								<img src="${pageContext.request.contextPath}/upload/product/${p.img}" width="100px">
-								<p>${p.price}원 </p>
-								<p>최소 ${p.min}명 ~ 최대 ${p.max}명</p>
-								<p>예약건수<p>
-								<p>리뷰수<p>
-								<p>별점?<p>
-								
 							</div>
 						</div>
-					</c:forEach>
-				</div>
-			</div>
-		<!-- /box_general-->
-		
-		
-		<nav aria-label="...">
-			<ul class="pagination pagination-sm add_bottom_30">
-				<li class="page-item disabled">
-					<a class="page-link" href="" tabindex="-1">Previous</a>
-				</li>
-				<c:forEach var="i" begin="${beginPage}" end="${endPage}" step="1">
-					<li class="page-item">
-						<a class="page-link" href="${pageContext.request.contextPath}/company/productList?currentPage=${i}">${i}</a>
-					</li>
+						<!-- /box_grid -->
+					</div>
 				</c:forEach>
-				<li class="page-item">
-				</li>
-				<li class="page-item">
-					<a class="page-link" href="#">Next</a>
-				</li>
-			</ul>
-		</nav>
-		<!-- /pagination-->
+			</div>
+			<!-- /row -->
+			<div class="d-flex justify-content-center">
+				<nav aria-label="...">
+					<ul class="pagination pagination-sm add_bottom_30">
+						<li class="page-item disabled">
+							<a class="page-link" href="" tabindex="-1">Previous</a>
+						</li>
+						<c:forEach var="i" begin="${beginPage}" end="${endPage}" step="1">
+							<li class="page-item">
+								<a class="page-link" href="${pageContext.request.contextPath}/company/productList?currentPage=${i}">${i}</a>
+							</li>
+						</c:forEach>
+						<li class="page-item">
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="#">Next</a>
+						</li>
+					</ul>
+				</nav>
+				<!-- /pagination-->
+			</div>
+		  </div>
+		<!-- /wrapper-grid -->
 	    </div>
 	  </div>
-
-	    <!-- Logout Modal-->
-	    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	      <div class="modal-dialog" role="document">
-	        <div class="modal-content">
-	          <div class="modal-header">
-	            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-	            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-	              <span aria-hidden="true">×</span>
-	            </button>
-	          </div>
-	          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-	          <div class="modal-footer">
-	            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-	            <a class="btn btn-primary" href="#0">Logout</a>
-	          </div>
-	        </div>
-	      </div>
-	    </div>
-
 	    <!-- Custom scripts for all pages-->
 	    <script src="${pageContext.request.contextPath}/resources/admin_section/js/admin.js"></script>
 	    

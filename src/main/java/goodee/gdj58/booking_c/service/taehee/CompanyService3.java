@@ -123,7 +123,6 @@ public class CompanyService3 {
 	public List<Map<String, Object>> getOffday(String companyId) {
 		return companyMapper.selectCompanyOffday(companyId);
 	}
-	
 	// 1) 목록 페이징
 	public int getProductCount(String companyId) {
 		return companyMapper.productCount(companyId);

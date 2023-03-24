@@ -109,6 +109,11 @@
       		 	$("#optionAddBtn").click(function(){
 					$('#optionAddForm').submit();
 			 	});
+				
+				$('#btn').click(function() {
+					$('#modifyForm').submit();
+					alert("수정완료");
+				});
 			});
 		</script>
 	</head>
@@ -145,7 +150,7 @@
 				</div>
 				<c:forEach var="p" items="${list}">
 				<div class="col-md-8 add_top_30">
-					<form id="addForm" method="post" action="${pageContext.request.contextPath}/company/productModify">
+					<form id="modifyForm" method="post" action="${pageContext.request.contextPath}/company/productModify">
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
