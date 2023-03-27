@@ -58,11 +58,13 @@
 	#idHeader{
 		font-size: 20px;
     	margin-top: 10px;
+    	text-align: center;
 	}
 	#idBody{
 		color: #fc5b62;
 	    font-size: 17px;
 	    margin-top: 15px;
+	    text-align: center;
 	}
 </style>
 </head>
@@ -122,7 +124,7 @@
 					</tr>
 					<tr>
 						<!-- 아이디 조회 결과 -->
-						<td class="text-center"><div id="a"></div></td>
+						<td class="td-position"><div id="a"></div></td>
 					</tr>
 					<tr>
 						<td class="text-center">
@@ -249,7 +251,7 @@
 								var id = model;
 								var html = "<div id='resultId'>" + 
 												"<div id='idHeader'><strong>아이디 조회결과</strong></div>"+
-												"<div id='idbody'>"+id+"</div>"+
+												"<div id='idBody'>"+id+"</div>"+
 											"</div>"
 							}
 							$('#a').append(html);
