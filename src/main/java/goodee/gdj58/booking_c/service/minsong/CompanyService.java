@@ -22,6 +22,14 @@ public class CompanyService {
 	@Autowired 
 	private CompanyMapper companyMapper;
 	
+	// n일 후 날짜
+	public String getDateAfterN(String date, int days) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("date", date);
+		paramMap.put("days", days);
+		return companyMapper.selectDateAfterN(paramMap);
+	}
+	
 	// 상세 정보 여부
 	public int checkCompanyDetail(String companyId) {
 		return companyMapper.checkCompanyDetail(companyId);

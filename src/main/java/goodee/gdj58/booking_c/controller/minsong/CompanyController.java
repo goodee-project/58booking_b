@@ -31,7 +31,7 @@ public class CompanyController {
 	@Autowired
 	private CompanyService companyService;
 	private String[] timetable = {"00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00", "03:30", "04:00", "04:30", "05:00", "05:30", "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"};
-	private String[] addtionalService = {"주차 가능", "제로페이", "배달", "포장"};
+	private String[] addtionalService = {"주차 가능", "제로페이", "배달", "포장", "단체석"};
 	private int addtionalServiceLength = addtionalService.length;
 	
 	// 리뷰 목록
@@ -191,8 +191,8 @@ public class CompanyController {
 				log.debug(FontColor.PURPLE+date+"<--------");
 				// 쿼리 돌리기
 				for(int j = 0; j < 365; j+=7) {
-					log.debug(FontColor.PURPLE+j+"요일 계산");
-					if(companyService.countOffday(loginCompanyId, date) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
+					log.debug(FontColor.PURPLE+j+"요일 계산");						
+					if(companyService.countOffday(loginCompanyId, companyService.getDateAfterN(date, j)) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
 						companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);						
 					}
 				}
@@ -314,8 +314,25 @@ public class CompanyController {
 	companyOffday.setCompanyId(loginCompanyId);
 	
 	
-	// 휴무일 삭제 먼저 하고 휴무일 추가 (기존 휴무일 고려, 새로운 사유로 갱신하기 위함)
-	// 1-1. 휴무일 삭제(개별)
+	// 1-1. 휴무일 추가(개별)
+	row = 0;
+	if(companyOffdayDate != null) {			
+		for(int i = 0; i < companyOffdayDate.length; i++) {
+			if(!companyOffdayDate[i].equals("") && companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 이전에 등록된 날 제외
+				companyOffday.setCompanyOffdayDate(companyOffdayDate[i]);
+				companyOffday.setCompanyOffdayMemo(companyOffdayMemo[i]);
+				row += companyService.addCompanyOffday(companyOffday);
+				
+				if(row == 0) {
+					log.debug(FontColor.PURPLE+"휴무일 추가 row : "+row);
+					return "companyDetail/modifyCompanyDetail";
+				}
+			}
+		}
+		
+	}
+	
+	// 1-2. 휴무일 삭제(개별)
 	row = 0;
 	if(companyWorkingdayDate != null) {			
 		for(int i = 0; i < companyWorkingdayDate.length; i++) {
@@ -330,26 +347,17 @@ public class CompanyController {
 		}
 	}
 	
-	// 1-2. 휴무일 삭제(요일)
+	
+	// 2-1. 휴무일 삭제(요일)
 	row = 0;
-//	for(int i = 1; i < 8; i++) {
-//		int num = i;
-//		if(!IntStream.of(dayofweek).anyMatch(x -> x == num)) {	// 체크 안 돼 있으면
-//			String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
-//			// 쿼리 돌리기
-//			for(int j = 0; j < 365; j+=7) {
-//				log.debug(FontColor.PURPLE+j+"요일 계산");
-//				companyService.removeOffday(loginCompanyId, date, j);					
-//			}
-//		}
-//	}
 	List<Map<String, Object>> dayOfOffday = companyService.getDayOfOffday(loginCompanyId);
 	Set<Integer> days = new HashSet<>();
 	for(Map<String, Object> map : dayOfOffday) {
 		days.add((int)map.get("companyOffdayDay"));	// 요일 중복없이 한 번씩만 넣기
 	}
 	
-	if(dayofweek == null) {
+	if(dayofweek == null) {	// 연중 무휴로 변경
+		log.debug(FontColor.PURPLE+"업체 상세 정보 수정: 연중 무휴");
 		String date = "";
 		// 쿼리 돌리기
 //		if(dayOfOffday != null) {			
@@ -363,63 +371,56 @@ public class CompanyController {
 				}
 			}
 //		}
-	}else {		
+	}else {	
+		log.debug(FontColor.PURPLE+"업체 상세 정보 수정: 정기 휴무 있음");
 		for(int i = 1; i < 8; i++) {
 			int num = i;
 			if(days.contains(i) && !IntStream.of(dayofweek).anyMatch(x -> x == num)) {	// 기존에 있던 요일을 해제했다면 
+				log.debug(FontColor.PURPLE+"업체 상세 정보 수정: 기존 정기 휴무 해제: "+"삭제 요일: "+i);
 				String date = "";
 				// 쿼리 돌리기
 				for(Map<String, Object> map : dayOfOffday) {
-					if(i == (int)map.get("companyOffdayDay")) {	// 조건에 부합하는 요일이라면		
+					// 조건에 부합하는 요일이라면		
+					if(i == (int)map.get("companyOffdayDay")) {	
+						log.debug(FontColor.PURPLE+"업체 상세 정보 수정: 기존 정기 휴무 해제: "+"삭제 요일: "+i+", 현재 요일: "+(int)map.get("companyOffdayDay")+", 현재 날짜: "+String.valueOf(map.get("companyOffdayDate")));
 						date = String.valueOf(map.get("companyOffdayDate"));
-						row += companyService.removeOffday(loginCompanyId, date, i);					
+						row += companyService.removeOffday(loginCompanyId, date, i);	// 정기 휴무 삭제			
 						
+						// 개수
 						if(row == 0) {
 							log.debug(FontColor.PURPLE+"휴무일 요일 삭제 row : "+row);
 							return "companyDetail/modifyCompanyDetail";
 						}
 					}
+					
 				}
 			}	
 		}
 	}
 
-	// 2-1. 휴무일 추가(개별)
-	row = 0;
-	if(companyOffdayDate != null) {			
-		for(int i = 0; i < companyOffdayDate.length; i++) {
-			if(!companyOffdayDate[i].equals("") && companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {	// 이전에 등록된 날 제외
-				companyOffday.setCompanyOffdayDate(companyOffdayDate[i]);
-				companyOffday.setCompanyOffdayMemo(companyOffdayMemo[i]);
-				row += companyService.addCompanyOffday(companyOffday);
-
-				if(row == 0) {
-					log.debug(FontColor.PURPLE+"휴무일 추가 row : "+row);
-					return "companyDetail/modifyCompanyDetail";
-				}
-			}
-		}
-		
-	}
 	
 	// 2-2. 휴무일 추가(요일)
 	row = 0;
+	
 	if(dayofweek != null) {			
+		log.debug(FontColor.PURPLE+"업체 상세 정보 수정 - 휴무일 추가 - 휴무일 요일 개수: "+dayofweek.length);
+		
 		for(int i = 0; i < dayofweek.length; i++) {
 			// 해당 요일의 날짜 구하기
 			String date = companyService.getCompanyOffdayOfWeek(dayofweek[i]);
-			log.debug(FontColor.PURPLE+date+"<--------");
+			
+			
 			// 쿼리 돌리기
 			for(int j = 0; j < 365; j+=7) {
 //				log.debug(FontColor.PURPLE+j+"요일 계산");
-//				if(companyService.countOffday(loginCompanyId, companyOffdayDate[i]) == 0) {
-				if(companyOffdayDate == null || companyService.countOffday(loginCompanyId, date) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
-					row += companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);
+				//if(companyOffdayDate == null || companyService.countOffday(loginCompanyId, date) == 0) {	// 앞에서 등록한 사유가 있는 날이면 제외
+				if(companyService.countOffday(loginCompanyId, companyService.getDateAfterN(date, j)) == 0) {	// 이미 휴무일 등록 -> 제외
+					row += companyService.addCompanyOffdayOfWeek(loginCompanyId, date, j);	// date의 j일 후 추가
 					
 					if(row == 0) {
 						log.debug(FontColor.PURPLE+"휴무일 요일 추가 row : "+row);
 						return "companyDetail/modifyCompanyDetail";
-					}					
+					}
 				}
 			}
 		}
