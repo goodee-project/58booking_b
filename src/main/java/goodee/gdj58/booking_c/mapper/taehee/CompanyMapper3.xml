@@ -179,6 +179,36 @@
 	</select>
 	
 	<!-- 예약관리 -->
+	<!-- 4) 상세보기 -->
+	<select id="selectBookingOne" resultType="java.util.Map">
+		SELECT b.booking_no bookingNo
+				, b.customer_id cusId
+				, cus.customer_nickname cusNic
+				, cus.customer_phone cusPhone
+				, cus.customer_email cusEmail
+				, SUBSTRING(b.booking_date, 1, 16) bookingDate
+				, SUBSTRING(b.booking_request_date, 1, 16) requestDate
+				, b.product_no productNo
+				, p.booking_product_name pName
+				, o.booking_product_option_name oName
+				, o.booking_product_option_memo oMemo
+				, b.booking_price bPrice
+				, b.booking_total_price bTPrice
+				, b.booking_people people
+				, b.booking_state state
+				, c.cancel_memo cancel
+				, SUBSTRING(c.createdate, 1, 10) cancelDate
+		FROM booking b 
+		INNER JOIN booking_product p 
+		ON b.product_no = p.booking_product_no 
+		INNER JOIN booking_product_option o 
+		ON b.option_no = o.booking_product_option_no 
+		LEFT OUTER JOIN booking_cancel c
+		ON b.booking_no = c.booking_no
+		INNER JOIN customer cus
+		ON b.customer_id = cus.customer_id
+		WHERE b.booking_no = #{bookingNo}
+	</select>
 	<!-- 3) 취소 -->
 	<insert id="insertBookingCancel">
 		INSERT booking_cancel(booking_no, cancel_memo, cancel_subject) VALUES(#{bookingNo}, #{cancelMemo}, #{cancelSubject})
@@ -196,13 +226,14 @@
 			, b.booking_state state
 			, b.booking_company_id comId
 			, c.customer_name cusName
+			, c.customer_email cusEmail
 			, c.customer_phone customerPh
 			, b.booking_date date
 			, bp.booking_product_name productName
 			, bpo.booking_product_option_name optionName 
 			, b.booking_people people
 			, b.booking_total_price price
-			, b.booking_request_date requestDate
+			, i.booking_product_img_save_name img
 		FROM booking b 
 			INNER JOIN booking_product bp 
 			ON b.product_no = bp.booking_product_no 
@@ -210,6 +241,9 @@
 			ON b.option_no = bpo.booking_product_option_no
 			INNER JOIN customer c 
 			ON b.customer_id = c.customer_id 
+			LEFT OUTER JOIN 
+			(SELECT DISTINCT booking_product_no, booking_product_img_save_name FROM booking_product_img GROUP BY booking_product_no) i
+			ON b.product_no = i.booking_product_no
 		WHERE b.booking_company_id = #{loginCom.companyId}
 		ORDER BY b.booking_state ASC, b.booking_no DESC
 		LIMIT #{beginRow}, #{rowPerPage}

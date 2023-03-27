@@ -129,6 +129,11 @@ public class CompanyService3 {
 	}
 	
 	// 예약관리
+	// 4) 상세보기
+	public List<Map<String, Object>> getBookingOne(int bookingNo) {
+		return companyMapper.selectBookingOne(bookingNo);
+	}
+	
 	// 3) 취소
 	public int addBookingCancel(Booking booking, BookingCancel bookingCancel) {
 		companyMapper.updateBooking(booking);

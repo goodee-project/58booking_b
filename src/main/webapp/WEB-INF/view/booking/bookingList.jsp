@@ -130,7 +130,8 @@
 					<ul>
 						<c:forEach var="b" items="${list}">
 							<li>
-								<h4>${b.optionName} 
+								<figure><img src="${pageContext.request.contextPath}/upload/product/${b.img}" alt=""></figure>
+								<h4>${b.productName} - ${b.optionName}
 									<c:choose> 
 										<c:when test="${b.state eq '예약확정'}">
 											<i class="approved">확정</i>									
@@ -148,12 +149,11 @@
 								</h4>
 								<ul class="booking_list">
 									<li><strong>예약자 성함</strong> ${b.cusName}</li>
-									<li><strong>예약자 연락처</strong> ${b.customerPh}</li>
-									<li><strong>인원</strong> ${b.people}명</li>
+									<li><strong>예약자 연락처</strong> ${b.customerPh} - ${b.cusEmail}</li>
 									<li><strong>예약상품</strong> ${b.productName} ${b.optionName}</li>
-									<li><strong>금액</strong> ${b.price}원</li>
 									<li><strong>방문일</strong> ${fn:substring(b.date,0,16)}</li>
-									<li><strong>예약 신청일</strong> ${fn:substring(b.requestDate,0,16)}</li>
+									<li><strong>인원</strong> ${b.people}명</li>
+									<li><strong>결제금액</strong> ${b.price}원</li>
 								</ul>
 								
 								<ul class="buttons">

@@ -45,6 +45,8 @@ public interface CompanyMapper3 {
 	List<Map<String, Object>> selectCompanyOffday(String companyId);
 	
 	// 예약관리
+	// 4) 상세보기
+	List<Map<String, Object>> selectBookingOne(int bookingNo);
 	// 3) 취소
 	int insertBookingCancel(BookingCancel bookingCancel);
 	// 2) 변경
