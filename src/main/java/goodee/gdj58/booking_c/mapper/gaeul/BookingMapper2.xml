@@ -53,9 +53,10 @@
 	<select id="selectBookingCnt"
 			resultType="Integer"
 			parameterType="goodee.gdj58.booking_c.vo.Booking">
-		SELECT COUNT(*) cnt
-		FROM booking
-		WHERE booking_company_id = #{companyId} AND booking_state = #{bookingState} 
+		SELECT count(DISTINCT booking_request_date) cnt
+			FROM booking
+		WHERE booking_company_id = #{companyId} AND booking_state = #{bookingState}
+		
 	</select>
 	<!-- 
 		SELECT b.booking_state
@@ -73,7 +74,7 @@
 	 	SELECT
 			bp.booking_product_name productName
 			, bp.booking_product_no productNo
-			, COUNT(bp.booking_product_name) cnt
+			, COUNT(DISTINCT b.booking_request_date ,bp.booking_product_name) cnt
 		FROM booking b
 			INNER JOIN booking_product bp
 			ON b.product_no = bp.booking_product_no

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"  %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,6 +59,7 @@
 				<div class="header_box version_2">
 					<h2><i class="fa fa-bar-chart"></i>${year}년 ${month}월 날짜별 통계</h2>
 				</div>
+				<div class="mx-2 mb-2">* 매출 통계는 방문완료된 예약 건에 한해서 계산됩니다.</div>
 				<!-- 일별, 월별, 년별 매출 통계 그래프 -->
 				<canvas id="yearChart" width="1563" height="468" class="pb-4"></canvas>
 				
@@ -65,10 +67,10 @@
 				<div class="pt-2 pb-3">
 					<table class="table text-center">
 						<tr>
-							<th>날짜</th>
-							<th>매출합계</th>
-							<th>매출평균</th>
-							<th>건수</th>
+							<th class="w-25">날짜</th>
+							<th class="w-25">매출합계</th>
+							<th class="w-25">매출평균</th>
+							<th class="w-25">건수</th>
 						</tr>
 						<c:if test="${fn:length(dateList) == 0}">
 							<tr>
@@ -78,10 +80,10 @@
 						<c:if test="${fn:length(dateList) > 0}">
 							<c:forEach items="${dateList}" var="d">
 								<tr>
-									<th class="w-25">${d.date}</th>
-									<th class="w-25">${d.totalPrice}원</th>
-									<th class="w-25">${d.avgPrice}원</th>
-									<th class="w-25">${d.totalCnt}건</th>
+									<th>${d.date}</th>
+									<th><fmt:formatNumber value="${d.totalPrice}" pattern="#,###"/>원</th>
+									<th><fmt:formatNumber value="${d.avgPrice}" pattern="#,###"/>원</th>
+									<th><fmt:formatNumber value="${d.totalCnt}" pattern="#,###"/>건</th>
 								</tr>
 							</c:forEach>
 						</c:if>
@@ -130,7 +132,6 @@
 		, type : 'post'
 		, data : {year : year, month : month}
 		, success : function(model) { // model : 백앤드에서 객체로 반환 -> 변환 필요
-			
 			dateArray = model.map(row=>row.date);
 			totalPriceArray = model.map(row=>row.totalPrice);
 			avgPriceArray = model.map(row=>row.avgPrice);
@@ -190,7 +191,7 @@
 					beginAtZero: true,
 					fontSize : 15,
    					callback: function(value, index, ticks) { // 축 단위 설정
-                        return value+'원';
+   						return value.toLocaleString("ko-KR")+'원';
                     }
 				}
 			}, { // 건수만 따로
@@ -206,7 +207,7 @@
    					fontSize : 15,
    					stepSize : 10,
    					callback: function(value, index, ticks) { // 축 단위 설정
-                        return value+'건';
+   						return value.toLocaleString("ko-KR")+'건';
                     }
    				}
             }]

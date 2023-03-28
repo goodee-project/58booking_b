@@ -179,8 +179,7 @@ public class CompanyController2 {
 			model.addAttribute("msg", "일치하는 정보가 없습니다.");
 			return "beforeLogin/loginCompany";
 		}
-		session.setAttribute("loginCompany", resultCompany);
-		log.debug(FontColor.BLUE+"로그인 성공, 세션에 정보 저장");
+		
 		
 		// 2. 활성화 여부 확인
 		TotalId totalId = totalIdService.getActive(com.getCompanyId());
@@ -189,6 +188,9 @@ public class CompanyController2 {
 			model.addAttribute("msg", "가입 허가가 되지 않았습니다. 플랫폼에 문의하세요.");
 			return "beforeLogin/loginCompany"; // 로그인 페이지로 다시 이동(알림도 같이)
 		}
+		
+		session.setAttribute("loginCompany", resultCompany);
+		log.debug(FontColor.BLUE+"로그인 성공, 세션에 정보 저장");
 		
 		// 3. 상세정보 등록여부 확인
 		if(companyDetailService.getComDetailById(com.getCompanyId()) == 0) {

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,15 +67,22 @@
 						<th class="w-50">신고내용</th>
 						<th class="w-25">신고날짜</th>
 					</tr>
-					<c:forEach items="${reportList}" var="r">
+					<c:if test="${fn:length(reportList) == 0}">
 						<tr>
-							<td>
-								<a href="${pageContext.request.contextPath}/company/productOne?productNo=${r.productNo}">${r.productName}</a>
-							</td>
-							<td class="text-left">${r.reportMemo}</td>
-							<td>${r.createdate}</td>							
+							<td colspan="3">받은 신고 내역이 없습니다.</td>
 						</tr>
-					</c:forEach>
+					</c:if>
+					<c:if test="${fn:length(reportList) > 0}">
+						<c:forEach items="${reportList}" var="r">
+							<tr>
+								<td>
+									<a href="${pageContext.request.contextPath}/company/productOne?productNo=${r.productNo}">${r.productName}</a>
+								</td>
+								<td class="text-left">${r.reportMemo}</td>
+								<td>${r.createdate}</td>							
+							</tr>
+						</c:forEach>
+					</c:if>
 				</table>
 				
 				<!-- 페이징 -->
