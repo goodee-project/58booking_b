@@ -118,7 +118,7 @@
 		      , events: data
 		      , dateClick: function(info) { 
 		    	  // 휴무 사유 유효성 검사 후		    		  
-		    	  if($('#memo').val().length < 1 || $('#memo').val().trim() == ''){	
+		    	  if($('#memo').val().length < 1 || $('#memo').val().trim() == '' || $('#memo').val() == '정기휴무'){	
 					alert('휴무 사유를 입력해 주세요.(정기휴무 제외)');
 		    		return;
 		    	  }
