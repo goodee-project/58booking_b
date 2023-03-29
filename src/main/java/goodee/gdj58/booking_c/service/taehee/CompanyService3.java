@@ -130,8 +130,8 @@ public class CompanyService3 {
 	
 	// 예약관리
 	// 4) 상세보기
-	public List<Map<String, Object>> getBookingOne(int bookingNo) {
-		return companyMapper.selectBookingOne(bookingNo);
+	public List<Map<String, Object>> getBookingOne(String requestDate, String companyId, String bookingDate) {
+		return companyMapper.selectBookingOne(requestDate, companyId, bookingDate);
 	}
 	
 	// 3) 취소

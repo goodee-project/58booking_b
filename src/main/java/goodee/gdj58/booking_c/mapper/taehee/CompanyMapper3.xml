@@ -181,33 +181,34 @@
 	<!-- 예약관리 -->
 	<!-- 4) 상세보기 -->
 	<select id="selectBookingOne" resultType="java.util.Map">
-		SELECT b.booking_no bookingNo
-				, b.customer_id cusId
-				, cus.customer_nickname cusNic
-				, cus.customer_phone cusPhone
-				, cus.customer_email cusEmail
-				, SUBSTRING(b.booking_date, 1, 16) bookingDate
-				, SUBSTRING(b.booking_request_date, 1, 16) requestDate
-				, b.product_no productNo
-				, p.booking_product_name pName
-				, o.booking_product_option_name oName
-				, o.booking_product_option_memo oMemo
-				, b.booking_price bPrice
-				, b.booking_total_price bTPrice
-				, b.booking_people people
-				, b.booking_state state
-				, c.cancel_memo cancel
-				, SUBSTRING(c.createdate, 1, 10) cancelDate
+		SELECT
+			b.booking_no bookingNo 
+			, b.booking_state state
+			, b.booking_company_id comId
+			, c.customer_name cusName
+			, c.customer_email cusEmail
+			, c.customer_phone customerPh
+			, SUBSTRING(b.booking_date, 1, 16) date
+			, b.booking_request_date requestDate
+			, bp.booking_product_name productName
+			, b.booking_people people
+			, b.booking_total_price price
+			, o.booking_product_option_name oName
+			, o.booking_product_option_memo oMemo
+			, bc.cancel_memo cancleMemo
+			, bc.createdate cancleDate
 		FROM booking b 
-		INNER JOIN booking_product p 
-		ON b.product_no = p.booking_product_no 
-		INNER JOIN booking_product_option o 
-		ON b.option_no = o.booking_product_option_no 
-		LEFT OUTER JOIN booking_cancel c
-		ON b.booking_no = c.booking_no
-		INNER JOIN customer cus
-		ON b.customer_id = cus.customer_id
-		WHERE b.booking_no = #{bookingNo}
+			INNER JOIN booking_product bp 
+			ON b.product_no = bp.booking_product_no 
+			INNER JOIN customer c 
+			ON b.customer_id = c.customer_id 
+			LEFT OUTER JOIN booking_product_option o 
+			ON b.option_no = o.booking_product_option_no 
+			LEFT OUTER JOIN booking_cancel bc
+			ON b.booking_no = bc.booking_no
+		WHERE SUBSTRING(b.booking_request_date, 1, 19) = SUBSTRING(#{requestDate}, 1, 19) 
+				AND b.booking_company_id = #{companyId}
+				AND SUBSTRING(b.booking_date, 1, 16) = SUBSTRING(#{bookingDate}, 1, 16)
 	</select>
 	<!-- 3) 취소 -->
 	<insert id="insertBookingCancel">
@@ -229,29 +230,32 @@
 			, c.customer_email cusEmail
 			, c.customer_phone customerPh
 			, b.booking_date date
+			, b.booking_request_date requestDate
 			, bp.booking_product_name productName
-			, bpo.booking_product_option_name optionName 
 			, b.booking_people people
 			, b.booking_total_price price
 			, i.booking_product_img_save_name img
 		FROM booking b 
 			INNER JOIN booking_product bp 
 			ON b.product_no = bp.booking_product_no 
-			INNER JOIN booking_product_option bpo 
-			ON b.option_no = bpo.booking_product_option_no
 			INNER JOIN customer c 
 			ON b.customer_id = c.customer_id 
 			LEFT OUTER JOIN 
 			(SELECT DISTINCT booking_product_no, booking_product_img_save_name FROM booking_product_img GROUP BY booking_product_no) i
 			ON b.product_no = i.booking_product_no
 		WHERE b.booking_company_id = #{loginCom.companyId}
+		GROUP BY b.booking_date
 		ORDER BY b.booking_state ASC, b.booking_no DESC
 		LIMIT #{beginRow}, #{rowPerPage}
 	</select>
 	<select id="bookingCount" resultType="int">
-		SELECT COUNT(*) 
-		FROM booking 
-		WHERE booking_company_id = #{companyId}
+		SELECT COUNT(c.count) cnt
+		FROM (
+			SELECT COUNT(booking_date) count
+				FROM booking 
+				WHERE booking_company_id = 'com20'
+				GROUP BY booking_date
+			) c
 	</select>
 	
 	<!-- 문의사항 -->

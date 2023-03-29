@@ -110,28 +110,26 @@
 			<div class="box_general">
 				<div class="header_box">
 					<h2 class="d-inline-block">Bookings list</h2>
-					<div class="filter">
 			          <div class="styled-select short">
-			          		<form id="orderbyForm" method="get" action="${pageContext.request.contextPath}/company/bookingList">
-			  					<select name="order" id="orderby">
-			  						<option>모두보기</option>
-			  						<option value="예약확정">예약확정</option>
-			  						<option value="예약승인대기">예약승인대기</option>
-			  						<option value="방문완료">방문완료</option>
-			  						<option value="취소">취소</option>
-			  					</select>
-			          		</form>
-			          </div>
+		          		<form id="orderbyForm" method="get" action="${pageContext.request.contextPath}/company/bookingList">
+		  					<select name="order" id="orderby">
+		  						<option>모두보기</option>
+		  						<option value="예약확정">예약확정</option>
+		  						<option value="예약승인대기">예약승인대기</option>
+		  						<option value="방문완료">방문완료</option>
+		  						<option value="취소">취소</option>
+		  					</select>
+		          		</form>
 					</div>
+					<input type="text" class="form-group form-control" placeholder="search" name="search" id="search">
 				</div>
 				
 				<div class="list_general" >
-					<input type="text" class="form-group form-control" placeholder="search" name="search" id="search">
 					<ul>
 						<c:forEach var="b" items="${list}">
 							<li>
 								<figure><img src="${pageContext.request.contextPath}/upload/product/${b.img}" alt=""></figure>
-								<h4>${b.productName} - ${b.optionName}
+								<h4><a href="${pageContext.request.contextPath}/company/bookingOne?requestDate=${b.requestDate}&bookingDate=${b.date}">${b.productName}</a>
 									<c:choose> 
 										<c:when test="${b.state eq '예약확정'}">
 											<i class="approved">확정</i>									
@@ -150,7 +148,7 @@
 								<ul class="booking_list">
 									<li><strong>예약자 성함</strong> ${b.cusName}</li>
 									<li><strong>예약자 연락처</strong> ${b.customerPh} - ${b.cusEmail}</li>
-									<li><strong>예약상품</strong> ${b.productName} ${b.optionName}</li>
+									<li><strong>예약상품</strong> ${b.productName}</li>
 									<li><strong>방문일</strong> ${fn:substring(b.date,0,16)}</li>
 									<li><strong>인원</strong> ${b.people}명</li>
 									<li><strong>결제금액</strong> ${b.price}원</li>

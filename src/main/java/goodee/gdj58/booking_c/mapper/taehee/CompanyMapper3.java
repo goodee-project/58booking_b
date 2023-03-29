@@ -46,7 +46,7 @@ public interface CompanyMapper3 {
 	
 	// 예약관리
 	// 4) 상세보기
-	List<Map<String, Object>> selectBookingOne(int bookingNo);
+	List<Map<String, Object>> selectBookingOne(String requestDate, String companyId, String bookingDate);
 	// 3) 취소
 	int insertBookingCancel(BookingCancel bookingCancel);
 	// 2) 변경

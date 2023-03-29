@@ -171,6 +171,17 @@ public class CompanyController3 {
 	}
 	
 	// 예약관리
+	// 4) 예약 상세보기
+	@GetMapping("/company/bookingOne")
+	public String bookingOne(Model model, HttpSession session
+								,  @RequestParam(value = "requestDate") String requestDate
+								,  @RequestParam(value = "bookingDate") String bookingDate) {
+		Company loginCom = (Company)session.getAttribute("loginCompany");
+		List<Map<String, Object>> list = companyService.getBookingOne(requestDate, loginCom.getCompanyId(), bookingDate);
+		model.addAttribute("list", list);
+		return "/booking/bookingOne";
+	}
+	
 	// 3) 취소
 	@PostMapping("/company/cancelBooking")
 	public String cancelBooking(BookingCancel bookingCancel, Booking booking) {
