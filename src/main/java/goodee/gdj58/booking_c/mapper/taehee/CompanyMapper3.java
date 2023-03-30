@@ -58,6 +58,7 @@ public interface CompanyMapper3 {
 	// 1) 목록
 	List<Map<String, Object>> selectBooking(Map<String, Object> paramMap);
 	int bookingCount(String companyId);
+	List<Map<String, Object>> selectBookingCalendar(String companyId);
 	
 	// 문의사항
 	// 4) 상세보기

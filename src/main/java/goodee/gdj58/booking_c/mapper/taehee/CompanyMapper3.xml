@@ -14,7 +14,7 @@
 			, c.customer_email cusEmail
 			, com.booking_company_name comName
 			, p.booking_product_name productName
-			, CONCAT(com.booking_company_address,com.booking_company_address_detail) comAddress
+			, CONCAT(com.booking_company_address, " ", com.booking_company_address_detail) comAddress
 			, com.booking_company_phone comPh
 		FROM booking b
 		LEFT OUTER JOIN customer c
@@ -280,9 +280,18 @@
 		FROM (
 			SELECT COUNT(booking_date) count
 				FROM booking 
-				WHERE booking_company_id = 'com20'
+				WHERE booking_company_id = #{companyId}
 				GROUP BY booking_date
 			) c
+	</select>
+	<select id="selectBookingCalendar" resultType="java.util.Map">
+		SELECT b.booking_date start
+			, b.booking_state state
+			, p.booking_product_name title
+		FROM booking b
+		INNER JOIN booking_product p
+		ON b.product_no = p.booking_product_no
+		WHERE b.booking_company_id = #{loginCom.companyId}
 	</select>
 	
 	<!-- 문의사항 -->

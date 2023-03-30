@@ -34,7 +34,28 @@
 		<!-- Your custom styles -->
 		<link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+		
+		<!-- fullcalender -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
 		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+			    var calendarEl = document.getElementById('calendar');
+			    var request = $.ajax({   			
+					 method: 'get',
+					 url: "/58booking_b/bookingList"
+			    });
+			    request.done(function(data){
+			    	 var calendar = new FullCalendar.Calendar(calendarEl, {
+					      initialView: 'dayGridMonth'
+					      , selectable: true
+					      , events: data
+					    	// 휴무일 넣어주기
+					    });
+						calendar.render();
+				    });
+				});
+				  
 			$(document).ready(function(){
 				// 예약번호, 상태
 				let bookingNo = '';
@@ -107,75 +128,73 @@
 	        </li>
 	        <li class="breadcrumb-item active">Bookings list</li>
 	      </ol>
-			<div class="box_general">
-				<div class="header_box">
-					<h2 class="d-inline-block">Bookings list</h2>
-			          <div class="styled-select short">
-		          		<form id="orderbyForm" method="get" action="${pageContext.request.contextPath}/company/bookingList">
-		  					<select name="order" id="orderby">
-		  						<option>모두보기</option>
-		  						<option value="예약확정">예약확정</option>
-		  						<option value="예약승인대기">예약승인대기</option>
-		  						<option value="방문완료">방문완료</option>
-		  						<option value="취소">취소</option>
-		  					</select>
-		          		</form>
-					</div>
-					<input type="text" class="form-group form-control" placeholder="search" name="search" id="search">
+	      	<div class="box_general padding_bottom">
+				<div class="header_box version_2">
+					<h2><i class="fa fa-clock-o"></i>예약목록</h2>
 				</div>
-				
-				<div class="list_general" >
-					<ul>
-						<c:forEach var="b" items="${list}">
-							<li>
-								<figure><img src="${pageContext.request.contextPath}/upload/product/${b.img}" alt=""></figure>
-								<h4><a href="${pageContext.request.contextPath}/company/bookingOne?requestDate=${b.requestDate}&bookingDate=${b.date}&productNo=${b.productNo}">${b.productName}</a>
-									<c:choose> 
-										<c:when test="${b.state eq '예약확정'}">
-											<i class="approved">확정</i>									
-										</c:when> 
-										<c:when test="${b.state eq '예약승인대기'}">
-											<i class="pending">대기</i>									
-										</c:when> 
-										<c:when test="${b.state eq '취소'}">
-											<i class="cancel">취소</i>									
-										</c:when> 
-										<c:when test="${b.state eq '방문완료'}">
-											<i class="approved">완료</i>									
-										</c:when> 
-									</c:choose> 
-								</h4>
-								<ul class="booking_list">
-									<li><strong>예약자 성함</strong> ${b.cusName}</li>
-									<li><strong>예약자 연락처</strong> ${b.customerPh} - ${b.cusEmail}</li>
-									<li><strong>예약상품</strong> ${b.productName}</li>
-									<li><strong>방문일</strong> ${fn:substring(b.date,0,16)}</li>
-									<li><strong>인원</strong> ${b.people}명</li>
-									<li><strong>결제금액</strong> ${b.price}원</li>
-								</ul>
-								
-								<ul class="buttons">
-									<c:choose> 
-										<c:when test="${b.state eq '예약확정'}">
-											<li><a class="btn_1 gray delete" data-toggle="modal" data-target="#cancelModal" data-id="${b.bookingNo}" data-state="취소">
-													<i class="fa fa-fw fa-times-circle-o"></i> Cancel
-												</a>
-											</li>										
-										</c:when> 
-										<c:when test="${b.state eq '예약승인대기'}">
-											<li><a class="btn_1 gray approve approveBtn" id="approveBtn" data-id="${b.bookingNo}" data-state="예약확정"><i class="fa fa-fw fa-check-circle-o"></i> Approve</a></li>
-											<li><a class="btn_1 gray delete" data-toggle="modal" data-target="#cancelModal" data-id="${b.bookingNo}"><i class="fa fa-fw fa-times-circle-o"></i> Cancel</a></li>									
-										</c:when> 
-										<c:when test="${b.state eq '취소' || b.state eq '방문완료'}">
-										</c:when> 
-									</c:choose> 
-								</ul>
-							</li>
-						</c:forEach>
-					</ul>
+				<div class="row">
+					<div class="col-md-6">
+						<div id='calendar'></div>
+							
+					</div>
+					
+					<div class="col-md-6">
+						<h2 class="d-inline-block">Bookings list</h2>
+						<div class="list_general">
+							<ul>
+								<c:forEach var="b" items="${list}">
+									<li>
+										<figure><img src="${pageContext.request.contextPath}/upload/product/${b.img}" alt=""></figure>
+										<h4><a href="${pageContext.request.contextPath}/company/bookingOne?requestDate=${b.requestDate}&bookingDate=${b.date}&productNo=${b.productNo}">${b.productName}</a>
+											<c:choose> 
+												<c:when test="${b.state eq '예약확정'}">
+													<i class="approved">확정</i>									
+												</c:when> 
+												<c:when test="${b.state eq '예약승인대기'}">
+													<i class="pending">대기</i>									
+												</c:when> 
+												<c:when test="${b.state eq '취소'}">
+													<i class="cancel">취소</i>									
+												</c:when> 
+												<c:when test="${b.state eq '방문완료'}">
+													<i class="approved">완료</i>									
+												</c:when> 
+											</c:choose> 
+										</h4>
+										<ul class="booking_list">
+											<li><strong>예약자 성함</strong> ${b.cusName}</li>
+											<li><strong>예약자 연락처</strong> ${b.customerPh} - ${b.cusEmail}</li>
+											<li><strong>예약상품</strong> ${b.productName}</li>
+											<li><strong>방문일</strong> ${fn:substring(b.date,0,16)}</li>
+											<li><strong>인원</strong> ${b.people}명</li>
+											<li><strong>결제금액</strong> ${b.price}원</li>
+										</ul>
+										
+										<ul class="buttons">
+											<c:choose> 
+												<c:when test="${b.state eq '예약확정'}">
+													<li><a class="btn_1 gray delete" data-toggle="modal" data-target="#cancelModal" data-id="${b.bookingNo}" data-state="취소">
+															<i class="fa fa-fw fa-times-circle-o"></i> Cancel
+														</a>
+													</li>										
+												</c:when> 
+												<c:when test="${b.state eq '예약승인대기'}">
+													<li><a class="btn_1 gray approve approveBtn" id="approveBtn" data-id="${b.bookingNo}" data-state="예약확정"><i class="fa fa-fw fa-check-circle-o"></i> Approve</a></li>
+													<li><a class="btn_1 gray delete" data-toggle="modal" data-target="#cancelModal" data-id="${b.bookingNo}"><i class="fa fa-fw fa-times-circle-o"></i> Cancel</a></li>									
+												</c:when> 
+												<c:when test="${b.state eq '취소' || b.state eq '방문완료'}">
+												</c:when> 
+											</c:choose> 
+										</ul>
+									</li>
+								</c:forEach>
+							</ul>
+						</div>
+					</div>
 				</div>
 			</div>
 			<!-- /box_general-->
+			
 			<nav aria-label="...">
 				<ul class="pagination pagination-sm add_bottom_30">
 					<li class="page-item disabled">

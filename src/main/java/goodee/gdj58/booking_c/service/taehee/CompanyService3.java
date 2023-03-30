@@ -38,52 +38,52 @@ public class CompanyService3 {
 	@Autowired CompanyMapper3 companyMapper;
 	
 	// 스케줄러 예약관련 메일 전송
-	@Scheduled(cron = "0 0 9 * * *") 
+	@Scheduled(cron = "0 0 9 * * *") // 매일 9시마다 작동
 	public void run() {
 		List<Map<String, Object>> list = companyMapper.selectMail();
 		
-		String setFrom = "goodee@booking.com";
-		String toMail = "";
-		String title = "";
-		String content = "";
-		
-		for (Map<String, Object> m : list) {
-			log.debug(FontColor.GREEN+ m.get("bookingNo"));
-			toMail = (String)m.get("cusEmail");
-			title = (String)("내일은 "+ m.get("comName") +" 방문일입니다.");
-			content = (String)(
-					"내일은 "+ m.get("comName") +" 방문일입니다." +
-					"<br><br>" + 
-					"일정 :  "+ m.get("date") + 
-					"<br>" + 
-					"예약인원 :  "+ m.get("people") + 
-					"<br>" + 
-					"예약 상품 :  "+ m.get("productName") + 
-					"<br>" + 
-					"주소 :  "+ m.get("comAddress") + 
-					"<br>" + 
-					"연락처 :  "+ m.get("comPh") + 
-					"<br>" + 
-					"<br>" + 
-					"이 메일은 회신이 불가합니다.");
-			// 2. 이메일 전송
-			JavaMailSender mailSender = MailConfig.getMailSender();
-			MimeMessage message = mailSender.createMimeMessage();
-			try {
-				MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-				helper.setFrom(new InternetAddress(setFrom, true));
-				helper.setTo(toMail);
-				helper.setSubject(title);
-				// true 전달 > html 형식으로 전송 , 작성하지 않으면 단순 텍스트로 전달
-				helper.setText(content, true);
-				mailSender.send(message);
-				log.debug(FontColor.GREEN+"메일 전송 성공");
-			} catch (MessagingException e) {
-				e.printStackTrace();
-				log.debug(FontColor.GREEN+"메일 전송 실패");
+		if(list != null) {
+			for (Map<String, Object> m : list) {
+				log.debug(FontColor.GREEN+ m.get("bookingNo"));
+				
+				String setFrom = "goodee@booking.com";
+				String toMail = (String)m.get("cusEmail");
+				String title = (String)("내일은 "+ m.get("comName") +" 방문일입니다.");
+				String content = (String)(
+						"내일은 "+ m.get("comName") +" 방문일입니다." +
+								"<br><br>" + 
+								"일정 :  "+ m.get("date") + 
+								"<br>" + 
+								"예약인원 :  "+ m.get("people") + 
+								"<br>" + 
+								"예약 상품 :  "+ m.get("productName") + 
+								"<br>" + 
+								"주소 :  "+ m.get("comAddress") + 
+								"<br>" + 
+								"연락처 :  "+ m.get("comPh") + 
+								"<br>" + 
+								"<br>" + 
+						"이 메일은 회신이 불가합니다.");
+				
+				// 이메일 전송
+				JavaMailSender mailSender = MailConfig.getMailSender();
+				MimeMessage message = mailSender.createMimeMessage();
+				
+				try {
+					MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+					helper.setFrom(new InternetAddress(setFrom, true));
+					helper.setTo(toMail);
+					helper.setSubject(title);
+					// true 전달 > html 형식으로 전송 , 작성하지 않으면 단순 텍스트로 전달
+					helper.setText(content, true);
+					mailSender.send(message);
+					log.debug(FontColor.GREEN+"메일 전송 성공");
+				} catch (MessagingException e) {
+					e.printStackTrace();
+					log.debug(FontColor.GREEN+"메일 전송 실패");
+				}
 			}
 		}
-		
 	}
 	
 	// 상품관리
@@ -216,6 +216,10 @@ public class CompanyService3 {
 	// 1) 목록 페이징
 	public int getBookingCount(String companyId) {
 		return companyMapper.bookingCount(companyId);
+	}
+	
+	public List<Map<String, Object>> getBookingCalendar(String comId){
+		return companyMapper.selectBookingCalendar(comId);
 	}
 	
 	// 문의사항 

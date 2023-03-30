@@ -205,7 +205,7 @@ public class CompanyController3 {
 	@GetMapping("/company/bookingList")
 	public String getBookingList(Model model, HttpSession session
 								, @RequestParam(value = "currentPage", defaultValue = "1") int currentPage
-								, @RequestParam(value = "rowPerPage", defaultValue = "10") int rowPerPage) {
+								, @RequestParam(value = "rowPerPage", defaultValue = "3") int rowPerPage) {
 		
 		Company loginCom = (Company)session.getAttribute("loginCompany");
 		model.addAttribute("loginCom", loginCom);
