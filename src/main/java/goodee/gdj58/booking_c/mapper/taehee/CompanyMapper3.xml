@@ -292,6 +292,7 @@
 		INNER JOIN booking_product p
 		ON b.product_no = p.booking_product_no
 		WHERE b.booking_company_id = #{loginCom.companyId}
+		GROUP BY SUBSTRING(b.booking_request_date, 1, 18), b.customer_id, b.booking_date
 	</select>
 	
 	<!-- 문의사항 -->

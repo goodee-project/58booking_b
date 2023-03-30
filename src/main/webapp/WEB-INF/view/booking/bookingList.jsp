@@ -106,6 +106,25 @@
 						},
 					});
 				});
+				$('#completeBtn').click(function(){
+					bookingNo = $(this).data('id');
+					state = $(this).data('state');
+					
+					// vo로 POST
+					$.ajax({ // 컨트롤러와 통신	    			
+						 type: 'POST',
+						 url: "/58booking_b/company/modifyBooking",
+						 data: {"bookingNo" : bookingNo, "bookingState" : state},
+						 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+						 success: function(data) {
+							 alert("방문 완료");
+							 document.location.reload(); // 승인완료 후 페이지리로드
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							alert("ERROR");
+						},
+					});
+				});
 				
 				// 정렬
 				$('#orderby').change(function() {
@@ -135,7 +154,6 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div id='calendar'></div>
-							
 					</div>
 					
 					<div class="col-md-6">
@@ -174,13 +192,17 @@
 											<c:choose> 
 												<c:when test="${b.state eq '예약확정'}">
 													<li><a class="btn_1 gray delete" data-toggle="modal" data-target="#cancelModal" data-id="${b.bookingNo}" data-state="취소">
-															<i class="fa fa-fw fa-times-circle-o"></i> Cancel
+															<i class="fa fa-fw fa-times-circle-o"></i> 취소
+														</a>
+													</li>										
+													<li><a class="btn_1 gray approve" id="completeBtn" data-id="${b.bookingNo}" data-state="방문완료">
+															<i class="fa fa-fw fa-times-circle-o"></i> 방문완료
 														</a>
 													</li>										
 												</c:when> 
 												<c:when test="${b.state eq '예약승인대기'}">
-													<li><a class="btn_1 gray approve approveBtn" id="approveBtn" data-id="${b.bookingNo}" data-state="예약확정"><i class="fa fa-fw fa-check-circle-o"></i> Approve</a></li>
-													<li><a class="btn_1 gray delete" data-toggle="modal" data-target="#cancelModal" data-id="${b.bookingNo}"><i class="fa fa-fw fa-times-circle-o"></i> Cancel</a></li>									
+													<li><a class="btn_1 gray approve approveBtn" id="approveBtn" data-id="${b.bookingNo}" data-state="예약확정"><i class="fa fa-fw fa-check-circle-o"></i> 승인</a></li>
+													<li><a class="btn_1 gray delete" data-toggle="modal" data-target="#cancelModal" data-id="${b.bookingNo}"><i class="fa fa-fw fa-times-circle-o"></i> 취소</a></li>									
 												</c:when> 
 												<c:when test="${b.state eq '취소' || b.state eq '방문완료'}">
 												</c:when> 
