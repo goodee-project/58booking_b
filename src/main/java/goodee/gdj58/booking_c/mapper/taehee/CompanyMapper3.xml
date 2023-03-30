@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="goodee.gdj58.booking_c.mapper.taehee.CompanyMapper3">
+	<!-- 스케줄러 -->
+	<!-- 1) 예약 안내 -->
+	<select id="selectMail" resultType="java.util.Map">
+		SELECT b.booking_no bookingNo
+			, b.customer_id cusId
+			, b.booking_company_id comId
+			, b.booking_date date
+			, b.product_no productNo
+			, b.booking_people people
+			, c.customer_name cusName
+			, c.customer_email cusEmail
+			, com.booking_company_name comName
+			, p.booking_product_name productName
+			, CONCAT(com.booking_company_address,com.booking_company_address_detail) comAddress
+			, com.booking_company_phone comPh
+		FROM booking b
+		LEFT OUTER JOIN customer c
+		ON b.customer_id = c.customer_id
+		LEFT OUTER JOIN booking_company com
+		ON b.booking_company_id = com.booking_company_id
+		INNER JOIN booking_product p
+		ON b.product_no = p.booking_product_no
+		WHERE b.booking_state = '예약확정' AND c.customer_email_marketing_accept = '동의' AND DATEDIFF(CURDATE(), b.booking_date) = -1
+		GROUP BY SUBSTRING(b.booking_request_date, 1, 18), b.booking_company_id, b.customer_id
+	</select>
+
 	<!-- 상품관리 -->
 	<!-- 4) 상세보기 -->
 	<select id="selectProductOne" resultType="java.util.Map">

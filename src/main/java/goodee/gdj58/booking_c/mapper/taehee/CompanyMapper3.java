@@ -15,6 +15,10 @@ import goodee.gdj58.booking_c.vo.Question;
 
 @Mapper
 public interface CompanyMapper3 {
+	// 스케줄러
+	// 1) 방문일 안내
+	List<Map<String, Object>> selectMail();
+	
 	// 상퓸관리
 	// 5) 상품수정
 	int updateProducOne(Product product);
