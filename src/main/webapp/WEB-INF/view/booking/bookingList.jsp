@@ -129,7 +129,7 @@
 						<c:forEach var="b" items="${list}">
 							<li>
 								<figure><img src="${pageContext.request.contextPath}/upload/product/${b.img}" alt=""></figure>
-								<h4><a href="${pageContext.request.contextPath}/company/bookingOne?requestDate=${b.requestDate}&bookingDate=${b.date}">${b.productName}</a>
+								<h4><a href="${pageContext.request.contextPath}/company/bookingOne?requestDate=${b.requestDate}&bookingDate=${b.date}&productNo=${b.productNo}">${b.productName}</a>
 									<c:choose> 
 										<c:when test="${b.state eq '예약확정'}">
 											<i class="approved">확정</i>									
@@ -138,12 +138,12 @@
 											<i class="pending">대기</i>									
 										</c:when> 
 										<c:when test="${b.state eq '취소'}">
-											<i class="cancel" >취소</i>									
+											<i class="cancel">취소</i>									
 										</c:when> 
 										<c:when test="${b.state eq '방문완료'}">
 											<i class="approved">완료</i>									
 										</c:when> 
-								</c:choose> 
+									</c:choose> 
 								</h4>
 								<ul class="booking_list">
 									<li><strong>예약자 성함</strong> ${b.cusName}</li>
@@ -219,7 +219,7 @@
 	                        <span aria-hidden="true">×</span>
 	                    </button>
 	                </div>
-	                <form id="cancelForm" method="post" action="${pageContext.request.contextPath}/company/modifyBooking">
+	                <form id="cancelForm" method="post" action="${pageContext.request.contextPath}/company/cancelBooking">
 		                <div class="modal-body">
 		                    <div class="row">
 		                        <div class="col-md-6">

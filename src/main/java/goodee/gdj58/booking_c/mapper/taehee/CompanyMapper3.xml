@@ -206,7 +206,7 @@
 			ON b.option_no = o.booking_product_option_no 
 			LEFT OUTER JOIN booking_cancel bc
 			ON b.booking_no = bc.booking_no
-		WHERE SUBSTRING(b.booking_request_date, 1, 19) = SUBSTRING(#{requestDate}, 1, 19) 
+		WHERE SUBSTRING(b.booking_request_date, 1, 18) = SUBSTRING(#{requestDate}, 1, 18) 
 				AND b.booking_company_id = #{companyId}
 				AND SUBSTRING(b.booking_date, 1, 16) = SUBSTRING(#{bookingDate}, 1, 16)
 	</select>
@@ -232,6 +232,7 @@
 			, b.booking_date date
 			, b.booking_request_date requestDate
 			, bp.booking_product_name productName
+			, bp.booking_product_no productNo
 			, b.booking_people people
 			, b.booking_total_price price
 			, i.booking_product_img_save_name img

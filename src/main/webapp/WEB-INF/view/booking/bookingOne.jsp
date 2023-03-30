@@ -33,9 +33,32 @@
 		<!-- Your custom styles -->
 		<link href="${pageContext.request.contextPath}/resources/admin_section/css/custom.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+		
+		<!-- swiper -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js"></script>
+		
 		<script>
 			$(document).ready(function(){
-				
+				new Swiper('.swiper-container', {
+
+					// ★동적로딩 설정
+					lazy : {
+						loadPrevNext : true // 이전, 다음 이미지는 미리 로딩
+					},
+
+					// 페이징 설정
+					pagination : {
+						el : '.swiper-pagination',
+						clickable : true, // 페이징을 클릭하면 해당 영역으로 이동, 필요시 지정해 줘야 기능 작동
+					},
+
+					// 네비게이션 설정
+					navigation : {
+						nextEl : '.swiper-button-next', // 다음 버튼 클래스명
+						prevEl : '.swiper-button-prev', // 이번 버튼 클래스명
+					},
+				});
 			});
 		</script>
 	</head>
@@ -58,116 +81,114 @@
 			<div class="header_box version_2">
 				<h2><i class="fa fa-user"></i>고객정보</h2>
 			</div>
-			<div class="row">
+			
+			<div class="list_general">
 				<c:forEach var="b" items="${list}" varStatus="i">
 					<c:if test="${i.index == 0}">
-						<div class="col-md-12">
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<div>
-											<label>Name</label>
-										</div>
-										<div>
-											<label>Telephone</label>
-										</div>
-										<div>
-											<label>Email</label>
-										</div>
-										<div>
-											<span>${b.cusName}</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- /row-->
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<div>
-											<span>${b.cusEmail}</span>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>Email</label>
-										<div>
-											<span>${b.customerPh}</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- /row-->
-						</div>
+						<table class="">
+							<tr>
+								<td rowspan="3" width="30px"></td>
+								<th>예약자</th>
+								<td rowspan="3" width="100px"></td>
+								<td>${b.cusName}</td>
+							</tr>
+							<tr>
+								<th>연락처</th>
+								<td>${b.customerPh}</td>
+							</tr>
+							<tr>
+								<th>이메일</th>
+								<td>${b.cusEmail}</td>
+							</tr>
+						</table>
 					</c:if>
 				</c:forEach>
 			</div>
 		</div>
 		<!-- /box_general-->
-	      <div class="box_general padding_bottom">
+      	<div class="box_general padding_bottom">
 			<div class="header_box version_2">
 				<h2><i class="fa fa-clock-o"></i>예약정보</h2>
 			</div>
 			<div class="row">
-				<c:forEach var="b" items="${list}" varStatus="i">
-					<c:if test="${i.index == 0}">
-						<div class="col-md-12">
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>방문일</label>
-										<div>
-											<span>${b.date}</span>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>상태</label>
-										<div>
-											<span>${b.state}</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- /row-->
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>상품</label>
-										<div>
-											<span>${b.productName}</span>
-										</div>
-									</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<c:if test="${img != null}">
+							<div>
+								<div class="swiper-container">
+								    <div class="swiper-wrapper">
+										<c:forEach var="i" items="${img}">
+								      		<div class="swiper-slide">
+								      			<img width = 100% src="${pageContext.request.contextPath}/upload/product/${i.productImg}">
+								      		</div>
+										</c:forEach>
+								   </div>
+									<!-- 네비게이션 버튼 -->
+									<div class="swiper-button-next"></div><!-- 다음 버튼 (오른쪽에 있는 버튼) -->
+									<div class="swiper-button-prev"></div><!-- 이전 버튼 -->
+								
+									<!-- 페이징 -->
+									<div class="swiper-pagination"></div>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>결제금액</label>
-										<div>
-											<span>${b.price}</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<!-- /row-->
-							<div class="row">
-								<div class="col-md-12">
-									<div class="form-group">
-										<label>Cancel info</label>
-										<textarea style="height:100px;" class="form-control" placeholder="Personal info"></textarea>
-									</div>
-								</div>
-							</div>
-							<!-- /row-->
-						</div>
-					</c:if>
-				</c:forEach>
+						</c:if>
+				    </div>
+				</div>
+				<div class="col-md-8 add_top_30">
+					<div class="list_general">
+						<c:forEach var="b" items="${list}" varStatus="i">
+							<table class="">
+								<c:if test="${i.index == 0}">
+									<tr>
+										<td rowspan="3" width="30px"></td>
+										<th>방문일</th>
+										<td rowspan="3" width="100px"></td>
+										<td>${b.date}</td>
+									</tr>
+									<tr>
+										<th>결제금액</th>
+										<td>${b.price}원</td>
+									</tr>
+									<tr>
+										<th>상품</th>
+										<td>${b.productName}</td>
+									</tr>
+									<tr>
+										<td rowspan="5" width="30px"></td>
+										<th>옵션</th>
+								</c:if>
+									<c:if test="${i.index >= 0}">
+											<td rowspan="3" width="100px"></td>
+											<td>${b.oName}</td>
+									</c:if>
+									</tr>
+							</table>
+						</c:forEach>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- /box_general-->
+		
+		<c:forEach var="b" items="${list}" varStatus="i">
+			<c:if test="${i.index == 0 && b.cancleMemo != null}">
+				<div class="box_general padding_bottom">
+					<div class="header_box version_2">
+						<h2><i class="fa fa-clock-o"></i>취소</h2>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label>사유</label>
+								<textarea style="height:100px;" class="form-control" readonly="readonly">${b.cancleMemo}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</c:if>
+		</c:forEach>
+		<!-- /box_general-->
+		
 		  </div>
 		  <!-- /container-fluid-->
 	   	</div>

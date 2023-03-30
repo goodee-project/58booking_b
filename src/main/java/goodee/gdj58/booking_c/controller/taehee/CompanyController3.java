@@ -174,11 +174,14 @@ public class CompanyController3 {
 	// 4) 예약 상세보기
 	@GetMapping("/company/bookingOne")
 	public String bookingOne(Model model, HttpSession session
-								,  @RequestParam(value = "requestDate") String requestDate
-								,  @RequestParam(value = "bookingDate") String bookingDate) {
+								, @RequestParam(value = "requestDate") String requestDate
+								, @RequestParam(value = "bookingDate") String bookingDate
+								, @RequestParam(value = "productNo") int productNo) {
 		Company loginCom = (Company)session.getAttribute("loginCompany");
 		List<Map<String, Object>> list = companyService.getBookingOne(requestDate, loginCom.getCompanyId(), bookingDate);
+		List<Map<String, Object>> img = companyService.getProductImg(productNo);
 		model.addAttribute("list", list);
+		model.addAttribute("img", img);
 		return "/booking/bookingOne";
 	}
 	
@@ -187,7 +190,7 @@ public class CompanyController3 {
 	public String cancelBooking(BookingCancel bookingCancel, Booking booking) {
 		// 상태변경 + 취소insert
 		companyService.addBookingCancel(booking, bookingCancel);
-		return "";
+		return "redirect:/company/bookingList";
 	}
 	// 2) 상태변경
 	@PostMapping("/company/modifyBooking")
