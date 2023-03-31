@@ -112,7 +112,7 @@
 				<c:forEach var="p" items="${list}">
 					<div class="col-xl-3 col-lg-6 col-md-6" >
 						<div class="box_general padding_bottom">
-							<div class="box_grid">
+							<div class="box_grid" style="height: 660px;">
 								<div class="wrapper">
 									<div class="text-center">
 										<c:choose>
